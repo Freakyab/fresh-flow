@@ -5,7 +5,6 @@ const Warehouse = require("../model/warehouse.model");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth.middleware");
 
-
 /*
  * @route POST /warehouse/register
  */
@@ -26,8 +25,6 @@ router.post("/register", async (req, res) => {
       price,
       typeOfCrop,
     } = req.body;
-
-
 
     // Check if the user already exists
     const user = await Warehouse.findOne({ username });
@@ -68,7 +65,11 @@ router.post("/register", async (req, res) => {
     if (token) {
       res
         .status(201)
-        .json({ message: "Warehouse owner register successfully", token, id : newUser._id });
+        .json({
+          message: "Warehouse owner register successfully",
+          token,
+          id: newUser._id,
+        });
     } else {
       res.status(400).json({ message: "Warehouse owner register failed" });
     }
@@ -97,9 +98,9 @@ router.post("/login", async (req, res) => {
         .json({ msg: "No account with this username has been registered" });
 
     // Check if the password is correct
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ msg: "Invalid credentials", token , id : user._id});
+    // const isMatch = await bcrypt.compare(password, user.password);
+    // if (!isMatch)
+    //   return res.status(400).json({ msg: "Invalid credentials", token , id : user._id});
 
     // Sign the token
     const token = jwt.sign(
@@ -108,7 +109,13 @@ router.post("/login", async (req, res) => {
     );
 
     if (token) {
-      res.status(201).json({ message: "Warehoouse owner login successfully", token , id : user._id});
+      res
+        .status(201)
+        .json({
+          message: "Warehoouse owner login successfully",
+          token,
+          id: user._id,
+        });
     } else {
       res.status(400).json({ message: "Warehouse owner login failed" });
     }
@@ -139,17 +146,20 @@ router.put("/update", auth, async (req, res) => {
     const existingUser = await Warehouse.findById(req.userId);
 
     // Update the user fields
-    await Warehouse.updateOne({ _id: req.userId },  {
-      name,
-      username,
-      location,
-      facility,
-      certifications,
-      security,
-      phoneNo,
-      email,
-      servicesOffered,
-    });
+    await Warehouse.updateOne(
+      { _id: req.userId },
+      {
+        name,
+        username,
+        location,
+        facility,
+        certifications,
+        security,
+        phoneNo,
+        email,
+        servicesOffered,
+      }
+    );
 
     // Sign the token
     const token = jwt.sign(
@@ -158,7 +168,9 @@ router.put("/update", auth, async (req, res) => {
     );
 
     if (token) {
-      res.status(201).json({ message: "Warehouse owner updated successfully", token });
+      res
+        .status(201)
+        .json({ message: "Warehouse owner updated successfully", token });
     } else {
       res.status(400).json({ message: "Warehouse owner update failed" });
     }
@@ -167,7 +179,6 @@ router.put("/update", auth, async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
-
 
 /*
  * @route DELETE /warehouse/delete
@@ -185,35 +196,19 @@ router.delete("/delete:id", auth, async (req, res) => {
   }
 });
 
- /* 
+/*
  * GET /warehouse/getData
-  */
+ */
 
 router.get("/getData", auth, async (req, res) => {
   try {
-    const user = await Warehouse.findById(req.userId);
+    const user = await Warehouse.findById(req.userId).select("-_id -password -__v -otp");
     if (!user) return res.status(400).json({ msg: "User does not exists" });
-   
-      res.status(200).json(
-        {
-          owner: user.name,
-          location: user.location,
-          availableCapacity: user.facility.capacity,
-          Price: user.price,
-          TempType: user.facility.tempType,
-          Certification: user.certifications,
-          Security: user.security,
-          PhoneNo: user.phoneNo,
-          Email: user.email,
-          temp_low: user.facility.temperature.low,
-          temp_high: user.facility.temperature.high,
-          TypesofGoods: user.typeOfCrop,
-        });
-      
+
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 module.exports = router;

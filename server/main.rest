@@ -1,0 +1,59 @@
+# Farmer
+
+#login
+
+# {
+#   "message": "Farmer login successfully",
+#   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmE4MmVmNzlkZmU5M2UzNzdhODMwNSIsInVzZXJuYW1lIjoidXNlcm5hbWU5NDYiLCJpYXQiOjE3MDY3MjI3NzV9.53VJ5jJGcDPukbIZ8zE-BnO1lfSk6bph1LycfQsGsFo",
+#   "id": "65ba82ef79dfe93e377a8305"
+# }
+
+###
+POST http://localhost:5000/farmer/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "username946",
+    "password": "password17"
+}
+
+###
+GET  http://localhost:5000/farmer/getdata HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmE4MmVmNzlkZmU5M2UzNzdhODMwNSIsInVzZXJuYW1lIjoidXNlcm5hbWU5NDYiLCJpYXQiOjE3MDY3MjI3NzV9.53VJ5jJGcDPukbIZ8zE-BnO1lfSk6bph1LycfQsGsFo
+
+# Req for purchase warehouse
+
+###
+POST  http://localhost:5000/transaction/farmer-purchase HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmE4MmVmNzlkZmU5M2UzNzdhODMwNSIsInVzZXJuYW1lIjoidXNlcm5hbWU5NDYiLCJpYXQiOjE3MDY3MjI3NzV9.53VJ5jJGcDPukbIZ8zE-BnO1lfSk6bph1LycfQsGsFo
+
+{ "warehouseId" : "65ba84981c2c2ee035fa6489", "crop" : "Crop1", "quantity" : 10 , "duration" :30 }
+
+
+
+# Warehouse
+
+#login
+
+# {
+#   "message": "Warehoouse owner login successfully",
+#   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmE4NDk4MWMyYzJlZTAzNWZhNjQ4OSIsInVzZXJuYW1lIjoidXNlcm5hbWUzNDYiLCJpYXQiOjE3MDY3MjQ1NTZ9.-A7izgxmLVr91vN9FVFgdGycxHB_O6ChhkmQddPbzVA",
+#   "id": "65ba84981c2c2ee035fa6489"
+# }
+
+
+###
+POST http://localhost:5000/warehouse/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "username346",
+    "password": "password389"
+}
+
+###
+GET  http://localhost:5000/warehouse/getdata HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmE4NDk4MWMyYzJlZTAzNWZhNjQ4OSIsInVzZXJuYW1lIjoidXNlcm5hbWUzNDYiLCJpYXQiOjE3MDY3MjQ1NTZ9.-A7izgxmLVr91vN9FVFgdGycxHB_O6ChhkmQddPbzVA

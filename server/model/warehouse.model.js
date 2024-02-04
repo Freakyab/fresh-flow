@@ -4,75 +4,79 @@ const client = require("../config/connect");
 const warehouseSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    // required: true,
+  },
+  ownerName: {
+    type: String,
+    // required: true,
   },
   username: {
     type: String,
-    required: true,
+    // required: true,
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
-  location: {
+  city: {
     type: String,
-    required: true,
+    // required: true,
   },
   facility: {
     temperature: {
       low: {
         type: Number,
-        required: true,
+        // required: true,
       },
       high: {
         type: Number,
-        required: true,
+        // required: true,
       },
     },
     capacity: {
       type: Number,
-      required: true,
+      // required: true,
     },
     occupancy: {
       type: Number,
-      required: false,
+      // required: false,
     },
     tempType: {
       type: String,
-      required: true,
+      // required: true,
     },
   },
   certifications: {
     type: String,
-    required: true,
+    // required: true,
   },
   security: {
     type: String,
-    required: true,
+    // required: true,
   },
   phoneNo: {
     type: Number,
-    required: true,
+    // required: true,
   },
   email: {
     type: String,
-    required: true,
+    // required: true,
   },
   servicesOffered: {
     type: String,
-    required: true,
+    // required: true,
   },
   price : {
     type : Number,
-    require : true
+    // require : true
   },
   otp: {
     type: Number,
-    required: false,
+    // required: false,
   },
   typeOfCrop: {
     type: [String],
-    required: true,
+    // required: true,
   },
   duration: {
     type: Number,

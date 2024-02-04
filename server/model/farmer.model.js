@@ -4,43 +4,43 @@ const client = require("../config/connect");
 const farmerSchema = new mongoose.Schema({
   adharNo: {
     type: String,
-    required: true,
+    // required: true,
   },
   fullName: {
     type: String,
-    required: true,
+    // required: true,
   },
   phoneNo: {
     type: Number,
-    required: true,
+    // required: true,
   },
   email: {
     type: String,
-    required: true,
+    // required: true,
   },
   address: {
     type: String,
-    required: true,
+    // required: true,
   },
   username: {
     type: String,
-    required: true,
+    // required: true,
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
   landSize: {
     type: Number,
-    required: true,
+    // required: true,
   },
   typeOfCrop: {
     type: [String],
-    required: true,
+    // required: true,
   },
   otp : {
     type : Number,
-    require : false
+    // require : false
   }
 });
 

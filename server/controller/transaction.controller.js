@@ -7,27 +7,36 @@ const Transaction = require("../model/transaction.model");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth.middleware");
 
-/* Farmer purchase warehouse */
+/* Farmer purchase warehouse
+ * GET /transaction/farmer-purchase
+ */
 router.post("/farmer-purchase", auth, async (req, res) => {
   try {
     const { warehouseId, crop, quantity, duration } = req.body;
     const farmerId = req.userId;
 
-    const Transcation = new Transaction({
-      warehouseId,
-      farmerId,
-      crop,
-      quantity,
-      duration,
-      status: "pending",
-    });
-
-    await Transcation.save();
-
-    if (Transcation) {
-      res.status(200).json({ Transcation });
+    const warehouse = await Warehouse.findById(warehouseId);
+    if (!warehouse.typeOfCrop.includes(crop)) {
+      return res
+        .status(400)
+        .json({ message: "Warehouse doesn't have this crop" });
     } else {
-      res.status(400).json({ error: "Something went wrong" });
+      const Transcation = new Transaction({
+        warehouseId,
+        farmerId,
+        crop,
+        quantity,
+        duration,
+        status: "pending",
+      });
+
+      await Transcation.save();
+
+      if (Transcation) {
+        res.status(200).json({ Transcation });
+      } else {
+        res.status(400).json({ error: "Something went wrong" });
+      }
     }
   } catch (error) {
     console.error(error);
@@ -174,44 +183,45 @@ router.get("/farmer-request/:id", auth, async (req, res) => {
   }
 });
 
-
 /*
-  *Farmer  all request
-  */
-  router.get("/farmer-all-request/:id", auth, async (req, res) => {
-    try {
-      const farmerId = req.params.id;
-      const allTransaction = await Transaction.find({ farmerId: farmerId });
-  
-      if (!allTransaction || allTransaction.length === 0) {
-        return res.status(400).json({ message: "No request found" });
-      }
-  
-      const warehouseIds = allTransaction.map(transaction => transaction.warehouseId);
-      const allWarehouses = await Warehouse.find({ _id: { $in: warehouseIds } });
-  
-      // Map transactions with specific fields
-      const modifiedTransactions = allTransaction.map(transaction => {
-        const warehouse = allWarehouses.find(w => w._id.equals(transaction.warehouseId));
-  
-        return {
-            // Add other specific fields you want to include
-          warehouseName: warehouse ? warehouse.name : null,
-          warehouseAddress: warehouse ? warehouse.location : null,
-          warehousePhoneNo: warehouse ? warehouse.phoneNo : null,
-          warehousePrice  : warehouse ? warehouse.price : null,
-          status : transaction.status,
-          // Include other transaction fields as needed
-        };
-      });
-  
-      res.status(200).json({ allTransaction: modifiedTransactions });
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: "Internal Server Error" });
+ *Farmer  all request
+ */
+router.get("/farmer-all-request/:id", auth, async (req, res) => {
+  try {
+    const farmerId = req.params.id;
+    const allTransaction = await Transaction.find({ farmerId: farmerId });
+
+    if (!allTransaction || allTransaction.length === 0) {
+      return res.status(400).json({ message: "No request found" });
     }
-  });
-  
-  
+
+    const warehouseIds = allTransaction.map(
+      (transaction) => transaction.warehouseId
+    );
+    const allWarehouses = await Warehouse.find({ _id: { $in: warehouseIds } });
+
+    // Map transactions with specific fields
+    const modifiedTransactions = allTransaction.map((transaction) => {
+      const warehouse = allWarehouses.find((w) =>
+        w._id.equals(transaction.warehouseId)
+      );
+
+      return {
+        // Add other specific fields you want to include
+        warehouseName: warehouse ? warehouse.name : null,
+        warehouseAddress: warehouse ? warehouse.location : null,
+        warehousePhoneNo: warehouse ? warehouse.phoneNo : null,
+        warehousePrice: warehouse ? warehouse.price : null,
+        status: transaction.status,
+        // Include other transaction fields as needed
+      };
+    });
+
+    res.status(200).json({ allTransaction: modifiedTransactions });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 module.exports = router;

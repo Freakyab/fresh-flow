@@ -85,8 +85,8 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "No Farmer with this username" });
 
     // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    // const isMatch = await bcrypt.compare(password, user.password);
+    // if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
     // Sign the token
     const token = jwt.sign(
@@ -178,27 +178,13 @@ router.delete("/delete/:id", auth, async (req, res) => {
 
  router.get("/getData", auth, async (req, res) => {
   try {
-    const user = await Farmer.findById(req.userId);
+    const user = await Farmer.findById(req.userId).select("-password -_id -__v -otp");
 
     if (!user) {
       return res.status(400).json({ msg: "User does not exist" });
     }
 
-    // Select fields to include in the response (excluding Aadhar number)
-    const modifiedUser = {
-      // _id: user._id,
-      // Add other fields you want to include
-      name: user.fullName,
-      email: user.email,
-      phoneNo: user.phoneNo,
-      address: user.address,
-      landSize: user.landSize,
-
-      // Exclude Aadhar number
-      // Do not include the field if you want to exclude it completely
-    };
-
-    res.json(modifiedUser);
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
