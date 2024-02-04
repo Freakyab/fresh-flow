@@ -5,23 +5,23 @@ import LoginComponent from "../../components/login.component";
 import RegisterComponent from "../../components/register.component";
 
 export default function login() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="justify-start flex w-[500px] ">
+      <div className="flex flex-col items-center pt-5 justify-center h-full">
+        <div className="justify-start flex w-[500px]">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className={`w-[100px] h-10 mt-4 rounded-t-md ${
-              isLogin ? " text-white bg-black" : "text-black  bg-white"
+            className={` h-10 w-full mt-4 rounded-t-md ${
+              !isLogin ? " text-white bg-black" : "text-black  bg-white"
             }`}>
             Login{" "}
           </button>
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className={`w-[100px] h-10 mt-4 rounded-t-md ${
-              !isLogin ? " text-white bg-black" : "text-black  bg-white"
+            className={`w-full h-10 mt-4 rounded-t-md ${
+              isLogin ? " text-white bg-black" : "text-black  bg-white"
             }`}>
             Register{" "}
           </button>

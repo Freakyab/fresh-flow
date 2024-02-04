@@ -130,7 +130,7 @@ const FarmerRegisterform = ({
               <InputWithImageComponent
                 Image={<MdEmail size={25} />}
                 placeholder="Email"
-                type="number"
+                type="email"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -148,12 +148,20 @@ const FarmerRegisterform = ({
             </div>
           </div>
         </SwiperSlide>
+        
       </Swiper>
-      <button
-        onClick={() => setSelectedUserType("")}
-        className="bg-black text-white flex items-start rounded-md p-2 focus:outline-none">
-        reset
-      </button>
+      <div className="flex gap-4 justify-start">
+        <button
+          onClick={() => setSelectedUserType("")}
+          className="bg-black  text-white flex items-start rounded-md p-2 focus:outline-none">
+          Reset
+        </button>
+        <button
+          onClick={() => console.log(formData)}
+          className="bg-black text-white flex items-start rounded-md p-2 focus:outline-none">
+          Submit
+        </button>
+      </div>
     </>
   );
 };

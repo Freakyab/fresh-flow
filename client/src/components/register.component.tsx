@@ -6,7 +6,7 @@ import { GiFarmer } from "react-icons/gi";
 import { FaWarehouse } from "react-icons/fa";
 import { IoPeopleSharp } from "react-icons/io5";
 
-import FarmerRegisterform from "./farmerRegisterform";
+import FarmerRegisterform from "./farmerRegisterform.component";
 
 const RegisterComponent = () => {
   const [selectedUserType, setSelectedUserType] = useState("");
@@ -18,11 +18,11 @@ const RegisterComponent = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-[500px] min-h-[500px] justify-center p-8 bg-white text-black rounded-b-md shadow-lg">
+    <div className="flex flex-col  w-[500px] min-h-[500px]  p-4 bg-white text-black rounded-b-md shadow-lg">
       {selectedUserType === "" && (
         <div className="flex flex-col justify-center h-full items-center">
           <h2 className="text-2xl mb-4 font-bold">Who are you?</h2>
-          <div className="flex flex-col gap-4 max-w-[300px] w-full">
+          <div className="flex flex-col gap-4 max-w-[500px] ">
             <InputRadioWithImageComponent
               Image={<GiFarmer size={25} />}
               handleUserTypeChange={handleUserTypeChange}
@@ -41,12 +41,13 @@ const RegisterComponent = () => {
               name="userType"
               value="Customer"
             />
-           
           </div>
         </div>
       )}
 
-      {selectedUserType === "Farmer" && <FarmerRegisterform setSelectedUserType = {setSelectedUserType}/>}
+      {selectedUserType === "Farmer" && (
+        <FarmerRegisterform setSelectedUserType={setSelectedUserType} />
+      )}
     </div>
   );
 };

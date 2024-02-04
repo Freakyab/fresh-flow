@@ -17,7 +17,7 @@ const LoginComponent = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-[500px] justify-center p-8 bg-white text-black rounded-b-md shadow-lg">
+    <div className="flex flex-col items-center w-[500px]  h-[500px] justify-center p-8 bg-white text-black rounded-b-md shadow-lg">
       <div className="flex space-x-4 ">
         <button
           className={`${
