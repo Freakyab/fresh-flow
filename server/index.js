@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  r;es.send('Hello World!')
+  res.send('Hello World!')
 });
 
 app.use("/generate",require("./controller/generate.controller"))
