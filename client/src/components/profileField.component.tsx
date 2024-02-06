@@ -17,7 +17,7 @@ type orderProps = {
 };
 
 const ProfileField = ({ key, icon, label, value }: Option) => (
-  <div className="flex p-2" key={key}>
+  <div className="flex p-2 " key={key}>
     <span className="px-2 justify-start mt-2">{icon}</span>
     <span className="flex flex-col">
       <span className="text-xl font-semibold capitalize">{label}</span>
@@ -35,8 +35,8 @@ export const OrderField = ({
   duration,
 }: orderProps) => {
   return (
-    <div className="flex flex-col gap-4 justify-center">
-      <div className="flex m-2 bg-gray-100 p-2 shadow-lg rounded-lg" key={key}>
+    <div className="flex flex-col gap-4 overflow-y-auto justify-center">
+      <div className="flex m-2  bg-gray-100 p-2 shadow-lg rounded-lg" key={key}>
         <span className="p-2">
           <p className="font-semibold px-2">{name}</p>
           <p className="font-light px-2">
