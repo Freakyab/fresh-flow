@@ -72,7 +72,7 @@ const Profile = () => {
 
   return (
     <div className="bg-gray-100 flex flex-col lg:flex-row gap-1">
-      <div className="lg:w-1/2 p-2 ml-4 mt-4 flex gap-8 h-full flex-col">
+      <div className="lg:w-1/2 p-2 ml-4 mt-4 flex gap-5 h-full flex-col">
         <div className="w-full h-72 p-2 bg-white border shadow-xl rounded-lg">
           <h1 className="text-2xl font-mono font-semibold p-4 w-full">Profile</h1>
           <Image
@@ -102,13 +102,13 @@ const Profile = () => {
           <p className="text-2xl font-mono font-semibold border-b p-4">
             Available Quantity
           </p>
-          <span className="w-full h-96 mt-2 flex justify-center items-center">
+          <span className="w-full h-[400px] my-2 flex justify-center items-center">
               <Pie data={data} />
           </span>
         </div>
       </div>
-      <div className="lg:w-1/2">
-        <div className=" p-2 m-4 bg-white border shadow-xl rounded-lg">
+      <div className="lg:w-1/2 flex flex-col gap-5">
+        <div className=" px-2 mt-4 bg-white border shadow-xl rounded-lg">
           <h1 className="text-2xl font-mono font-semibold border-b p-4 w-full">
             Order History
           </h1>
@@ -118,7 +118,7 @@ const Profile = () => {
             ))}
           </div>
         </div>
-        <div className="p-2 m-4 rounded-lg h-96 overflow-y-auto bg-white border shadow-xl">
+        <div className="px-2 rounded-lg h-[400px] overflow-y-auto bg-white border shadow-xl">
           <h2 className="font-mono text-xl p-4 font-semibold border-b w-full">
             Personal Information
           </h2>

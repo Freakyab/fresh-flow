@@ -36,7 +36,7 @@ export const OrderField = ({
 }: orderProps) => {
   return (
     <div className="flex flex-col gap-4 justify-center">
-      <div className="flex m-2 bg-gray-100 p-2 shadow-xl rounded-lg" key={key}>
+      <div className="flex m-2 bg-gray-100 p-2 shadow-lg rounded-lg" key={key}>
         <span className="p-2">
           <p className="font-semibold px-2">{name}</p>
           <p className="font-light px-2">
