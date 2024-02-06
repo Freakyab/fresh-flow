@@ -16,7 +16,7 @@ const Profile = () => {
     email: "farmer787@example.com",
     phone: "1234567890",
     address: "123, 4th Street, 5th Avenue, New York",
-    username: "johndoe",
+    username: "johndoe", // username
   };
 
   const orderData = [
