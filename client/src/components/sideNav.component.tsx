@@ -1,27 +1,28 @@
 import React, { ReactNode } from "react";
+import { IoIosLogOut } from "react-icons/io";
 import Image from "next/image";
 import Link from "next/link";
 
-type Option =  {
+type Option = {
   title: string;
   Icon: ReactNode;
   link: string;
-}
+};
 
 type SideNavProps = {
   options: Option[];
-}
+};
 
 const SideNav = ({ options }: SideNavProps) => {
   // Sample user attributes
 
   return (
-    <div className="sideNav flex h-screen w-full flex-col bg-gray-200 items-center bg-muted p-3">
+    <div className="sideNav flex h-full w-full flex-col justify-evenly bg-gray-200 items-center">
       {/* Circular Profile Image */}
-      <div className="object-cover">
+      <div className="p-2">
         <Image
-          className="profileImage rounded-full
-          object-cover object-center"
+          className=" w-[150px] h-[160px] rounded-full
+           object-center5"
           src="/login.jpg"
           alt="Profile"
           width={150}
@@ -30,19 +31,27 @@ const SideNav = ({ options }: SideNavProps) => {
       </div>
 
       {/* Array of Attributes */}
-      <div className="attributes my-10 py-10   text-black"
-      >
-        {options.map(({ title, Icon,link }: Option, index: number) => {
+      <div className="w-full h-72 text-black py-4">
+        {options.map(({ title, Icon, link }: Option, index: number) => {
           return (
-            <div key={index} className="flex items-center gap-4">
-              <Link href = {link} key={index}>
-              <p className="text-xl">{title}</p>
-              {Icon}
+            <div
+              key={index}
+              className="w-full flex justify-center hover:bg-white gap-6 pl-4">
+              <Link href={link} key={index}>
+                <span className="flex p-2 py-4 w-[150px] gap-4 rounded-md hover:bg-white">
+                  {Icon}
+                  <p className="text-xl">{title}</p>
+                </span>
               </Link>
             </div>
           );
         })}
       </div>
+
+      <button className="bg-red-500 flex items-center gap-2 text-white p-2 rounded-md">
+      <IoIosLogOut size={25} />
+        Logout
+      </button>
     </div>
   );
 };
