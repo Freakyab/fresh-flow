@@ -5,7 +5,16 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import InputWithImageComponent from "./inputWithimage.component";
 
-const LoginComponent = () => {
+type controlsProps = {
+  isLogin: boolean;
+  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type loginComponentProps = {
+  controls: controlsProps;
+};
+
+const LoginComponent = ({ controls }: loginComponentProps) => {
   const [userType, setUserType] = useState("Farmer");
   const [formData, setFormData] = useState({
     email: "",
@@ -56,17 +65,25 @@ const LoginComponent = () => {
           Image={<RiLockPasswordFill size={25} />}
           placeholder="Password"
           type="password"
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
           value={formData.password}
         />
-        <p className="text-blue-500 font-medium text-center cursor-pointer">Forgot Password?</p>
-        
+        <p className="text-blue-500 font-medium text-center cursor-pointer">
+          Forgot Password?
+        </p>
+
         <button className="w-full h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none">
           Login
         </button>
         <p className="text-center text-sm">
           Don't have an account?{" "}
-          <span className="text-blue-500 font-medium cursor-pointer">Register</span>
+          <span
+            className="text-blue-500 font-medium cursor-pointer"
+            onClick={() => controls.setIsLogin(!controls.isLogin)}>
+            Register
+          </span>
         </p>
         <p className="text-center">Sign in with</p>
         <div className="flex justify-center space-x-4">

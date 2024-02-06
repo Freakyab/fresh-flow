@@ -22,11 +22,13 @@ export default function login() {
             onClick={() => setIsLogin(!isLogin)}
             className={`w-full h-10 mt-4 rounded-t-md ${
               isLogin ? " text-white bg-black" : "text-black  bg-white"
-            }`}>
+            }`}
+              
+            >
             Register{" "}
           </button>
         </div>
-        {isLogin ? <LoginComponent /> : <RegisterComponent />}
+        {isLogin ? <LoginComponent controls={ {isLogin ,setIsLogin} } /> : <RegisterComponent />}
       </div>
       <Image
         src={"/login.jpg"}

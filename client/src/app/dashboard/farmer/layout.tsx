@@ -39,7 +39,7 @@ const FarmerDashboard = ({ children }: FarmerDashboardProps) => {
         <SideNav options={options} />
       </section>
 
-      <section className="flex h-screen w-5/6 overflow-hidden flex-col">
+      <section className="flex min-h-screen h-full w-5/6 overflow-hidden flex-col">
         {children}
       </section>
     </div>
