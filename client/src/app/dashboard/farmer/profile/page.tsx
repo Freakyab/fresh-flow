@@ -108,7 +108,7 @@ const Profile = () => {
         </div>
       </div>
       <div className="lg:w-1/2">
-        <div className="w-[90%] p-2 m-4 bg-white border shadow-xl rounded-lg">
+        <div className=" p-2 m-4 bg-white border shadow-xl rounded-lg">
           <h1 className="text-2xl font-mono font-semibold border-b p-4 w-full">
             Order History
           </h1>
@@ -118,7 +118,7 @@ const Profile = () => {
             ))}
           </div>
         </div>
-        <div className="w-[90%] p-2 m-4 rounded-lg h-96 bg-white border shadow-xl">
+        <div className="p-2 m-4 rounded-lg h-96 overflow-y-auto bg-white border shadow-xl">
           <h2 className="font-mono text-xl p-4 font-semibold border-b w-full">
             Personal Information
           </h2>
