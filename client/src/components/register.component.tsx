@@ -8,6 +8,7 @@ import { IoPeopleSharp } from "react-icons/io5";
 
 import FarmerRegisterform from "./farmerRegisterform.component";
 import WarehouseOwnerRegisterform from "./warehouseOwnerRegisterform.component";
+import CustomerRegisterform from "./customerRegisterform.component";
 
 const RegisterComponent = () => {
   const [selectedUserType, setSelectedUserType] = useState("");
@@ -52,7 +53,10 @@ const RegisterComponent = () => {
       {selectedUserType === "Warehouse Owner" && (
         <WarehouseOwnerRegisterform setSelectedUserType={setSelectedUserType} />
       )}
-      
+      {selectedUserType === "Customer" && (
+        <CustomerRegisterform setSelectedUserType={setSelectedUserType} />
+      )}
+
     </div>
   );
 };
