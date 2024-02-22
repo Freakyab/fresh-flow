@@ -121,13 +121,13 @@ const Profile = () => {
         </div>
       </div>
       <div className="gap-1 w-1/2 ">
-        <div className="m-4 w-[90%] h-full  p-2 bg-white border shadow-xl rounded-lg">
+        <div className="m-4 w-[90%] p-2 bg-white border shadow-xl rounded-lg">
           <h1 className="text-2xl font-mono font-semibold border-b p-4 w-full">
             Order History
           </h1>
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 justify-center shadow-xl rounded-lg">
-              <div className="flex m-2 p-2">
+            <div className="flex flex-col gap-4 justify-center">
+              <div className="flex m-2 bg-gray-100 p-2 shadow-xl rounded-lg">
                 <span className="p-2">
                   <p className="font-semibold px-2">Warehouse2</p>
                   <p className="font-light px-2">
@@ -150,8 +150,8 @@ const Profile = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col gap-4 justify-center shadow-xl rounded-lg">
-              <div className="flex m-2 p-2">
+            <div className="flex flex-col gap-4 justify-center">
+              <div className="flex m-2 bg-gray-100 p-2 shadow-xl rounded-lg">
                 <span className="p-2">
                   <p className="font-semibold px-2">Warehouse2</p>
                   <p className="font-light px-2">
@@ -174,8 +174,8 @@ const Profile = () => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col gap-4 justify-center shadow-xl rounded-lg">
-              <div className="flex m-2 p-2">
+            <div className="flex flex-col gap-4 justify-center">
+              <div className="flex m-2 bg-gray-100 p-2 shadow-xl rounded-lg">
                 <span className="p-2">
                   <p className="font-semibold px-2">Warehouse2</p>
                   <p className="font-light px-2">

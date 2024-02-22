@@ -7,6 +7,8 @@ import { FaWarehouse } from "react-icons/fa";
 import { IoPeopleSharp } from "react-icons/io5";
 
 import FarmerRegisterform from "./farmerRegisterform.component";
+import WarehouseOwnerRegisterform from "./warehouseOwnerRegisterform.component";
+import CustomerRegisterform from "./customerRegisterform.component";
 
 const RegisterComponent = () => {
   const [selectedUserType, setSelectedUserType] = useState("");
@@ -24,19 +26,19 @@ const RegisterComponent = () => {
           <h2 className="text-2xl mb-4 font-bold">Who are you?</h2>
           <div className="flex flex-col gap-4 max-w-[500px] ">
             <InputRadioWithImageComponent
-              Image={<GiFarmer size={25} />}
+              Image={<GiFarmer size={25} className={"input-icon-color"}/>}
               handleUserTypeChange={handleUserTypeChange}
               name="userType"
               value="Farmer"
             />
             <InputRadioWithImageComponent
-              Image={<FaWarehouse size={25} />}
+              Image={<FaWarehouse size={25} className={"input-icon-color"}/>}
               handleUserTypeChange={handleUserTypeChange}
               name="userType"
               value="Warehouse Owner"
             />
             <InputRadioWithImageComponent
-              Image={<IoPeopleSharp size={25} />}
+              Image={<IoPeopleSharp size={25} className={"input-icon-color"}/>}
               handleUserTypeChange={handleUserTypeChange}
               name="userType"
               value="Customer"
@@ -48,6 +50,13 @@ const RegisterComponent = () => {
       {selectedUserType === "Farmer" && (
         <FarmerRegisterform setSelectedUserType={setSelectedUserType} />
       )}
+      {selectedUserType === "Warehouse Owner" && (
+        <WarehouseOwnerRegisterform setSelectedUserType={setSelectedUserType} />
+      )}
+      {selectedUserType === "Customer" && (
+        <CustomerRegisterform setSelectedUserType={setSelectedUserType} />
+      )}
+
     </div>
   );
 };

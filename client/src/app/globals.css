@@ -42,7 +42,7 @@ body {
   text-align: center;
   font-size: 18px;
   background: #fff;
-
+  
   /* Center slide text vertically */
   display: flex;
   justify-content: center;
@@ -54,4 +54,13 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  color: #a0aec0;
+}
+
+/* .swiper-button-prev, .swiper-button-next::after{
+  background: #a0aec0;
+} */
+
+.input-icon-color {
+  color: #a0aec0;
 }
