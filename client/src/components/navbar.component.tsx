@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function Header() {
   return (
-    <div className="flex bg-black h-24 w-full items-center justify-between bg-primary ">
+    <div className="flex top-0 z-50 bg-black h-24 w-full items-center justify-between bg-primary ">
       <div className="mx-3">
         <button>
           <h1 className="text-3xl font-bold text-white"><Link href="/">Fresh Flow</Link></h1>

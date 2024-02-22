@@ -46,19 +46,19 @@ const frameworks = [
 const FarmerMarketplacePage = () => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const [location, setLocation] = React.useState({
-    latitude: 0,
-    longitude: 0
-  });
+  // const [location, setLocation] = React.useState({
+  //   latitude: 0,
+  //   longitude: 0
+  // });
 
-  React.useEffect(()=>{
-    navigator.geolocation.watchPosition((position) => {
-      setLocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      });
-    });
-  },[location])
+  // React.useEffect(()=>{
+  //   navigator.geolocation.watchPosition((position) => {
+  //     setLocation({
+  //       latitude: position.coords.latitude,
+  //       longitude: position.coords.longitude
+  //     });
+  //   });
+  // },[location])
 
   // Update the location state when the user's location changes
 
@@ -136,7 +136,7 @@ const FarmerMarketplacePage = () => {
 
         </div>
       </div>
-          <Map location={location} />
+          {/* <Map location={location} /> */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { TileLayer, MapContainer, Marker, Popup } from "react-leaflet";
-// import { FaMapMarker } from "react-icons/fa";
-
+import { useState } from "react";
+import {Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 interface CurrentLocation {
@@ -15,8 +15,16 @@ interface Props {
 const  Map = ({ location }: Props) => {
   //   const currentCity: Location = location;
 
+  const icon = new Icon({
+    iconUrl: "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
   return (
-    <MapContainer zoom={4} scrollWheelZoom={false} 
+    <MapContainer center={{ lat: 20, lng: 80 }} zoom={5} scrollWheelZoom={false} 
       className="w-screen h-screen"
     >
       <TileLayer
@@ -25,7 +33,7 @@ const  Map = ({ location }: Props) => {
       />
 
       <Marker
-        // icon={<FaMapMarker />}
+        icon={icon}
         position={[location.latitude, location.longitude]}>
         <Popup>
           { "Nagpur" }
