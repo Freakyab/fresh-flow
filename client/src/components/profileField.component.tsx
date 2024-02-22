@@ -18,7 +18,7 @@ type orderProps = {
 
 const ProfileField = ({ key, icon, label, value }: Option) => (
   <div className="flex p-2 " key={key}>
-    <span className="px-2 justify-start mt-2">{icon}</span>
+    {/* <span className="px-2 justify-start mt-2">{icon}</span> */}
     <span className="flex flex-col">
       <span className="text-xl font-semibold capitalize">{label}</span>
       <span className="text-xs text-blue-700">{value}</span>
@@ -53,7 +53,7 @@ export const OrderField = ({
             className={`font-bold ${
               status === "Requested"
                 ? "text-blue-700"
-                : status === "Reject"
+                : status === "Rejected"
                 ? "text-red-700"
                 : "text-green-700"
             } px-2`}>

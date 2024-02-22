@@ -44,76 +44,81 @@ const FarmerRegisterform = ({
         pagination={{ type: "progressbar", dynamicBullets: true }}
         navigation={true}
         modules={[Pagination, Navigation]}>
-        <SwiperSlide>
-          <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-            <h2 className="text-2xl mb-4 font-bold">Profile Info</h2>
-            <div className="flex flex-col gap-4">
-              <InputWithImageComponent
-                Image={<MdEmail size={25} />}
-                placeholder="Name"
-                type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-              />
+        {
+          <SwiperSlide>
+            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <h2 className="text-2xl mb-4 font-bold">Profile Info</h2>
+              <div className="flex flex-col gap-4">
+                <InputWithImageComponent
+                  Image={<MdEmail size={25} />}
+                  placeholder="Name"
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                />
 
-              <InputWithImageComponent
-                Image={<MdEmail size={25} />}
-                placeholder="Username"
-                type="text"
-                value={formData.username}
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
-              />
-              <InputWithImageComponent
-                Image={<MdEmail size={25} />}
-                placeholder="Password"
-                type="text"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
-              <InputWithImageComponent
-                Image={<MdEmail size={25} />}
-                placeholder="Confirm Password"
-                type="text"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
-                }
-              />
-              <span className="flex gap-4">
-                <span>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="Male"
-                    checked={formData.gender === "Male"}
-                    onChange={() =>
-                      setFormData({ ...formData, gender: "Male" })
-                    }
-                  />
-                  <label>Male</label>
+                <InputWithImageComponent
+                  Image={<MdEmail size={25} />}
+                  placeholder="Username"
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) =>
+                    setFormData({ ...formData, username: e.target.value })
+                  }
+                />
+                <InputWithImageComponent
+                  Image={<MdEmail size={25} />}
+                  placeholder="Password"
+                  type="text"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+                <InputWithImageComponent
+                  Image={<MdEmail size={25} />}
+                  placeholder="Confirm Password"
+                  type="text"
+                  value={formData.confirmPassword}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                />
+                <span className="flex gap-4">
+                  <span>
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Male"
+                      checked={formData.gender === "Male"}
+                      onChange={() =>
+                        setFormData({ ...formData, gender: "Male" })
+                      }
+                    />
+                    <label>Male</label>
+                  </span>
+                  <span>
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Female"
+                      checked={formData.gender === "Female"}
+                      onChange={() =>
+                        setFormData({ ...formData, gender: "Female" })
+                      }
+                    />
+                    <label>Female</label>
+                  </span>
                 </span>
-                <span>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="Female"
-                    checked={formData.gender === "Female"}
-                    onChange={() =>
-                      setFormData({ ...formData, gender: "Female" })
-                    }
-                  />
-                  <label>Female</label>
-                </span>
-              </span>
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        }
         <SwiperSlide>
           <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
             <h2 className="text-2xl mb-4 font-bold">Profile Info</h2>
@@ -148,7 +153,6 @@ const FarmerRegisterform = ({
             </div>
           </div>
         </SwiperSlide>
-        
       </Swiper>
       <div className="flex gap-4 justify-start">
         <button
