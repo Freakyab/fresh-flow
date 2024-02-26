@@ -100,22 +100,10 @@ const FarmerRegisterform = ({
                   />
                   <label>Male</label>
                 </span>
-                <span>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value="Female"
-                    checked={formData.gender === "Female"}
-                    onChange={() =>
-                      setFormData({ ...formData, gender: "Female" })
-                    }
-                  />
-                  <label>Female</label>
-                </span>
-              </span>
+              </div>
             </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        }
         <SwiperSlide>
           <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
             <h2 className="text-2xl mb-4 font-bold">Profile Info</h2>

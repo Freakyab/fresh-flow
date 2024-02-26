@@ -15,7 +15,6 @@ const RegisterComponent = () => {
 
   const handleUserTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const userType = e.target.value;
-    console.log(userType);
     setSelectedUserType(userType);
   };
 
