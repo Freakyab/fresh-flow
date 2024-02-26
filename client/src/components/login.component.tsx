@@ -55,14 +55,14 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
       </h2>
       <div className="flex flex-col w-full gap-4 mt-4">
         <InputWithImageComponent
-          Image={<MdEmail size={25} />}
+          Image={<MdEmail size={25} className={"input-icon-color"}/>}
           placeholder="Email"
           type="text"
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           value={formData.email}
         />
         <InputWithImageComponent
-          Image={<RiLockPasswordFill size={25} />}
+          Image={<RiLockPasswordFill size={25} className={"input-icon-color"}/>}
           placeholder="Password"
           type="password"
           onChange={(e) =>
