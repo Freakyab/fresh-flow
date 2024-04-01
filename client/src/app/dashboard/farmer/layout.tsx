@@ -34,12 +34,12 @@ const FarmerDashboard = ({ children }: FarmerDashboardProps) => {
   ];
 
   return (
-    <div className="flex flex-row overflow-hidden">
-      <section className="flex w-1/6 flex-col items-center">
+    <div className="flex  flex-row overflow-hidden">
+      <section className="flex sideNav w-1/6 flex-col items-center">
         <SideNav options={options} />
       </section>
 
-      <section className="flex h-screen w-5/6 overflow-hidden flex-col">
+      <section className="flex sidenavChildren min-h-screen h-full w-5/6 overflow-hidden flex-col">
         {children}
       </section>
     </div>
