@@ -1,7 +1,8 @@
-import React, { ReactNode } from "react";
+"use client";
+import React, { ReactNode, useState } from "react";
 import { IoIosLogOut } from "react-icons/io";
-import Image from "next/image";
 import Link from "next/link";
+import { User, Button } from "@nextui-org/react";
 
 type Option = {
   title: string;
@@ -14,41 +15,47 @@ type SideNavProps = {
 };
 
 const SideNav = ({ options }: SideNavProps) => {
-  // Sample user attributes
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
-    <div className="flex flex-col justify-evenly items-center bg-gray-200 min-h-screen h-full w-64">
-      {/* Circular Profile Image */}
-      <div className="p-2">
-        <img
-          className="w-[150px] h-[150px] rounded-full object-center"
-          src="https://lh3.googleusercontent.com/-935HM2R1INU/AAAAAAAAAAI/AAAAAAAAAAA/AFNEGgIfLim9kZl0b-32K9B0EORXkAmFEQ/photo.jpg"
-          alt="Profile"
-          width={150}
-          height={150}
+    <div className="bg-white p-3 w-full flex flex-col justify-evenly h-[80%]">
+      <h1 className="text-3xl capitalize tracking-tighter 🤞">
+        start your day be productive
+      </h1>
+      <div>
+        <User
+          name="Jane Doe"
+          description="Product Designer"
+          avatarProps={{
+            src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+          }}
         />
       </div>
-
-      {/* Array of Attributes */}
-      <div className="w-full text-black py-4 overflow-y-auto">
-        {options.map(({ title, Icon, link }: Option, index: number) => (
-          <div
-            key={index}
-            className="w-full flex justify-center hover:bg-white gap-6 pl-4">
-            <Link href={link} key={index}>
-              <span className="flex p-2 py-4 w-[150px] gap-4 rounded-md hover:bg-white">
-                {Icon}
-                <p className="text-xl">{title}</p>
-              </span>
-            </Link>
+      <div>
+        <p className="font-bold tracking-widest uppercase py-3">Menu</p>
+        <div className="flex flex-col gap-4">
+          {options.map(({ title, Icon, link }: Option, index) => (
+            <div key={index}>
+              <Link href={link} onClick={() => setSelectedIndex(index)}>
+                <span
+                  className={`flex items-center py-2 px-2 gap-1 w-full rounded-3xl transition ease-in ${
+                    selectedIndex === index
+                      ? "bg-black text-white"
+                      : "bg-white hover:bg-light-bg"
+                  }`}>
+                  {Icon}
+                  <p className="text-xl font-light">{title}</p>
+                </span>
+              </Link>
+            </div>
+          ))}
+          <div>
+            <Button color="danger" variant="bordered">
+              <IoIosLogOut className="text-2xl" /> Logout
+            </Button>
           </div>
-        ))}
+        </div>
       </div>
-
-      <button className="bg-red-500 flex items-center gap-2 text-white p-2 rounded-md">
-        <IoIosLogOut size={25} />
-        Logout
-      </button>
     </div>
   );
 };

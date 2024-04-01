@@ -1,119 +1,182 @@
 "use client";
-
-import Image from "next/image";
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { FaSearch } from "react-icons/fa";
-import { Check, ChevronsUpDown } from "lucide-react";
-import Map from "./../../../components/location";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+// import Map from "@/components/location";
+
+import cropsType from "@/components/dataSample/cropsType";
+import warehouseDetailData from "@/components/dataSample/warehouseData";
 
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Card,
+  CardBody,
+  CardFooter,
+  Link,
+  Divider,
+  Chip,
+  Select,
+  SelectItem,
+  Input,
+  User,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  Button,
+  DropdownItem,
+} from "@nextui-org/react";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+interface CenterProp {
+  location: number[];
+}
+
+const Map = dynamic(() => import("@/components/location"), { ssr: false });
+
 const FarmerMarketplacePage = () => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  // const [location, setLocation] = React.useState({
-  //   latitude: 0,
-  //   longitude: 0
-  // });
+  const [flyOn, setFlyOn] = React.useState([0, 0]);
+  const [location, setLocation] = React.useState({
+    latitude: 0,
+    longitude: 0,
+  });
 
-  // React.useEffect(()=>{
-  //   navigator.geolocation.watchPosition((position) => {
-  //     setLocation({
-  //       latitude: position.coords.latitude,
-  //       longitude: position.coords.longitude
-  //     });
-  //   });
-  // },[location])
+  React.useEffect(() => {
+    navigator.geolocation.watchPosition((position) => {
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    });
+  }, [location]);
 
-  // Update the location state when the user's location changes
+  const handleCenter = (e: CenterProp) => {
+    setFlyOn([e.location[0], e.location[1]]);
+  };
+
+  const cardRefs = warehouseDetailData.map(() =>
+    React.useRef<HTMLDivElement>(null)
+  );
 
   return (
-    <div className="grid w-full h-full">
-      <div className="grid p-4 relative">
-        <Image
-          src="/appInfo3.jpg"
-          alt="image"
-          width={800}
-          height={800}
-          className="col-span-2 row-start-1  blur-sm row-span-4 col-start-1 w-full h-[500px] object-cover rounded-xl bg-opacity-115"
-        />
-
-        {/* Dark gradient overlay */}
-
-        <div className="flex justify-center items-center h-full w-full backdrop-brightness-50 rounded-xl row-start-1 col-start-1 col-span-2 row-span-4 gap-4 p-4 text-white relative">
-          <div className="gap-2 flex flex-col">
-            <h1 className="text-4xl font-bold row-span-2 px-2">
-              Farmer Marketplace
-            </h1>
-            <span className="flex  bg-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 rounded-lg  py-2 px-4 text-black items-center h-20 w-full gap-2">
-              <span className="flex">
-                <input
-                  id="searchInput"
-                  type="text"
-                  placeholder="Search for products..."
-                  className="px-2 bg-gray-200 h-12 w-[200px] rounded-l-md outline-none"
-                />
-                <FaSearch className="text-black w-8 rounded-r-lg h-12 p-2 bg-gray-300" />
-              </span>
-              <span className="flex">
-                <input
-                  id="searchInput"
-                  type="text"
-                  placeholder="Search for location..."
-                  className="px-2 bg-gray-200 h-12 w-[200px] rounded-l-md outline-none"
-                />
-                <FaSearch className="text-black w-8 rounded-r-lg h-12 p-2 bg-gray-300" />
-              </span>
-              <span className="flex">
-                <input
-                  id="searchInput"
-                  type="text"
-                  placeholder="Search for category..."
-                  className="px-2 bg-gray-200 h-12 w-[200px] rounded-l-md outline-none"
-                />
-                <FaSearch className="text-black w-8 rounded-r-lg h-12 p-2 bg-gray-300" />
-              </span>
-            </span>
+    <div className="w-[99%] m-2 border-black border-2 h-full">
+      <div className="w-full h-screen flex">
+        <div className="bg-white p-3 w-1/2 h-screen flex flex-col gap-3">
+          <div className="flex gap-3">
+            <Select
+              label="Select Crop Type"
+              placeholder={cropsType[0].label}
+              className="max-w-xs">
+              {cropsType.map((e) => (
+                <SelectItem key={e.id} value={e.label}>
+                  {e.label}
+                </SelectItem>
+              ))}
+            </Select>
+            <Input
+              placeholder="Search for crops"
+              className="max-w-xs"
+              size={"lg"}
+            />
           </div>
-          {/* Additional UI elements can be added here */}
+          <div className="overflow-auto p-2 gap-3">
+            {warehouseDetailData.map((warehouse, index) => (
+              <div
+                ref={cardRefs[index]}
+                onClick={() => handleCenter({ location: warehouse.location })}
+                key={index}
+                className="cursor-pointer">
+                <Card
+                  // key={warehouse._id}
+                  className="border-none mb-3 bg-primary-50">
+                  <CardBody className="px-3 py-0 text-small text-default-400 flex flex-row">
+                    <div className="p-3 w-fit">
+                      <Image
+                        alt="Warehouse"
+                        className="object-cover h-full"
+                        height={200}
+                        src={warehouse.image}
+                        width={200}
+                      />
+                    </div>
+                    <div className="p-3">
+                      <User
+                        name={warehouse.name}
+                        description={warehouse.ownerName}
+                        avatarProps={{
+                          src: warehouse.image,
+                        }}
+                      />
+                      <div className="flex flex-col gap-3">
+                        <span className="flex gap-2 items-center">
+                          Temperature:{" "}
+                          <Chip variant="bordered">
+                            Low : {warehouse.facility.temperature.low}°C
+                          </Chip>
+                          <Chip variant="bordered">
+                            High : {warehouse.facility.temperature.high}°C
+                          </Chip>
+                        </span>
+                        <span>
+                          Capacity :{" "}
+                          <Chip color="warning" variant="bordered">
+                            {warehouse.facility.capacity} tons
+                          </Chip>
+                        </span>
+                        <span>
+                          Security :{" "}
+                          <Chip color="success" variant="bordered">
+                            {warehouse.security}
+                          </Chip>
+                        </span>
+                        <Dropdown>
+                          <DropdownTrigger>
+                            <Button variant="bordered">Get Contacts</Button>
+                          </DropdownTrigger>
+                          <DropdownMenu
+                            aria-label="Static Actions"
+                            className="flex justify-center items-center gap-3"
+                            onClick={() => setOpen(!open)}>
+                            <DropdownItem key="phone">
+                              <span>Phone no.:</span>
+                              <Chip color="primary" variant="solid">
+                                {warehouse.phoneNo}
+                              </Chip>
+                            </DropdownItem>
+                            <DropdownItem key="email">
+                              <span>Email:</span>
+                              <Chip color="success" variant="flat">
+                                {warehouse.email}
+                              </Chip>
+                            </DropdownItem>
+                            <DropdownItem key="services">
+                              <span>Services:</span>
+                              <Chip color="primary" variant="bordered">
+                                {warehouse.servicesOffered}
+                              </Chip>
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                  </CardBody>
+                  <Divider />
+                  <CardFooter className="flex justify-between items-center p-3">
+                      <Link href={`/warehouse/${warehouse._id}`}>
+                        View Details
+                      </Link>
+                      <span className="text-xl ml-auto">{warehouse.price}/kg</span>
+                  </CardFooter>
+                </Card>
+              </div>
+            ))}
+          </div>
         </div>
+        <Map
+          cardRefs={cardRefs}
+          className="w-1/2 h-screen"
+          FlyOn={{ lat: flyOn[0], lng: flyOn[1] }}
+        />
       </div>
-      {/* <Map location={location} /> */}
     </div>
   );
 };

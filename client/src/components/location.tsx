@@ -1,46 +1,73 @@
-import { TileLayer, MapContainer, Marker, Popup } from "react-leaflet";
-import { useState } from "react";
-import {Icon } from "leaflet";
+// Require libs
+import React from "react";
+import { TileLayer, MapContainer, Marker, Popup, useMap } from "react-leaflet";
+import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-interface CurrentLocation {
-  latitude: number;
-  longitude: number;
-  //   display_name:string
-}
+import warehouseDetailData from "./dataSample/warehouseData";
 
 interface Props {
-  location: CurrentLocation; // Fix the prop name here
+  cardRefs: React.RefObject<HTMLDivElement>[];
+  className: string;
+  FlyOn: {
+    lat: number;
+    lng: number;
+  };
 }
-const  Map = ({ location }: Props) => {
-  //   const currentCity: Location = location;
+
+const Map = ({ cardRefs, className, FlyOn }: Props) => {
+  function LocationMarker() {
+    const map = useMap();
+    if (FlyOn.lat !== 0 && FlyOn.lng !== 0) {
+      map.flyTo([FlyOn.lat, FlyOn.lng], 12);
+    }
+    return null;
+  }
 
   const icon = new Icon({
-    iconUrl: "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
-    iconSize: [25, 41],
+    iconUrl:
+      "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png",
+    iconSize: [40, 40],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   });
 
   return (
-    <MapContainer center={{ lat: 20, lng: 80 }} zoom={5} scrollWheelZoom={false} 
-      className="w-screen h-screen"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-
-      <Marker
-        icon={icon}
-        position={[location.latitude, location.longitude]}>
-        <Popup>
-          { "Nagpur" }
-        </Popup>       
-      </Marker>
-    </MapContainer>
+    <>
+      <MapContainer
+        center={[21, 85]}
+        scrollWheelZoom={true}
+        zoom={5}
+        className={className}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <LocationMarker />
+        {warehouseDetailData.map((warehouse, index) => (
+          <Marker
+            key={index}
+            icon={icon}
+            position={[warehouse.location[0], warehouse.location[1]]}
+            // riseOnHover={true}
+            eventHandlers={{
+              click: (event) => {
+                const map = event.target._map;
+                if (map) {
+                  map.flyTo([warehouse.location[0], warehouse.location[1]], 12);
+                }
+                cardRefs[index].current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              },
+            }}>
+            <Popup>{warehouse.name}</Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </>
   );
-}
+};
 
 export default Map;
