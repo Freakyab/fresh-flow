@@ -42,6 +42,7 @@ const FarmerMarketplacePage = () => {
 
   React.useEffect(() => {
     navigator.geolocation.watchPosition((position) => {
+      // console.log(position.coords.latitude, position.coords.longitude);
       setLocation({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
@@ -58,9 +59,9 @@ const FarmerMarketplacePage = () => {
   );
 
   return (
-    <div className="w-[99%] m-2 border-black border-2 h-full">
-      <div className="w-full h-screen flex">
-        <div className="bg-white p-3 w-1/2 h-screen flex flex-col gap-3">
+    <div className="w-[99%] m-2 border-black border-2 d-hight">
+      <div className="w-full h-full flex">
+        <div className="bg-white p-3 w-1/2 h-full flex flex-col gap-3">
           <div className="flex gap-3">
             <Select
               label="Select Crop Type"
@@ -173,7 +174,7 @@ const FarmerMarketplacePage = () => {
         </div>
         <Map
           cardRefs={cardRefs}
-          className="w-1/2 h-screen"
+          className="w-1/2 h-full"
           FlyOn={{ lat: flyOn[0], lng: flyOn[1] }}
         />
       </div>

@@ -1,4 +1,4 @@
-/*
+/* map card details
     Card details 
     left side : 
       todo : Image {Nextui}
@@ -22,6 +22,22 @@
         todo : duration {Nextui slider}
       div
 
+*/
+
+/*  
+      name: "Warehouse1",
+      ownerName: "Owner1",
+      username: "username346",
+      city: "New York",
+      facility: {
+        temperature: {
+          low: 1,
+          high: 40,
+        },
+        capacity: 290,
+        occupancy: 384,
+        tempType: "Dry",
+      },
 */
 
 

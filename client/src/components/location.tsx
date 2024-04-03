@@ -16,10 +16,16 @@ interface Props {
 }
 
 const Map = ({ cardRefs, className, FlyOn }: Props) => {
+  const mapRef = React.useRef<any>(null);
+
   function LocationMarker() {
     const map = useMap();
     if (FlyOn.lat !== 0 && FlyOn.lng !== 0) {
       map.flyTo([FlyOn.lat, FlyOn.lng], 12);
+      if (mapRef) {
+        mapRef.current.interactive = true;
+        // mapRef.current.openPopup = true;
+      }
     }
     return null;
   }
@@ -36,6 +42,7 @@ const Map = ({ cardRefs, className, FlyOn }: Props) => {
   return (
     <>
       <MapContainer
+       
         center={[21, 85]}
         scrollWheelZoom={true}
         zoom={5}
@@ -49,6 +56,7 @@ const Map = ({ cardRefs, className, FlyOn }: Props) => {
           <Marker
             key={index}
             icon={icon}
+            ref={mapRef}
             position={[warehouse.location[0], warehouse.location[1]]}
             // riseOnHover={true}
             eventHandlers={{
@@ -62,7 +70,7 @@ const Map = ({ cardRefs, className, FlyOn }: Props) => {
                 });
               },
             }}>
-            <Popup>{warehouse.name}</Popup>
+            <Popup >{warehouse.name}</Popup>
           </Marker>
         ))}
       </MapContainer>
