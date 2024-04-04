@@ -183,8 +183,7 @@ const warehouseDetailData = [
     "otp": 5910,
     "image": "/images/warehouse_1.jpg",
     "location": [
-      48.8566,
-      2.3522
+      21.11,79.008
     ],
     "typeOfCrop": [
       "Crop1",
@@ -221,8 +220,7 @@ const warehouseDetailData = [
     "otp": 1174,
     "image": "/images/warehouse_1.jpg",
     "location": [
-      21,
-      85
+      21,79
     ],
     "typeOfCrop": [
       "Crop1",
