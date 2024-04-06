@@ -14,6 +14,7 @@ import "leaflet/dist/leaflet.css";
 import LocationSearch from "@/components/marketPlace/location/loactionSearch";
 import { userIcon, WarehouseIcon } from "./marketPlace/location/MarkerIcons";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
+import { LeafletMouseEvent }  from "leaflet";
 
 import warehouseDetailData from "./dataSample/warehouseData";
 
@@ -130,7 +131,8 @@ const Map = ({ cardRefs, className }: Props) => {
               position={[warehouse.location[0], warehouse.location[1]]}
               // @ts-ignore
               eventHandlers={{
-                click: (event) => {
+                // @ts-ignore
+                click: (event : LeafletMouseEvent) => {
                   const map = event.target._map;
                   if (map) {
                     map.flyTo(
