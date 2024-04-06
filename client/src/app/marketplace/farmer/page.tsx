@@ -1,10 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState ,useEffect, use} from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-
-// import Map from "@/components/location";
-
+import useMapLoading from "@/redux/dispatch/useMaploading";
+import { CiSearch } from "react-icons/ci";
 import cropsType from "@/components/dataSample/cropsType";
 import warehouseDetailData from "@/components/dataSample/warehouseData";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
@@ -31,25 +30,20 @@ interface CenterProp {
   location: number[];
 }
 
-type Location = {
-  lat: number;
-  lng: number;
-};
-
 const Map = dynamic(() => import("@/components/location"), { ssr: false });
 
 const FarmerMarketplacePage = () => {
-  const [open, setOpen] = React.useState(false);
-  const [flyOn, setFlyOn] = React.useState([0, 0]);
-  const [loc, updLoc] = useState<Location | null>(null);
-  const [search, updSearch] = useState<string | undefined>();
-  const [isClicked, setIsClicked] = React.useState(false);
-  const [location, setLocation] = React.useState({
+  const [open, setOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [location, setLocation] = useState({
     latitude: 0,
     longitude: 0,
   });
 
-  React.useEffect(() => {
+  const { setFlyOn, getLoc, setSearch, getSearch, setIsClicked } =
+    useMapLoading();
+
+  useEffect(() => {
     navigator.geolocation.watchPosition((position) => {
       console.log(position.coords.latitude, position.coords.longitude);
       setLocation({
@@ -59,14 +53,27 @@ const FarmerMarketplacePage = () => {
     });
   }, [location]);
 
+  useEffect(() => {
+    if(searchText.length === 0) {
+      setSearch("");
+    }
+  }
+  , [searchText]);
+
   const handleCenter = (e: CenterProp) => {
-    setFlyOn([e.location[0], e.location[1]]);
-    if(loc) setIsClicked(true);
+    setFlyOn(e.location[0], e.location[1]);
+
+    if (getLoc()) setIsClicked(true);
   };
 
   const cardRefs = warehouseDetailData.map(() =>
     React.useRef<HTMLDivElement>(null)
   );
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearch(searchText);
+  };
 
   return (
     <div className="w-[99%] m-2 border-black border-2 d-hight">
@@ -83,21 +90,32 @@ const FarmerMarketplacePage = () => {
                 </SelectItem>
               ))}
             </Select>
-            <Input
-              placeholder="Search for crops"
-              className="max-w-xs"
-              size={"lg"}
-              onChange={(e) => {updSearch(e.target.value)}}
-            />
+            <form onSubmit={handleSubmit} className="flex gap-3">
+              <Input
+                placeholder="Search By Loaction"
+                className="max-w-xs"
+                size={"lg"}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+              />
+              <Button
+                type="submit"
+                color="primary"
+                className="max-w-xs"
+                size={"lg"}>
+                <CiSearch />
+              </Button>
+            </form>
           </div>
           <div className="overflow-auto p-2 gap-3">
             {warehouseDetailData
               .filter((warehouse) => {
-                if (search?.length === 0) return warehouse;
-                if (!loc) return warehouse;
-                const latDiff = Math.abs(warehouse.location[0] - loc?.lat);
-                const lngDiff = Math.abs(warehouse.location[1] - loc?.lng);
-                if (!loc) return true;
+                if (getSearch()?.length === 0) return warehouse;
+                if (!getLoc) return warehouse;
+                const latDiff = Math.abs(warehouse.location[0] - getLoc()?.lat);
+                const lngDiff = Math.abs(warehouse.location[1] - getLoc()?.lng);
+                if (!getLoc()) return true;
 
                 return latDiff <= latLngThreshold && lngDiff <= latLngThreshold;
               })
@@ -108,7 +126,6 @@ const FarmerMarketplacePage = () => {
                   key={index}
                   className="cursor-pointer">
                   <Card
-                  
                     // key={warehouse._id}
                     className="border-none mb-3 bg-primary-50">
                     <CardBody className="px-3 py-0 text-small text-default-400 flex flex-row">
@@ -196,16 +213,7 @@ const FarmerMarketplacePage = () => {
               ))}
           </div>
         </div>
-        <Map
-          cardRefs={cardRefs}
-          className="w-1/2 h-full"
-          FlyOn={{ lat: flyOn[0], lng: flyOn[1] }}
-          search={search}
-          updLoc={updLoc}
-          loc={loc}
-          isClicked={isClicked}
-          setIsClicked={setIsClicked}
-        />
+        <Map cardRefs={cardRefs} className="w-1/2 h-full" />
       </div>
     </div>
   );

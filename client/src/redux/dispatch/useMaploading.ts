@@ -15,7 +15,7 @@ const useMapLoading = () => {
     };
 
     const setSearch = (search: string) => {
-        dispatch(mapLoadingAction.setSearch(search));
+        dispatch(mapLoadingAction.setSearch(search.toString().toLowerCase()));
     };
 
     const setLoc = (lat: number, lng: number) => {

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import useMapLoading from "@/redux/dispatch/useMaploading";
 import {
   TileLayer,
   MapContainer,
@@ -19,28 +20,14 @@ import warehouseDetailData from "./dataSample/warehouseData";
 interface Props {
   cardRefs: React.RefObject<HTMLDivElement>[];
   className: string;
-  FlyOn: {
-    lat: number;
-    lng: number;
-  };
-  search: string | undefined;
-  updLoc: (loc: { lat: number; lng: number }) => void;
-  loc: { lat: number; lng: number } | null;
-  isClicked: boolean;
-  setIsClicked: (isClicked: boolean) => void;
 }
 
 const Map = ({
   cardRefs,
   className,
-  FlyOn,
-  search,
-  updLoc,
-  loc,
-  isClicked,
-  setIsClicked,
 }: Props) => {
   const markerRef = warehouseDetailData.map(() => useRef<any>(null));
+  const { getFlyOn, getLoc, getSearch, setIsClicked,getIsClicked } = useMapLoading();
   const mapRef = useRef<any>(null);
   const [routingControlAdded, setRoutingControlAdded] = useState(false);
   const routingMachineRef = useRef<any>(null);
@@ -51,13 +38,13 @@ const Map = ({
     // Calculate the warehouse index which has the same location as the FlyOn
     const index = warehouseDetailData.findIndex(
       (warehouse) =>
-        warehouse.location[0] === FlyOn.lat &&
-        warehouse.location[1] === FlyOn.lng
+        warehouse.location[0] === getFlyOn().lat &&
+        warehouse.location[1] === getFlyOn().lng
     );
 
     // Use setTimeout to load the popup after the map uses flyto
-    if (FlyOn.lat !== 0 && FlyOn.lng !== 0) {
-      map.flyTo([FlyOn.lat, FlyOn.lng], 12);
+    if (getFlyOn().lat !== 0 && getFlyOn().lng !== 0) {
+      map.flyTo([getFlyOn().lat, getFlyOn().lng], 12);
       setTimeout(() => {
         if (markerRef[index]?.current) {
           markerRef[index].current.openPopup();
@@ -69,30 +56,26 @@ const Map = ({
   }
 
   React.useEffect(() => {
-    if (search?.length === 0 && routingControlAdded) {
+    if (getSearch()?.length === 0 && routingControlAdded) {
+      
       if (routingMachineRef.current) {
         const map = routingMachineRef.current.leafletElement._map; // Get the Leaflet map instance
+        map.center = [21, 85]; // Set the center of the map
         map.removeControl(routingMachineRef.current); // Remove the control
         setRoutingControlAdded(false);
       }
     }
     setIsClicked(false);
-  }, [search, routingControlAdded]);
+  }, [getSearch(), routingControlAdded]);
 
-  function Test({
-    location,
-    search,
-  }: {
-    location: { lat: number; lng: number } | null;
-    search: string | undefined;
-  }) {
+  function Test() {
     const map = useMap();
-    if (search?.length == 0) map.flyTo([21, 85], 5);
-    if (location) map.flyTo(location, 12);
+    if (getSearch()?.length == 0) map.flyTo([21, 85], 5);
+    if (getLoc()) map.flyTo(getLoc(), 12);
 
     return location ? (
-      <Marker position={location} icon={userIcon}>
-        <Popup>You are here: {search}</Popup>
+      <Marker position={getLoc()} icon={userIcon}>
+        <Popup>You are here: {getSearch()}</Popup>
       </Marker>
     ) : null;
   }
@@ -110,30 +93,30 @@ const Map = ({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {search ? (
+        {getSearch() ? (
           <>
-            {isClicked && loc ? (
+            {getIsClicked() && getLoc() ? (
               !routingControlAdded && (
                 <RoutingControl
                   ref={routingMachineRef}
-                  key={FlyOn.lat}
+                  key={getFlyOn().lat}
                   position={"topleft"}
-                  start={[loc?.lat, loc?.lng]}
-                  end={[FlyOn?.lat, FlyOn?.lng]}
+                  start={[getLoc()?.lat, getLoc()?.lng]}
+                  end={[getFlyOn()?.lat, getFlyOn()?.lng]}
                   color={"#757de8"}
                 />
               )
             ) : null}
-            <Test location={loc} search={search} />
-            <LocationSearch search={search} updLoc={updLoc} />
+            <Test />
+            <LocationSearch />
           </>
         ) : null}
         {warehouseDetailData
           .filter((warehouse) => {
-            if (search?.length === 0) return warehouse;
-            if (!loc) return warehouse;
-            const latDiff = Math.abs(warehouse.location[0] - loc?.lat);
-            const lngDiff = Math.abs(warehouse.location[1] - loc?.lng);
+            if (getSearch()?.length === 0) return warehouse;
+            if (!getLoc()) return warehouse;
+            const latDiff = Math.abs(warehouse.location[0] - getLoc()?.lat);
+            const lngDiff = Math.abs(warehouse.location[1] - getLoc()?.lng);
 
             return latDiff <= latLngThreshold && lngDiff <= latLngThreshold;
           })
