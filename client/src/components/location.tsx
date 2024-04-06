@@ -90,6 +90,7 @@ const Map = ({ cardRefs, className }: Props) => {
         zoom={5}
         className={className}>
         <TileLayer
+          // @ts-ignore
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
@@ -127,6 +128,7 @@ const Map = ({ cardRefs, className }: Props) => {
               icon={WarehouseIcon}
               ref={markerRef[index]}
               position={[warehouse.location[0], warehouse.location[1]]}
+              // @ts-ignore
               eventHandlers={{
                 click: (event) => {
                   const map = event.target._map;
@@ -145,9 +147,15 @@ const Map = ({ cardRefs, className }: Props) => {
               <Popup>{warehouse.name}</Popup>
             </Marker>
           ))}
-        <LayersControl position="topright">
-          <LayersControl.BaseLayer checked name="Map">
+        <LayersControl
+          // @ts-ignore
+          position="topright">
+          <LayersControl.BaseLayer
+            // @ts-ignore
+            checked
+            name="Map">
             <TileLayer
+              // @ts-ignore
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
