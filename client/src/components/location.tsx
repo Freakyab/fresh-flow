@@ -73,7 +73,6 @@ const Map = ({ cardRefs, className }: Props) => {
     return location ? (
       <Marker
         position={getLoc()}
-        // @ts-ignore
         icon={userIcon}>
         <Popup>You are here: {getSearch()}</Popup>
       </Marker>
@@ -90,7 +89,6 @@ const Map = ({ cardRefs, className }: Props) => {
         zoom={5}
         className={className}>
         <TileLayer
-          // @ts-ignore
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
@@ -124,11 +122,9 @@ const Map = ({ cardRefs, className }: Props) => {
           .map((warehouse, index) => (
             <Marker
               key={index}
-              // @ts-ignore
               icon={WarehouseIcon}
               ref={markerRef[index]}
               position={[warehouse.location[0], warehouse.location[1]]}
-              // @ts-ignore
               eventHandlers={{
                 // @ts-ignore
                 click: (event: any) => {
@@ -149,14 +145,11 @@ const Map = ({ cardRefs, className }: Props) => {
             </Marker>
           ))}
         <LayersControl
-          // @ts-ignore
           position="topright">
           <LayersControl.BaseLayer
-            // @ts-ignore
             checked
             name="Map">
             <TileLayer
-              // @ts-ignore
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
