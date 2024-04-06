@@ -84,6 +84,7 @@ const Map = ({ cardRefs, className }: Props) => {
     <>
       <MapContainer
         ref={mapRef}
+        // @ts-ignore
         center={[21, 85]}
         scrollWheelZoom={true}
         zoom={5}
