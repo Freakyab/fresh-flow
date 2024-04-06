@@ -22,12 +22,10 @@ interface Props {
   className: string;
 }
 
-const Map = ({
-  cardRefs,
-  className,
-}: Props) => {
+const Map = ({ cardRefs, className }: Props) => {
   const markerRef = warehouseDetailData.map(() => useRef<any>(null));
-  const { getFlyOn, getLoc, getSearch, setIsClicked,getIsClicked } = useMapLoading();
+  const { getFlyOn, getLoc, getSearch, setIsClicked, getIsClicked } =
+    useMapLoading();
   const mapRef = useRef<any>(null);
   const [routingControlAdded, setRoutingControlAdded] = useState(false);
   const routingMachineRef = useRef<any>(null);
@@ -57,7 +55,6 @@ const Map = ({
 
   React.useEffect(() => {
     if (getSearch()?.length === 0 && routingControlAdded) {
-      
       if (routingMachineRef.current) {
         const map = routingMachineRef.current.leafletElement._map; // Get the Leaflet map instance
         map.center = [21, 85]; // Set the center of the map
@@ -74,7 +71,10 @@ const Map = ({
     if (getLoc()) map.flyTo(getLoc(), 12);
 
     return location ? (
-      <Marker position={getLoc()} icon={userIcon}>
+      <Marker
+        position={getLoc()}
+        // @ts-ignore
+        icon={userIcon}>
         <Popup>You are here: {getSearch()}</Popup>
       </Marker>
     ) : null;
@@ -87,26 +87,25 @@ const Map = ({
         center={[21, 85]}
         scrollWheelZoom={true}
         zoom={5}
-        className={className}
-      >
+        className={className}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {getSearch() ? (
           <>
-            {getIsClicked() && getLoc() ? (
-              !routingControlAdded && (
-                <RoutingControl
-                  ref={routingMachineRef}
-                  key={getFlyOn().lat}
-                  position={"topleft"}
-                  start={[getLoc()?.lat, getLoc()?.lng]}
-                  end={[getFlyOn()?.lat, getFlyOn()?.lng]}
-                  color={"#757de8"}
-                />
-              )
-            ) : null}
+            {getIsClicked() && getLoc()
+              ? !routingControlAdded && (
+                  <RoutingControl
+                    ref={routingMachineRef}
+                    key={getFlyOn().lat}
+                    position={"topleft"}
+                    start={[getLoc()?.lat, getLoc()?.lng]}
+                    end={[getFlyOn()?.lat, getFlyOn()?.lng]}
+                    color={"#757de8"}
+                  />
+                )
+              : null}
             <Test />
             <LocationSearch />
           </>
@@ -123,6 +122,7 @@ const Map = ({
           .map((warehouse, index) => (
             <Marker
               key={index}
+              // @ts-ignore
               icon={WarehouseIcon}
               ref={markerRef[index]}
               position={[warehouse.location[0], warehouse.location[1]]}
@@ -139,8 +139,7 @@ const Map = ({
                     behavior: "smooth",
                   });
                 },
-              }}
-            >
+              }}>
               <LocationMarker />
               <Popup>{warehouse.name}</Popup>
             </Marker>
