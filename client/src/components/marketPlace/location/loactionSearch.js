@@ -14,6 +14,7 @@ function LoactionSearch() {
       let newSearch = search + ", india";
       geocoder.geocode(newSearch, (results) => {
         var r = results[0];
+        console.log(r);
         if (r) {
           const { lat, lng } = r?.center;
           if (lat && lng) setLoc(lat, lng);

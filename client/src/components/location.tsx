@@ -41,13 +41,16 @@ const Map = ({ cardRefs, className }: Props) => {
     );
 
     // Use setTimeout to load the popup after the map uses flyto
-    if (getFlyOn().lat !== 0 && getFlyOn().lng !== 0) {
+
+    if (getFlyOn().lat !== 0 && getFlyOn().lng !== 0 && getSearch().length == 0) {
       map.flyTo([getFlyOn().lat, getFlyOn().lng], 12);
       setTimeout(() => {
         if (markerRef[index]?.current) {
           markerRef[index].current.openPopup();
         }
       }, 500);
+    }else if(getSearch().length !== 0 && getLoc().lat !== 0 && getLoc().lng !== 0 && getIsClicked()){
+      map.flyTo([getFlyOn()?.lat, getFlyOn()?.lng], 12);
     }
 
     return null;
@@ -67,6 +70,7 @@ const Map = ({ cardRefs, className }: Props) => {
 
   function Test() {
     const map = useMap();
+    console.log(getLoc(), getSearch());
     if (getSearch()?.length == 0) map.flyTo([21, 85], 5);
     if (getLoc()) map.flyTo(getLoc(), 12);
 
