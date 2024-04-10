@@ -18,7 +18,7 @@ const SideNav = ({ options }: SideNavProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
-    <div className="bg-white p-3 w-full flex flex-col justify-evenly h-[80%]">
+    <div className="bg-white p-3 w-full flex flex-col justify-between h-[80%]">
       <h1 className="text-3xl capitalize tracking-tighter 🤞">
         start your day be productive
       </h1>
@@ -49,12 +49,12 @@ const SideNav = ({ options }: SideNavProps) => {
               </Link>
             </div>
           ))}
-          <div>
-            <Button color="danger" variant="bordered">
-              <IoIosLogOut className="text-2xl" /> Logout
-            </Button>
-          </div>
         </div>
+      </div>
+      <div>
+        <Button color="danger" variant="bordered">
+          <IoIosLogOut className="text-2xl" /> Logout
+        </Button>
       </div>
     </div>
   );

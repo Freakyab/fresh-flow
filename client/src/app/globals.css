@@ -97,3 +97,7 @@
 .input-icon-color {
   color: #a0aec0;
 }
+
+.d-hight{
+  height: calc(100vh - 7rem);
+}

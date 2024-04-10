@@ -1,7 +1,9 @@
 "use client";
 // import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import {Providers} from "./provider";
+import { Providers } from "./provider/provider";
+import ReduxProvider from "./provider/reduxProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import "./globals.css";
 import Navbar from "@/components/navbar.component";
@@ -22,10 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          <Navbar />
-          {children}
-        </Providers>
+        <ReduxProvider>
+          <Providers>
+            <Navbar />
+            {children}
+            <SpeedInsights />
+          </Providers>
+        </ReduxProvider>
       </body>
     </html>
   );
