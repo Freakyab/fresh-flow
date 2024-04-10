@@ -14,22 +14,22 @@ const FarmerDashboard = ({ children }: FarmerDashboardProps) => {
     {
       title: "Profile",
       Icon: <CgProfile size={25} />,
-      link: "/dashboard/farmer/profile",
+      link: "/dashboard/warehouse/profile",
     },
     {
       title: "Charts",
       Icon: <GrAnalytics size={25} />,
-      link: "/dashboard/farmer/charts",
+      link: "/dashboard/warehouse/charts",
     },
     {
       title: "Orders",
       Icon: <IoMdReorder size={25} />,
-      link: "/dashboard/farmer/orders",
+      link: "/dashboard/warehouse/orders",
     },
     {
       title: "Settings",
       Icon: <IoSettingsOutline size={25} />,
-      link: "/dashboard/farmer/settings",
+      link: "/dashboard/warehouse/settings",
     },
   ];
 
