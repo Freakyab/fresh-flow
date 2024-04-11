@@ -1,11 +1,17 @@
+"use client";
 import React, { ReactNode } from "react";
 import { Divider } from "@nextui-org/react";
+import {useRouter} from 'next/navigation';
+
 type TitleProps = {
   title: string;
   Icon: ReactNode;
+  link : string | undefined;
   className?: string;
 };
-const Title = ({ title, Icon, className }: TitleProps) => {
+const Title = ({ title, Icon, className ,link}: TitleProps) => {
+  const router = useRouter();
+
   return (
     <div className="flex w-full justify-between">
       <div className={`${className} px-2 w-fit flex`}>
@@ -18,7 +24,9 @@ const Title = ({ title, Icon, className }: TitleProps) => {
         </div>
       </div>
       <div className="px-2 w-fit ">
-        <p className="capitalize tracking-tighter cursor-pointer ">See more {">>"}</p>
+        <p className="capitalize tracking-tighter cursor-pointer "
+        onClick = {() => router.push(link?link:'')}  
+      >See more {">>"}</p>
         <Divider className="my-1" />
       </div>
     </div>

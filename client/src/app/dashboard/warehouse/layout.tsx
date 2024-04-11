@@ -5,31 +5,28 @@ import { IoMdReorder } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import SideNav from "../../../components/sideNav.component";
 
-interface FarmerDashboardProps {
-  children: ReactNode;
-}
 
-const FarmerDashboard = ({ children }: FarmerDashboardProps) => {
+const WarehouseDashboard = ({ children }: { children: ReactNode }) => {
   const options = [
     {
       title: "Profile",
       Icon: <CgProfile size={25} />,
-      link: "/dashboard/farmer/profile",
+      link: "/dashboard/warehouse/profile",
     },
     {
       title: "Charts",
       Icon: <GrAnalytics size={25} />,
-      link: "/dashboard/farmer/charts",
+      link: "/dashboard/warehouse/charts",
     },
     {
       title: "Orders",
       Icon: <IoMdReorder size={25} />,
-      link: "/dashboard/farmer/orders",
+      link: "/dashboard/warehouse/orders",
     },
     {
       title: "Settings",
       Icon: <IoSettingsOutline size={25} />,
-      link: "/dashboard/farmer/settings",
+      link: "/dashboard/warehouse/settings",
     },
   ];
 
@@ -48,4 +45,4 @@ const FarmerDashboard = ({ children }: FarmerDashboardProps) => {
   );
 };
 
-export default FarmerDashboard;
+export default WarehouseDashboard;

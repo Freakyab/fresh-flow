@@ -1,11 +1,11 @@
 "use client";
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import useMapLoading from "@/redux/dispatch/useMaploading";
 import { CiSearch } from "react-icons/ci";
 import cropsType from "@/components/dataSample/cropsType";
-import warehouseDetailData from "@/components/dataSample/warehouseData";
+// import warehouseDetailData from "@/components/dataSample/warehouseData";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
 
 import {
@@ -34,13 +34,25 @@ const Map = dynamic(() => import("@/components/location"), { ssr: false });
 
 const FarmerMarketplacePage = () => {
   const [open, setOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
   const [location, setLocation] = useState({
     latitude: 0,
     longitude: 0,
   });
+  const [warehouseDetailData, setWarehouseDetailData] = useState<
+    warehouseDetailDataProps[]
+  >([]);
 
-  const { setFlyOn, getLoc, setSearch, getSearch, setIsClicked } =
+  useEffect(() => {
+    fetch("http://localhost:5000/warehouse/allwarehouse")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setWarehouseDetailData(data);
+        }
+      });
+  }, []);
+
+  const { setFlyOn, getLoc, setSearch, getSearch, changeIsClicked } =
     useMapLoading();
 
   useEffect(() => {
@@ -53,26 +65,20 @@ const FarmerMarketplacePage = () => {
     });
   }, [location]);
 
-  useEffect(() => {
-    if(searchText.length === 0) {
-      setSearch("");
-    }
-  }
-  , [searchText]);
-
   const handleCenter = (e: CenterProp) => {
     setFlyOn(e.location[0], e.location[1]);
 
-    if (getLoc()) setIsClicked(true);
+    if (getLoc()) changeIsClicked(true);
   };
 
-  const cardRefs = warehouseDetailData.map(() =>
-    React.useRef<HTMLDivElement>(null)
-  );
+  const cardRefs =
+    warehouseDetailData.length > 0
+      ? warehouseDetailData.map(() => React.createRef<HTMLDivElement>())
+      : [React.createRef<HTMLDivElement>()];
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSearch(searchText);
+  const handleSubmit = (e: FormData) => {
+    const searchValue = e.get("search");
+    setSearch(searchValue !== null ? searchValue.toString() : "");
   };
 
   return (
@@ -90,14 +96,12 @@ const FarmerMarketplacePage = () => {
                 </SelectItem>
               ))}
             </Select>
-            <form onSubmit={handleSubmit} className="flex gap-3">
+            <form action={handleSubmit} className="flex gap-3">
               <Input
                 placeholder="Search By Loaction"
                 className="max-w-xs"
                 size={"lg"}
-                onChange={(e) => {
-                  setSearchText(e.target.value);
-                }}
+                name="search"
               />
               <Button
                 type="submit"
@@ -109,111 +113,138 @@ const FarmerMarketplacePage = () => {
             </form>
           </div>
           <div className="overflow-auto p-2 gap-3">
-            {warehouseDetailData
-              .filter((warehouse) => {
-                if (getSearch()?.length === 0) return warehouse;
-                if (!getLoc) return warehouse;
-                const latDiff = Math.abs(warehouse.location[0] - getLoc()?.lat);
-                const lngDiff = Math.abs(warehouse.location[1] - getLoc()?.lng);
-                if (!getLoc()) return true;
+            {warehouseDetailData &&
+              warehouseDetailData.length > 0 &&
+              warehouseDetailData
+                .filter((warehouse) => {
+                  const searchLength = getSearch()?.length;
+                  const userLocation = getLoc();
 
-                return latDiff <= latLngThreshold && lngDiff <= latLngThreshold;
-              })
-              .map((warehouse, index) => (
-                <div
-                  ref={cardRefs[index]}
-                  onClick={() => handleCenter({ location: warehouse.location })}
-                  key={index}
-                  className="cursor-pointer">
-                  <Card
-                    // key={warehouse._id}
-                    className="border-none mb-3 bg-primary-50">
-                    <CardBody className="px-3 py-0 text-small text-default-400 flex flex-row">
-                      <div className="p-3 w-fit">
-                        <Image
-                          alt="Warehouse"
-                          className="object-cover h-full"
-                          height={200}
-                          src={warehouse.image}
-                          width={200}
-                        />
-                      </div>
-                      <div className="p-3">
-                        <User
-                          name={warehouse.name}
-                          description={warehouse.ownerName}
-                          avatarProps={{
-                            src: warehouse.image,
-                          }}
-                        />
-                        <div className="flex flex-col gap-3">
-                          <span className="flex gap-2 items-center">
-                            Temperature:{" "}
-                            <Chip variant="bordered">
-                              Low : {warehouse.facility.temperature.low}°C
-                            </Chip>
-                            <Chip variant="bordered">
-                              High : {warehouse.facility.temperature.high}°C
-                            </Chip>
-                          </span>
-                          <span>
-                            Capacity :{" "}
-                            <Chip color="warning" variant="bordered">
-                              {warehouse.facility.capacity} tons
-                            </Chip>
-                          </span>
-                          <span>
-                            Security :{" "}
-                            <Chip color="success" variant="bordered">
-                              {warehouse.security}
-                            </Chip>
-                          </span>
-                          <Dropdown>
-                            <DropdownTrigger>
-                              <Button variant="bordered">Get Contacts</Button>
-                            </DropdownTrigger>
-                            <DropdownMenu
-                              aria-label="Static Actions"
-                              className="flex justify-center items-center gap-3"
-                              onClick={() => setOpen(!open)}>
-                              <DropdownItem key="phone">
-                                <span>Phone no.:</span>
-                                <Chip color="primary" variant="solid">
-                                  {warehouse.phoneNo}
-                                </Chip>
-                              </DropdownItem>
-                              <DropdownItem key="email">
-                                <span>Email:</span>
-                                <Chip color="success" variant="flat">
-                                  {warehouse.email}
-                                </Chip>
-                              </DropdownItem>
-                              <DropdownItem key="services">
-                                <span>Services:</span>
-                                <Chip color="primary" variant="bordered">
-                                  {warehouse.servicesOffered}
-                                </Chip>
-                              </DropdownItem>
-                            </DropdownMenu>
-                          </Dropdown>
+                  if (searchLength === 0 || !userLocation) return true; // No filtering required
+
+                  const earthRadius = 6371; // Earth's radius in kilometers
+                  const lat1 = userLocation.lat * (Math.PI / 180); // Convert latitude to radians
+                  const lat2 = warehouse.location[0] * (Math.PI / 180);
+                  const lon1 = userLocation.lng * (Math.PI / 180); // Convert longitude to radians
+                  const lon2 = warehouse.location[1] * (Math.PI / 180);
+
+                  const latDiff = Math.abs(lat2 - lat1); // Calculate absolute latitude difference
+                  const lonDiff = Math.abs(lon2 - lon1); // Calculate absolute longitude difference
+
+                  // Haversine formula to calculate distance between two points on a sphere
+                  const a =
+                    Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+                    Math.cos(lat1) *
+                      Math.cos(lat2) *
+                      Math.sin(lonDiff / 2) *
+                      Math.sin(lonDiff / 2);
+                  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                  const distance = earthRadius * c; // Distance in kilometers
+
+                  return distance <= latLngThreshold; // Compare distance with threshold in kilometers
+                })
+                .map((warehouse, index) => (
+                  <div
+                    ref={cardRefs[index]}
+                    onClick={() =>
+                      handleCenter({ location: warehouse.location })
+                    }
+                    key={index}
+                    className="cursor-pointer">
+                    <Card
+                      // key={warehouse._id}
+                      className="border-none mb-3 bg-primary-50">
+                      <CardBody className="px-3 py-0 text-small text-default-400 flex flex-row">
+                        <div className="p-3 w-fit">
+                          <Image
+                            alt="Warehouse"
+                            className="object-cover h-full"
+                            height={200}
+                            src={warehouse.image}
+                            width={200}
+                          />
                         </div>
-                      </div>
-                    </CardBody>
-                    <Divider />
-                    <CardFooter className="flex justify-between items-center p-3">
-                      <Link href={`/warehouse/${warehouse._id}`}>
-                        View Details
-                      </Link>
-                      <span className="text-xl ml-auto">
-                        {warehouse.price}/kg
-                      </span>
-                    </CardFooter>
-                  </Card>
-                </div>
-              ))}
+                        <div className="p-3">
+                          <User
+                            name={warehouse.name}
+                            description={warehouse.name}
+                            avatarProps={{
+                              src: warehouse.image,
+                            }}
+                          />
+                          <div className="flex flex-col gap-3">
+                            <span className="flex gap-2 items-center">
+                              Type:{" "}
+                              <Chip variant="bordered">{warehouse.type}</Chip>
+                            </span>
+
+                            <span className="flex gap-2 items-center">
+                              Max Capacity (in Mt):{" "}
+                              <Chip variant="bordered">
+                                {warehouse.capacity}
+                              </Chip>
+                            </span>
+                            <span className="flex gap-2 items-center">
+                              Registration Date :{" "}
+                              <Chip variant="bordered">
+                                {warehouse.registrationDate}
+                              </Chip>
+                            </span>
+                            <span className="flex gap-2 items-center">
+                              City | District :{" "}
+                              <Chip variant="bordered">{warehouse.city}</Chip>
+                            </span>
+                            <span className="flex gap-2 items-center">
+                              Address:{" "}
+                              <Chip variant="bordered">
+                                {warehouse.address}
+                              </Chip>
+                            </span>
+
+                            <Dropdown>
+                              <DropdownTrigger>
+                                <Button variant="bordered">Get Contacts</Button>
+                              </DropdownTrigger>
+                              <DropdownMenu
+                                aria-label="Static Actions"
+                                className="flex justify-center items-center gap-3"
+                                onClick={() => setOpen(!open)}>
+                                <DropdownItem key="phone">
+                                  <span>Phone no.:</span>
+                                  <Chip color="primary" variant="solid">
+                                    {warehouse.phoneNo}
+                                  </Chip>
+                                </DropdownItem>
+                                <DropdownItem key="email">
+                                  <span>Email:</span>
+                                  <Chip color="success" variant="flat">
+                                    {warehouse.email}
+                                  </Chip>
+                                </DropdownItem>
+                              </DropdownMenu>
+                            </Dropdown>
+                          </div>
+                        </div>
+                      </CardBody>
+                      <Divider />
+                      <CardFooter className="flex justify-between items-center p-3">
+                        <Link href={`/warehouse/${warehouse._id}`}>
+                          View Details
+                        </Link>
+                        <Button color="success" variant="bordered">
+                          {warehouse.price}/kg
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                ))}
           </div>
         </div>
-        <Map cardRefs={cardRefs} className="w-1/2 h-full" />
+        <Map
+          cardRefs={cardRefs}
+          className="w-1/2 h-full"
+          warehouseDetailData={warehouseDetailData}
+        />
       </div>
     </div>
   );

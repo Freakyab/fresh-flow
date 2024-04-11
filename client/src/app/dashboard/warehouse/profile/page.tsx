@@ -6,13 +6,13 @@ import Title from "@/components/dashboard/profile/title";
 import { GoListUnordered } from "react-icons/go";
 import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
-
+import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
 function page() {
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
       <div className="flex gap-3">
         <div className="bg-white rounded-xl w-fit p-3">
-          <Title title="Warehouse Detail" Icon={<LuWarehouse />} />
+          <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
           <div className="flex gap-3 p-3">
             <Card shadow="sm" className="bg-light-bg ">
               <CardBody className="flex justify-center text-nowrap gap-3">
@@ -28,7 +28,7 @@ function page() {
                 </div>
                 <div className="flex gap-2">
                   Username :
-                  <Chip color="primary">{warehouseDetailData[0].username}</Chip>
+                  <Chip color="primary">{warehouseDetailData[0].name}</Chip>
                 </div>
                 <div className="flex gap-2">
                   City :
@@ -37,11 +37,11 @@ function page() {
                 <div className="flex gap-2">
                   Temperature : low :-{" "}
                   <Chip color="primary">
-                    {warehouseDetailData[0].facility.temperature.low}
+                    {/* {warehouseDetailData[0].facility.temperature.low} */}
                   </Chip>
                   high :-{" "}
                   <Chip color="primary">
-                    {warehouseDetailData[0].facility.temperature.high}
+                    {/* {warehouseDetailData[0].facility.temperature.high} */}
                   </Chip>
                 </div>
               </CardBody>
@@ -49,53 +49,21 @@ function page() {
           </div>
         </div>
         <div className="bg-white rounded-xl w-full p-3">
-          <Title title="Recent's Order" Icon={<GoListUnordered />} />
+          <Title title="Recent's Order" Icon={<GoListUnordered />} link={"/dashboard/warehouse/orders"}/>
           <div className="flex gap-3 p-3 flex-col lg:flex-row">
             {warehouseOrderType.map((order, index) => (
-              <Card shadow="sm" key={index} className="bg-light-bg">
-                <CardBody className="flex justify-center text-nowrap gap-3">
-                  <div className="flex gap-2">
-                    Order no. :<Chip color="primary">{order._id}</Chip>
-                  </div>
-                  <div className="flex gap-2">
-                    Farmer Name :
-                    <Chip variant="bordered">{order.farmerName}</Chip>
-                  </div>
-                  <div className="flex gap-2">
-                    Crop :<Chip color="primary">{order.crop}</Chip>
-                  </div>
-                  <div className="flex gap-2">
-                    Quantity :<Chip color="primary">{order.quantity}</Chip>
-                  </div>
-                  <div className="flex gap-2">
-                    Price :<Chip color="primary">{order.price}</Chip>
-                  </div>
-                  <div className="flex gap-2">
-                    Duration :<Chip color="primary">{order.duration}</Chip>
-                  </div>
-                  <div className="flex gap-2">
-                    Status :
-                    <Chip
-                      variant="bordered"
-                      color={`${
-                        order.status === "pending"
-                          ? "danger"
-                          : order.status === "accepted"
-                          ? "success"
-                          : "warning"
-                      }`}>
-                      {order.status}
-                    </Chip>
-                  </div>
-                </CardBody>
-              </Card>
+              <div key={index}>
+                <OrderCardDetail {...order}
+                />
+                <Divider />
+              </div>
             ))}
           </div>
         </div>
       </div>
       <div className="flex gap-3 h-full">
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Charts" Icon={<LuGanttChartSquare />} />
+          <Title title="Charts" Icon={<LuGanttChartSquare />} link={""}/>
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque neque
           incidunt nisi, ea corrupti soluta dolore tenetur odit quibusdam,
           laboriosam magnam molestias officia necessitatibus placeat distinctio
@@ -112,7 +80,7 @@ function page() {
           animi quasi sint eligendi
         </div>
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Settings" Icon={<CiSettings />} />
+          <Title title="Settings" Icon={<CiSettings />} link={""}/>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
           eveniet iste cumque autem, quod veniam molestias placeat commodi enim
           omnis minus possimus nulla non, totam deserunt hic voluptas, repellat

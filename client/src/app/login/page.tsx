@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginComponent from "../../components/login.component";
 import RegisterComponent from "../../components/register.component";
 
 export default function login() {
   const [isLogin, setIsLogin] = useState(true);
+  
 
   return (
     <>

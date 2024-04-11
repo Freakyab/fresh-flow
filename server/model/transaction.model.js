@@ -6,21 +6,34 @@ const TransactionScheme = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
+  farmerName : {
+    type : String,
+    required : true
+  },
+  customerName : {
+    type : String,
+    required : false
+  },
+  warehouseName : {
+    type : String,
+    required : true
+  },
   farmerId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  crop: {
-    type: String,
-    required: true,
+  customerID : {
+    type : mongoose.Schema.Types.ObjectId,
+    required : false
   },
+  
   quantity: {
     type: Number,
     required: true,
   },
   price: {
     type: Number,
-    required: false,
+    required: true,
   },
   duration : {
     type : Number,
@@ -32,6 +45,8 @@ const TransactionScheme = new mongoose.Schema({
     default: "pending",
     required: true,
   },
+},{
+  timestamps: true
 });
 
 const Transaction = client.model("Transaction", TransactionScheme);

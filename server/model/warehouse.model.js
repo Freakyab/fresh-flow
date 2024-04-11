@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const client = require("../config/connect");
 
 const warehouseSchema = new mongoose.Schema({
-  name: {
+  ownerName: {
     type: String,
     // required: true,
   },
-  ownerName: {
+  name: {
     type: String,
     // required: true,
   },
@@ -18,39 +18,28 @@ const warehouseSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
+  address: {
+    type: String,
+    // required: true,
+  },
   city: {
     type: String,
     // required: true,
   },
-  facility: {
-    temperature: {
-      low: {
-        type: Number,
-        // required: true,
-      },
-      high: {
-        type: Number,
-        // required: true,
-      },
-    },
-    capacity: {
-      type: Number,
-      // required: true,
-    },
-    occupancy: {
-      type: Number,
-      // required: false,
-    },
-    tempType: {
-      type: String,
-      // required: true,
-    },
-  },
-  certifications: {
+  state: {
     type: String,
     // required: true,
   },
-  security: {
+  capacity: {
+    type: String,
+    // required: true,
+  },
+  registrationDate: {
+    type: String,
+    // required: true,
+  },
+  registrationValidUpto 
+  : {
     type: String,
     // required: true,
   },
@@ -58,29 +47,41 @@ const warehouseSchema = new mongoose.Schema({
     type: Number,
     // required: true,
   },
-  email: {
+  status: {
     type: String,
     // required: true,
   },
-  servicesOffered: {
-    type: String,
+  type : {
+    type : [String],
+    // required : true
+  },
+  image : {
+    type : String,
+    // required : true
+  },
+  location: {
+    type: [Number],
     // required: true,
   },
   price : {
     type : Number,
     // require : true
   },
+  email : {
+    type : String,
+    // require : true
+  },
   otp: {
     type: Number,
     // required: false,
   },
-  typeOfCrop: {
-    type: [String],
-    // required: true,
+  occupied : {
+    type : String,
+    // required : true
   },
-  duration: {
-    type: Number,
-    required: false,
+  typeOfCrop : {
+    type : {String},
+    // required : true
   },
 });
 

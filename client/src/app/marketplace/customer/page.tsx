@@ -1,8 +1,11 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { IoLocation } from "react-icons/io5";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Slider,
   Card,
@@ -15,6 +18,8 @@ import { CropsMapList } from "@/components/dataSample/cropsMapList";
 import Model from "@/components/marketPlace/model";
 import useCropsMap from "@/redux/dispatch/useCropsMap";
 import cropsTypeList, { cropsType } from "@/components/dataSample/cropsType";
+// import { CustomerOrderCartItemsProps } from "@/redux/reducers/CustomerOrderCartItems";
+import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
 
 const Page = () => {
   const [filterBuffer, setFilterBuffer] = React.useState({
@@ -23,6 +28,8 @@ const Page = () => {
     location: "All",
   });
   const [newCropTypeList, setNewCropTypeList] = React.useState<cropsType[]>([]);
+
+  const router = useRouter();
 
   const lastIndex = {
     id: cropsTypeList.length + 1,
@@ -36,6 +43,7 @@ const Page = () => {
   }, []);
 
   const { getCropsList, setCrops, setFilter } = useCropsMap();
+  const { addOrderItem } = useCustomerOrderCardItem();
 
   React.useEffect(() => {
     setCrops(CropsMapList);
@@ -43,10 +51,18 @@ const Page = () => {
 
   const handleFilter = () => {
     setFilter(filterBuffer);
+    console.log(getCropsList());
     getCropsList();
-    console.log(filterBuffer);
   };
 
+  const handleCartItems = (item: CropsMapProps) => {
+    const newItem = {
+      ...item,
+      quantity: 1,
+    };
+    addOrderItem(newItem);
+    toast.success("Item added to cart");
+  };
   return (
     <div className="min-h-screen bg-light-bg">
       <div className="w-full p-3">
@@ -104,6 +120,18 @@ const Page = () => {
               Reset
             </Button>
           </div>
+          <div className="w-full justify-self items-center">
+            <Button
+              color="primary"
+              variant="bordered"
+              className="w-full"
+              onClick={() => {
+                toast.info("loading..");
+                router.push("/dashboard/customer/cartitems");
+              }}>
+              Cart Items
+            </Button>
+          </div>
         </div>
         <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
           {getCropsList().map((item) => (
@@ -136,7 +164,17 @@ const Page = () => {
                 <Divider />
                 <CardFooter className="flex justify-between items-center gap-3 p-3">
                   <Model {...item} />
-                  <Button color="success" className="text-xl ml-auto">
+                  <Button
+                    color="danger"
+                    size="sm"
+                    onClick={() => handleCartItems(item)}>
+                    Add to Cart
+                  </Button>
+                  <Button
+                    color="success"
+                    className=" ml-auto"
+                    size="sm"
+                    onClick={() => toast.info("please add to cart..")}>
                     {item.price}/Kg
                   </Button>
                 </CardFooter>
@@ -145,6 +183,7 @@ const Page = () => {
           ))}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

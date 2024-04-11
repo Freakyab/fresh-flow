@@ -12,18 +12,24 @@ const auth = require("../middleware/auth.middleware");
 router.post("/register", async (req, res) => {
   try {
     const {
+      ownerName,
       name,
       username,
       password,
-      location,
-      facility,
-      certifications,
-      security,
+      address,
+      city,
+      state,
+      capacity,
+      registrationDate,
+      registrationValidUpto,
       phoneNo,
-      email,
-      servicesOffered,
+      status,
+      type,
+      image,
+      location,
       price,
-      typeOfCrop,
+      email,
+      occupied,
     } = req.body;
 
     // Check if the user already exists
@@ -32,18 +38,24 @@ router.post("/register", async (req, res) => {
 
     // Create a new user
     const newUser = new Warehouse({
+      ownerName,
       name,
       username,
       password,
-      location,
-      facility,
-      certifications,
-      security,
+      address,
+      city,
+      state,
+      capacity,
+      registrationDate,
+      registrationValidUpto,
       phoneNo,
-      email,
-      servicesOffered,
+      status,
+      type,
+      image,
+      location,
       price,
-      typeOfCrop,
+      email,
+      occupied,
     });
 
     // Hash the password
@@ -63,13 +75,11 @@ router.post("/register", async (req, res) => {
     );
 
     if (token) {
-      res
-        .status(201)
-        .json({
-          message: "Warehouse owner register successfully",
-          token,
-          id: newUser._id,
-        });
+      res.status(201).json({
+        message: "Warehouse owner register successfully",
+        token,
+        id: newUser._id,
+      });
     } else {
       res.status(400).json({ message: "Warehouse owner register failed" });
     }
@@ -109,13 +119,11 @@ router.post("/login", async (req, res) => {
     );
 
     if (token) {
-      res
-        .status(201)
-        .json({
-          message: "Warehoouse owner login successfully",
-          token,
-          id: user._id,
-        });
+      res.status(201).json({
+        message: "Warehoouse owner login successfully",
+        token,
+        id: user._id,
+      });
     } else {
       res.status(400).json({ message: "Warehouse owner login failed" });
     }
@@ -202,10 +210,42 @@ router.delete("/delete:id", auth, async (req, res) => {
 
 router.get("/getData", auth, async (req, res) => {
   try {
-    const user = await Warehouse.findById(req.userId).select("-_id -password -__v -otp");
+    const user = await Warehouse.findById(req.userId).select(
+      "-_id -password -__v -otp"
+    );
     if (!user) return res.status(400).json({ msg: "User does not exists" });
 
     res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/*
+ * GET /warehouse/getdatabyid
+ */
+
+router.post("/getdatabyid/:id", async (req, res) => {
+  try {
+    const user = await Warehouse.findOne({ _id: req.params.id });
+    if (!user) return res.status(400).json({ msg: "User does not exists" });
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } 
+});
+/*
+ * GET /warehouse/allwarehouse
+ */
+
+router.get("/allwarehouse", async (req, res) => {
+  try {
+    const warehouse = await Warehouse.find();
+    if (!warehouse) return res.status(400).json({ msg: "Warehouse not found" });
+    else {
+      res.status(200).json(warehouse);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

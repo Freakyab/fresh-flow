@@ -1,9 +1,9 @@
 "use client";
-
 import React, { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import InputWithImageComponent from "./inputWithimage.component";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 type controlsProps = {
   isLogin: boolean;
@@ -17,12 +17,44 @@ type loginComponentProps = {
 const LoginComponent = ({ controls }: loginComponentProps) => {
   const [userType, setUserType] = useState("Farmer");
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    username: "Rajesh",
+    password: "Bangalore",
   });
+  
+  const {signup,userDetails,logout} = useUserDetails();
 
   const handleUserTypeChange = (type: string) => {
     setUserType(type);
+  };
+
+  const handleLogin = async() => {
+    if(formData.username === "" || formData.password === "") {
+      alert("Please fill all the fields");
+      return;
+    }
+    else if(userType === "Farmer") {
+      await fetch("http://localhost:5000/farmer/login", 
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if(data.error) {
+          alert(data.error);
+        }
+        else {
+          signup(formData.username, data.id, data.token);
+          console.log(userDetails.userDetails);
+        }
+      })
+    }
   };
 
   return (
@@ -56,10 +88,10 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
       <div className="flex flex-col w-full gap-4 mt-4">
         <InputWithImageComponent
           Image={<MdEmail size={25} className={"input-icon-color"}/>}
-          placeholder="Email"
+          placeholder="Enter the username"
           type="text"
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+          value={formData.username}
         />
         <InputWithImageComponent
           Image={<RiLockPasswordFill size={25} className={"input-icon-color"}/>}
@@ -74,7 +106,9 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
           Forgot Password?
         </p>
 
-        <button className="w-full h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none">
+        <button className="w-full h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none"
+          onClick={handleLogin}
+        >
           Login
         </button>
         <p className="text-center text-sm">

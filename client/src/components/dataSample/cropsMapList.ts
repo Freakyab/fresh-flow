@@ -3,7 +3,7 @@ import warehouseDetailData from "@/components/dataSample/warehouseData";
 
 const index = 0;
 
-export const CropsMapList = [
+export const CropsMapList: CropsMapProps[] = [
     {
         id: 1,
         cropName: cropsType[index].label,
@@ -12,8 +12,7 @@ export const CropsMapList = [
         farmerName: "John Doe",
         farmerLocation:
             warehouseDetailData[index].city,
-        farmerContact:
-            warehouseDetailData[index].phoneNo,
+        farmerContact: parseInt(warehouseDetailData[index].phoneNo),
         city: "Accra",
     },
     {
@@ -25,7 +24,7 @@ export const CropsMapList = [
         farmerLocation:
             warehouseDetailData[index + 1].city,
         farmerContact:
-            warehouseDetailData[index + 1].phoneNo,
+            parseInt(warehouseDetailData[index + 1].phoneNo),
         city: "Kumasi",
     },
     {
@@ -37,7 +36,7 @@ export const CropsMapList = [
         farmerLocation:
             warehouseDetailData[index + 2].city,
         farmerContact:
-            warehouseDetailData[index + 2].phoneNo,
+            parseInt(warehouseDetailData[index + 2].phoneNo),
         city: "Tamale",
     },
     {
@@ -48,8 +47,7 @@ export const CropsMapList = [
         farmerName: "John Doe",
         farmerLocation:
             warehouseDetailData[index + 3].city,
-        farmerContact:
-            warehouseDetailData[index + 3].phoneNo,
+        farmerContact: parseInt(warehouseDetailData[index + 3].phoneNo),
         city: "Ho",
     },
     {
@@ -60,8 +58,7 @@ export const CropsMapList = [
         farmerName: "Jane Doe",
         farmerLocation:
             warehouseDetailData[index + 4].city,
-        farmerContact:
-            warehouseDetailData[index + 4].phoneNo,
+        farmerContact: parseInt(warehouseDetailData[index + 4].phoneNo),
         city: "Sunyani",
     },
     {
@@ -73,7 +70,7 @@ export const CropsMapList = [
         farmerLocation:
             warehouseDetailData[0].city,
         farmerContact:
-            warehouseDetailData[0].phoneNo,
+            parseInt(warehouseDetailData[0].phoneNo),
         city: "Bolgatanga",
     }
 ];

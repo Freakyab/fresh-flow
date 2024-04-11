@@ -39,7 +39,7 @@ const mapLoadingSlice = createSlice({
         setLoc(state, action: PayloadAction<{ lat: number, lng: number }>) {
             state.loc = action.payload;
         },
-        setIsClicked(state, action: PayloadAction<boolean>) {
+        changeIsClicked(state, action: PayloadAction<boolean>) {
             state.isClicked = action.payload;
         },
     },

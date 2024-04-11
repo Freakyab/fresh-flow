@@ -2,9 +2,9 @@
 
 import { AppDispatch,RootState } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { CropsMapProps } from '@/redux/reducers/cropsMap';
 
-import { cropMapAction , filterProps } from '@/redux/reducers/cropsMap';
+
+import { cropMapAction  } from '@/redux/reducers/cropsMap';
 
 const useCropsMap = () => {
 

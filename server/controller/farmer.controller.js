@@ -13,13 +13,12 @@ router.post("/register", async (req, res) => {
   try {
     const {
       adharNo,
-      fullName,
-      phoneNo,
+      farmerName,
+      farmerContact,
       email,
-      address,
+      farmerLocation,
       username,
       password,
-      landSize,
       typeOfCrop,
     } = req.body;
 
@@ -30,22 +29,21 @@ router.post("/register", async (req, res) => {
     // Create a new user
     const newUser = new Farmer({
       adharNo,
-      fullName,
-      phoneNo,
+      farmerName,
+      farmerContact,
       email,
-      address,
+      farmerLocation,
       username,
       password,
-      landSize,
       typeOfCrop,
     });
 
     // Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
 
     // Replace the password with the hashed password
-    newUser.password = hashedPassword;
+    // newUser.password = hashedPassword;
 
     // Save the user
     await newUser.save();
