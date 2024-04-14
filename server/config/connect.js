@@ -8,7 +8,8 @@ const connectUrl =
   process.env.DEVELOPMENT == "True"
     ? process.env.MONGO_URI_DEV
     : process.env.MONGO_URI;
-const client = mongoose.connect(connectUrl, {
+    
+const client = mongoose.createConnection(connectUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
