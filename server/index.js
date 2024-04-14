@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-app.use(bodyParser.json());
 app.use(
   cors({
     origin: "*",
@@ -13,6 +12,7 @@ app.use(
     allowedHeaders: "Content-Type,Authorization",
   })
 );
+app.use(bodyParser.json());
 app.use(express.json());
 
 app.get("/", (req, res) => {
