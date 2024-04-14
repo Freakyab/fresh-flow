@@ -73,7 +73,7 @@ function page() {
             Icon={<GoListUnordered />}
             link={"/dashboard/warehouse/orders"}
           />
-          <div className="flex gap-3 p-3 flex-col overflow-y-auto">
+          <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
             {OrderData.map((order, index) => (
               <div key={index}>
                 <OrderCardDetail {...order} />
@@ -93,7 +93,7 @@ function page() {
           <WarehouseExpenseChart className="" />
         </div>
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Settings" Icon={<CiSettings />} link={""} />
+          <Title title="Settings" Icon={<CiSettings />} link={"/dashboard/warehouse/settings"} />
           Click on See More to access the settings
         </div>
       </div>

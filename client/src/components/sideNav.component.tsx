@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState ,useEffect} from "react";
 import { IoIosLogOut } from "react-icons/io";
 import Link from "next/link";
 import { User, Button } from "@nextui-org/react";
@@ -13,9 +13,11 @@ type Option = {
 
 type SideNavProps = {
   options: Option[];
+  name: string;
+  ownerName: string;
 };
 
-const SideNav = ({ options }: SideNavProps) => {
+const SideNav = ({ options , name , ownerName}: SideNavProps) => {
   const pathname = usePathname();
   const activeComponent = pathname.split("/").filter((item) => item !== "")[2];
 
@@ -33,10 +35,10 @@ const SideNav = ({ options }: SideNavProps) => {
       <h1 className="text-3xl capitalize tracking-tighter">
         start your day be productive
       </h1>
-      <div>
+      <div className="py-3">
         <User
-          name="Jane Doe"
-          description="Product Designer"
+          name={name}
+          description={ownerName}
           avatarProps={{
             src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
           }}

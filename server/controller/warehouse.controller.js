@@ -184,18 +184,19 @@ router.put("/update/:id", async (req, res) => {
       ];
       // 22-12-2011 to 22-DEC-2021
       return (
-        date.split("-")[0] +
+        date.split("-")[2]+
         "-" +
-        monthNames[parseInt(date.split("-")[1])] +
+        monthNames[parseInt(date.split("-")[1]) - 1] +
         "-" +
-        date.split("-")[2]
+        date.split("-")[0]
       );
     };
 
     const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
-    const newRegistrationValidUpto = getDateInMonthAbbreviation(
-      registrationValidUpto
-    );
+    const newRegistrationValidUpto = `${parseInt(newRegistrationDate.split("-")[0])-1}-${newRegistrationDate.split("-")[1]}-${parseInt(newRegistrationDate.split("-")[2])+5}`
+    // const newRegistrationValidUpto = getDateInMonthAbbreviation(
+    //   registrationValidUpto
+    // );
     // Create a new user
     const newUser = {
       ownerName,

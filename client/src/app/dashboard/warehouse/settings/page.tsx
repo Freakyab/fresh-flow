@@ -241,23 +241,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Registration Valid-Upto: </p>
-              <p>{warehouseDetailData.registrationValidUpto}</p> */}
-              <Input
-                label="Registration Valid-Upto"
-                placeholder="Registration Valid-Upto"
-                value={warehouseDetailData.registrationValidUpto}
-                type="date"
-                disabled={!isEdit ? true : false}
-                onChange={(e) =>
-                  setWarehouseDetailData({
-                    ...warehouseDetailData,
-                    registrationValidUpto: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="flex gap-3 items-center">
               {/* <p className="text-lg font-semibold">Location : </p>
               <p>
                 Lat :{" "}
@@ -348,7 +331,7 @@ const Settings = () => {
                 fetch(
                   // Change id
                   // `http://localhost:5000/warehouse/update/661922f36238f64733cc5736`,
-                  `https://fresh-flow-backend.vercel.app/warehouse/update/661922f36238f64733cc5736`,
+                  `https://fresh-flow-backend.vercel.app/warehouse/update/${userDetails.userDetails._id}`,
                   {
                     method: "PUT",
                     headers: {
