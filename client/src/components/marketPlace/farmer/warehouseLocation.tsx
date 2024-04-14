@@ -4,7 +4,6 @@ import {
   MapContainer,
   Marker,
   Popup,
-  
   LayersControl,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -21,7 +20,6 @@ function WarehouseLocation({
   className: string;
   warehouseDetailData: warehouseDetailDataProps;
 }) {
-  console.log(warehouseDetailData)
   const [userLocation, setUserLocation] = useState({
     latitude: 0,
     longitude: 0,
@@ -37,7 +35,7 @@ function WarehouseLocation({
           });
         });
       }
-    }, 5000);
+    }, 3000);
   }, []);
 
   useEffect(() => {
@@ -45,15 +43,22 @@ function WarehouseLocation({
     if (mapRef.current) {
       const map = mapRef.current.leafletElement;
       // Remove any existing layers before adding new ones
-      map.eachLayer((layer: any) => {
-        map.removeLayer(layer);
+      map?.eachLayer((layer: any) => {
+        map?.removeLayer(layer);
       });
     }
   }, [warehouseDetailData]);
 
   return (
     <MapContainer
-      center={[warehouseDetailData.location[0], warehouseDetailData.location[1]]}
+      center={[
+        warehouseDetailData.location && warehouseDetailData.location[0]
+          ? warehouseDetailData.location[0]
+          : 0,
+        warehouseDetailData.location && warehouseDetailData.location[1]
+          ? warehouseDetailData.location[1]
+          : 0,
+      ]}
       zoom={12}
       className={className}
       ref={mapRef} // Assign ref to map container
@@ -63,17 +68,26 @@ function WarehouseLocation({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker
-        position={[warehouseDetailData.location[0], warehouseDetailData.location[1]]}
+        position={[
+          warehouseDetailData.location && warehouseDetailData.location[0],
+          warehouseDetailData.location && warehouseDetailData.location[1],
+        ]}
         eventHandlers={{
           click: (event: any) => {
             const map = event.target._map;
             if (map) {
-              map.flyTo([warehouseDetailData.location[0], warehouseDetailData.location[1]], 12);
+              map.flyTo(
+                [
+                  warehouseDetailData?.location[0],
+                  warehouseDetailData?.location[1],
+                ],
+                12
+              );
             }
           },
         }}
         icon={WarehouseIcon}>
-        <Popup>{warehouseDetailData.name}</Popup>
+        <Popup>{warehouseDetailData?.name}</Popup>
       </Marker>
       {userLocation.latitude !== 0 && userLocation.longitude !== 0 && (
         <Marker
@@ -93,8 +107,11 @@ function WarehouseLocation({
       {userLocation.latitude !== 0 && userLocation.longitude !== 0 && (
         <RoutingControl
           position="topleft"
-          end={[warehouseDetailData.location[0], warehouseDetailData.location[1]]}
-          start={[userLocation.latitude, userLocation.longitude]}
+          end={[
+            warehouseDetailData?.location[0],
+            warehouseDetailData?.location[1],
+          ]}
+          start={[userLocation?.latitude, userLocation?.longitude]}
           color="#757de8"
         />
       )}

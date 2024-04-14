@@ -9,12 +9,13 @@ type warehouseDetailDataProps = {
     registrationDate: string;
     registrationValidUpto: string;
     phoneNo: string;
-    Status: string;
+    status: string;
     type: string;
     image: string;
     location: number[];
     price: number;
     email: string;
+    typeOfCrop: string[];
 };
 
 type CropsMapProps = {
@@ -77,7 +78,16 @@ type transactionProps = {
     duration: number,
     price : number,
     status: string,
+    typeOfCrop: string,
     createdAt: string,
 }
 
 
+type WarehouseOccupacyPieProps = {
+    occupied: {
+        type: string,
+        quantity: number
+    }[],
+    unoccupied: number,
+    totalSpace: number
+}

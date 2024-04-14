@@ -52,12 +52,12 @@ function page() {
         <div className="bg-white rounded-xl w-full p-3">
           <Title title="Recent's Order" Icon={<GoListUnordered />} link={""}/>
           <div className="flex gap-3 p-3 flex-col lg:flex-row">
-            {warehouseOrderType.map((order, index) => (
+            {/* {warehouseOrderType.map((order, index) => (
               <div key={index}>
                 <OrderCardDetail {...order} />
                 <Divider />
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

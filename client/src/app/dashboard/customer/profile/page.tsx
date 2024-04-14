@@ -56,19 +56,19 @@ function page() {
         <div className="bg-white rounded-xl w-full p-3">
           <Title title="Recent's Order" Icon={<GoListUnordered />} link={'/dashboard/customer/orders'} />
           <div className="flex gap-3 p-3 flex-col lg:flex-row">
-            {warehouseOrderType.map((order, index) => (
+            {/* {warehouseOrderType.map((order, index) => (
               <div key={index}>
                 <OrderCardDetail {...order} />
                 <Divider />
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </div>
       <div className="flex gap-3 h-full">
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
           <Title title="Charts" Icon={<LuGanttChartSquare />} link={'/dashboard/customer/charts'}/>
-          <ExpenseChart />
+          <ExpenseChart className=""/>
         </div>
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
           <Title title="Settings" Icon={<CiSettings />} link={'/dashboard/customer/settings'}/>

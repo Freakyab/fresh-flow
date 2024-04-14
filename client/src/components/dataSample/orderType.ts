@@ -9,6 +9,7 @@ export const warehouseOrderType = [
     price: 2271,
     duration: 10,
     status: "pending",
+    typeOfCrop: "Wheat",
     createdAt: "2024-04-11T18:10:02.110Z",
     updatedAt: "2024-04-11T18:10:02.110Z",
     __v: 0,

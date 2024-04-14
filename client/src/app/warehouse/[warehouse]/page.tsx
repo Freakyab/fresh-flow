@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import handleToast from "@/components/toastifyNotification";
 import {
   Modal,
   ModalContent,
@@ -11,8 +14,12 @@ import {
   Button,
   useDisclosure,
   Input,
+  Divider,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
+import WarehouseDetails from "@/components/dashboard/profile/warehouseDetails";
 
 const Map = dynamic(
   () => import("@/components/marketPlace/farmer/warehouseLocation"),
@@ -27,6 +34,7 @@ function Page() {
   const pathname = usePathname().split("/warehouse/")[1];
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [display, setDisplay] = React.useState(false);
+  const [selectedCrop, setSelectedCrop] = React.useState<string>("");
   const { getUserDetails } = useUserDetails();
 
   useEffect(() => {
@@ -40,7 +48,6 @@ function Page() {
         .then((res) => res.json())
         .then((data) => {
           if (data) {
-            console.log(data);
             setWarehouseDetailData(data);
           }
         });
@@ -51,12 +58,31 @@ function Page() {
     const duration = e.get("duration");
     const quantity = e.get("quantity");
 
-    if (duration === "" || quantity === "") {
-      alert("Please fill all the fields");
+    const newDuration = parseInt(duration as string);
+    const newQuantity = parseInt(quantity as string);
+    const capacity = warehouseDetailData
+      ? parseFloat(warehouseDetailData.capacity)
+      : 0;
+
+    if (duration === "" || quantity === "" || selectedCrop === "") {
+      handleToast("Please enter all the values", "error");
       return;
+    } else {
+      if (
+        newDuration <= 0 ||
+        newQuantity <= 0 ||
+        isNaN(newDuration) ||
+        isNaN(newQuantity)
+      ) {
+        handleToast("Please enter valid values", "error");
+        return;
+      } else if (newQuantity > capacity) {
+        handleToast("Quantity is more than the capacity", "error");
+        return;
+      }
     }
     await fetch(
-    `http://localhost:5000/transaction/farmer-purchase/${
+      `http://localhost:5000/transaction/farmer-purchase/${
         getUserDetails().userDetails._id
       }`,
       {
@@ -68,7 +94,8 @@ function Page() {
           duration: duration,
           quantity: quantity,
           warehouseId: warehouseDetailData?._id,
-          price : warehouseDetailData?.price
+          price: warehouseDetailData?.price,
+          typeOfCrop: selectedCrop,
         }),
       }
     )
@@ -76,9 +103,9 @@ function Page() {
       .then((data) => {
         console.log(data);
         if (data.error) {
-          alert(data.error);
+          handleToast(data.error, "error");
         } else {
-          alert("Transaction successful");
+          handleToast("Transcation successful, Check order history", "success");
         }
       });
     handleClose();
@@ -96,15 +123,31 @@ function Page() {
   return (
     <>
       {warehouseDetailData != null ? (
-        <div className="flex flex-col md:flex-row items-stretch h-screen w-[99%] m-2 overflow-hidden border-2 border-black rounded-lg shadow-lg">
-          <div className="w-full md:w-1/2 bg-gray-100 p-6">
+        <div className="flex flex-col md:flex-row items-stretch d-hight w-[99%] m-2 overflow-hidden border-2 border-black rounded-lg shadow-lg">
+          <div className="w-full md:w-1/2 bg-gray-100 p-6 flex flex-col overflow-x-auto">
             <h1 className="text-2xl font-bold mb-2">
               {warehouseDetailData.name}
+              <Divider />
             </h1>
+            <p className="text-lg font-semibold py-1">
+              {"₹"}
+              {warehouseDetailData.price}/sqft
+            </p>
 
-            <Button color="success" variant="bordered" onClick={handleModel}>
-              {warehouseDetailData.price}
-            </Button>
+            <WarehouseDetails
+              warehouseDetailData={warehouseDetailData}
+              className=""
+            />
+            <div className="p-3 flex gap-3 items-center">
+              <p className="text-lg font-semibold cursor-pointer">Buy </p>
+              <Button
+                color="success"
+                variant="bordered"
+                onClick={handleModel}
+                className="m-3">
+                {warehouseDetailData.price}/sqft
+              </Button>
+            </div>
             <div className="absolute z-10">
               <Modal isOpen={isOpen} onClose={handleClose}>
                 <ModalContent>
@@ -116,7 +159,7 @@ function Page() {
                       <form action={handleSubmit}>
                         <ModalBody>
                           <div className="flex flex-col gap-3">
-                            <p>Select the duration of the storage</p>
+                            <p>Enter the duration of the storage</p>
                             <Input
                               type="number"
                               name="duration"
@@ -130,6 +173,19 @@ function Page() {
                               label="Quantity (in Mt)"
                               placeholder="Enter your quantity in Mt"
                             />
+                            <Select
+                              name="typeOfCrop"
+                              label="Type of Crop"
+                              placeholder="Select the type of crop"
+                              onChange={(e) => setSelectedCrop(e.target.value)}
+                              >
+                              {warehouseDetailData.typeOfCrop.map((crop) => (
+                                <SelectItem key={crop} value={crop}
+                                >
+                                  {crop}
+                                </SelectItem>
+                              ))}
+                            </Select>
                           </div>
                         </ModalBody>
                         <ModalFooter>
@@ -151,11 +207,15 @@ function Page() {
             </div>
           </div>
           <div className="w-full md:w-1/2 bg-gray-300 p-6">
-            {!display && (
+            {!display && warehouseDetailData != undefined ? (
               <Map
                 className="w-full h-64 md:h-full"
                 warehouseDetailData={warehouseDetailData}
               />
+            ) : (
+              <div className="text-red-500 text-lg font-bold">
+                Loading map...
+              </div>
             )}
           </div>
         </div>
@@ -164,6 +224,7 @@ function Page() {
           Warehouse not found
         </div>
       )}
+      <ToastContainer />
     </>
   );
 }

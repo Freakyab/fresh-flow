@@ -47,12 +47,13 @@ Content-Type: application/json
     "registrationDate": "19-Feb-24",
     "registrationValidUpto": "18-Feb-29",
     "phoneNo": 9922861133,
-    "Status": "Active",
+    "status": "Active",
     "type": "hot",
     "image": "/images/warehouse_1.jpg",
     "location": [19.00436, 73.94346],
     "price": 2271,
-    "email": "agriculturalproducemarketcommitteemanchar24@example.com"
+    "email": "agriculturalproducemarketcommitteemanchar24@example.com",
+    "typeOfCrop": ["Rice","Wheat","Maize"]
 }
 
 ###

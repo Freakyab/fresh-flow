@@ -12,7 +12,7 @@ const auth = require("../middleware/auth.middleware");
  */
 router.post("/farmer-purchase/:id", async (req, res) => {
   try {
-    const { warehouseId, quantity, price, duration } = req.body;
+    const { warehouseId, quantity, price, duration,typeOfCrop } = req.body;
     const farmerId = req.params.id;
     const farmer = await Farmer.findById(farmerId);
     if (!farmer) {
@@ -33,6 +33,7 @@ router.post("/farmer-purchase/:id", async (req, res) => {
         farmerId,
         quantity,
         duration,
+        typeOfCrop,
         status: "pending",
       });
 
@@ -82,23 +83,27 @@ router.post("/order-request/:id", async (req, res) => {
  *Warehouse accept request
  */
 
-router.put("/accept", auth, async (req, res) => {
+router.put("/accept/:id", async (req, res) => {
   try {
-    const { transactionId } = req.body;
-    const warehouse = await Warehouse.findById(req.userId);
+    const transactionId = req.params.id;
     const transaction = await Transaction.findById(transactionId);
-    transaction.status = "accepted";
-    if (warehouse.facility.capacity < 0) {
-      res.status(400).json({ message: "no space available" });
-    }
-    if (warehouse.facility.capacity < transaction.quantity) {
-      res.status(400).json({ message: "no space available" });
-    }
-
-    await transaction.save();
-    warehouse.facility.capacity -= transaction.quantity;
-    await warehouse.save();
+    const warehouse = await Warehouse.findById(transaction.warehouseId);
     if (transaction) {
+      transaction.status = "accepted";
+      if (warehouse.capacity < 0) {
+        res.status(400).json({ message: "no space available" });
+      }
+      if (warehouse.capacity < transaction.quantity) {
+        res.status(400).json({ message: "no space available" });
+      }
+      let capacity = parseFloat(warehouse.capacity);
+      capacity -= transaction.quantity;
+      let occupied = parseFloat(warehouse.occupied) || 0;
+      occupied += transaction.quantity;
+      warehouse.capacity = capacity.toString();
+      warehouse.occupied = occupied.toString();
+      await transaction.save();
+      await warehouse.save();
       res.status(200).json({ message: "status updated" });
     } else {
       res.status(400).json({ message: "no request found" });
@@ -111,9 +116,9 @@ router.put("/accept", auth, async (req, res) => {
  *Warehouse  decline request
  */
 
-router.put("/decline", auth, async (req, res) => {
+router.put("/reject/:id", async (req, res) => {
   try {
-    const { transactionId } = req.body;
+    const transactionId = req.params.id;
     const transaction = await Transaction.findByIdAndUpdate(transactionId, {
       status: "rejected",
     });
@@ -219,5 +224,7 @@ router.get("/farmer-all-request/:id", auth, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 
 module.exports = router;

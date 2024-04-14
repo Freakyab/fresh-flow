@@ -3,7 +3,8 @@ import React from "react";
 import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
 import { Button, Card, CardBody, Chip, Divider } from "@nextui-org/react";
 import Image from "next/image";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import handleToast from "@/components/toastifyNotification";
 import "react-toastify/dist/ReactToastify.css";
 
 function CartItems() {
@@ -128,8 +129,11 @@ function CartItems() {
               color="success"
               variant="bordered"
               onClick={() => {
-                cartItem.length !== 0 ? toast.success("Transaction Successful") : toast.error("Cart is Empty")
-                onPay(customerOrderCartItemState.totalAmount)}}>
+                cartItem.length !== 0
+                  ? handleToast("Checkout", "success")
+                  : handleToast("Cart is empty", "error");
+                onPay(customerOrderCartItemState.totalAmount);
+              }}>
               Checkout
             </Button>
             <Button onClick={clearOrderItems}>Clear</Button>

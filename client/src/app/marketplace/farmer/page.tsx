@@ -5,14 +5,13 @@ import dynamic from "next/dynamic";
 import useMapLoading from "@/redux/dispatch/useMaploading";
 import { CiSearch } from "react-icons/ci";
 import cropsType from "@/components/dataSample/cropsType";
-// import warehouseDetailData from "@/components/dataSample/warehouseData";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
+import { useRouter } from "next/navigation";
 
 import {
   Card,
   CardBody,
   CardFooter,
-  Link,
   Divider,
   Chip,
   Select,
@@ -26,6 +25,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 
+// import warehouseDetailData from "@/components/dataSample/warehouseData";
 interface CenterProp {
   location: number[];
 }
@@ -33,6 +33,7 @@ interface CenterProp {
 const Map = dynamic(() => import("@/components/location"), { ssr: false });
 
 const FarmerMarketplacePage = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [location, setLocation] = useState({
     latitude: 0,
@@ -79,6 +80,10 @@ const FarmerMarketplacePage = () => {
   const handleSubmit = (e: FormData) => {
     const searchValue = e.get("search");
     setSearch(searchValue !== null ? searchValue.toString() : "");
+  };
+
+  const handleRoute = (id: string) => {
+    router.push(`/warehouse/${id}`);
   };
 
   return (
@@ -227,12 +232,15 @@ const FarmerMarketplacePage = () => {
                         </div>
                       </CardBody>
                       <Divider />
-                      <CardFooter className="flex justify-between items-center p-3">
-                        <Link href={`/warehouse/${warehouse._id}`}>
-                          View Details
-                        </Link>
-                        <Button color="success" variant="bordered">
-                          {warehouse.price}/kg
+                      <CardFooter
+                        className="flex justify-between items-center p-3"
+                        onClick={() => handleRoute(warehouse._id)}>
+                        View Details
+                        <Button
+                          color="success"
+                          variant="bordered"
+                          onClick={() => handleRoute(warehouse._id)}>
+                          {warehouse.price}/sqft
                         </Button>
                       </CardFooter>
                     </Card>

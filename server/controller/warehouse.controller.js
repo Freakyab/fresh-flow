@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const Warehouse = require("../model/warehouse.model");
+const Transaction = require("../model/transaction.model");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth.middleware");
 
@@ -30,6 +31,7 @@ router.post("/register", async (req, res) => {
       price,
       email,
       occupied,
+      typeOfCrop,
     } = req.body;
 
     // Check if the user already exists
@@ -56,6 +58,7 @@ router.post("/register", async (req, res) => {
       price,
       email,
       occupied,
+      typeOfCrop,
     });
 
     // Hash the password
@@ -133,58 +136,102 @@ router.post("/login", async (req, res) => {
 });
 
 /*
- * @route PUT /warehouse/update
+ * @route PUT /warehouse/update/:id
  */
 
-router.put("/update", auth, async (req, res) => {
+router.put("/update/:id", async (req, res) => {
   try {
     const {
+      ownerName,
       name,
       username,
-      location,
-      facility,
-      certifications,
-      security,
+      password,
+      address,
+      city,
+      state,
+      capacity,
+      registrationDate,
+      registrationValidUpto,
       phoneNo,
+      status,
+      type,
+      image,
+      location,
+      price,
       email,
-      servicesOffered,
+      occupied,
+      typeOfCrop,
     } = req.body;
 
     // Check if the user already exists
-    const existingUser = await Warehouse.findById(req.userId);
+    const user = await Warehouse.findOne({ _id: req.params.id });
+    if (!user) return res.status(400).json({ msg: "User does not exists" });
 
-    // Update the user fields
-    await Warehouse.updateOne(
-      { _id: req.userId },
-      {
-        name,
-        username,
-        location,
-        facility,
-        certifications,
-        security,
-        phoneNo,
-        email,
-        servicesOffered,
-      }
+    const getDateInMonthAbbreviation = (date) => {
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      // 22-12-2011 to 22-DEC-2021
+      return (
+        date.split("-")[0] +
+        "-" +
+        monthNames[parseInt(date.split("-")[1])] +
+        "-" +
+        date.split("-")[2]
+      );
+    };
+
+    const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
+    const newRegistrationValidUpto = getDateInMonthAbbreviation(
+      registrationValidUpto
     );
+    // Create a new user
+    const newUser = {
+      ownerName,
+      name,
+      username,
+      password,
+      address,
+      city,
+      state,
+      capacity,
+      registrationDate: newRegistrationDate,
+      registrationValidUpto: newRegistrationValidUpto,
+      phoneNo,
+      status,
+      type,
+      image,
+      location,
+      price,
+      email,
+      occupied,
+      typeOfCrop,
+    };
 
-    // Sign the token
-    const token = jwt.sign(
-      { id: existingUser._id, username: existingUser.username },
-      process.env.JWT_SECRET
-    );
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    if (token) {
-      res
-        .status(201)
-        .json({ message: "Warehouse owner updated successfully", token });
-    } else {
-      res.status(400).json({ message: "Warehouse owner update failed" });
-    }
+    // Replace the password with the hashed password
+    newUser.password = hashedPassword;
+
+    // Save the user
+    await Warehouse.findByIdAndUpdate(req.params.id, newUser);
+
+    res.json({ msg: "User updated" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -233,7 +280,7 @@ router.post("/getdatabyid/:id", async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
-  } 
+  }
 });
 /*
  * GET /warehouse/allwarehouse
@@ -245,6 +292,88 @@ router.get("/allwarehouse", async (req, res) => {
     if (!warehouse) return res.status(400).json({ msg: "Warehouse not found" });
     else {
       res.status(200).json(warehouse);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/getWarehouseExpenseChart/:id", async (req, res) => {
+  try {
+    const warehouse = await Warehouse.findById(req.params.id);
+    if (!warehouse) {
+      return res.status(400).json({ msg: "Warehouse not found" });
+    } else {
+      const allTransaction = await Transaction.find({
+        warehouseId: req.params.id,
+        status: "accepted",
+      }).exec(); // Executing the query to return a promise
+
+      if (allTransaction && allTransaction.length > 0) {
+        const monthNames = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        const ExpensesPerMonth = allTransaction.reduce((acc, obj) => {
+          const date = new Date(obj.createdAt);
+          const monthName = monthNames[date.getMonth()]; // Get month name from array
+          acc[monthName] = (acc[monthName] || 0) + obj.price;
+          return acc;
+        }, {});
+
+        res.status(200).json(ExpensesPerMonth);
+      } else {
+        res.status(400).json({ msg: "No data found" });
+      }
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get("/getOccupiedWarehousePie/:id", async (req, res) => {
+  try {
+    const warehouse = await Warehouse.findById(req.params.id);
+    const allTransaction = await Transaction.find({
+      warehouseId: req.params.id,
+      status: "accepted",
+    }).exec(); // Executing the query to return a promise
+
+    if (!warehouse) {
+      return res.status(400).json({ msg: "Warehouse not found" });
+    } else {
+      const freeSpace = warehouse.capacity - warehouse.occupied;
+
+      let occupied = [];
+
+      allTransaction.forEach((transaction) => {
+        occupied = [
+          ...occupied,
+          { type: transaction.typeOfCrop, quantity: transaction.quantity },
+        ];
+      });
+
+      const data = {
+        unoccupied: freeSpace,
+        occupied: occupied,
+        totalSpace: parseInt(warehouse.capacity),
+      };
+      if (data) {
+        res.status(200).json(data);
+      } else {
+        res.status(400).json({ msg: "data found" });
+      }
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

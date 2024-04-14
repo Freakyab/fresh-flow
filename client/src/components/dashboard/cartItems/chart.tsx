@@ -36,7 +36,7 @@ export const options = {
 
 const label = ["January", "February", "March", "April", "May", "June", "July"];
 
-export function ExpenseChart() {
+export function ExpenseChart({ className }: { className: string }) {
   const { getTotalSpend } = useCustomerOrderCardItem();
   const [price, setPrice] = React.useState([
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -88,5 +88,5 @@ export function ExpenseChart() {
     ],
   };
 
-  return <Bar options={options} data={newData} />;
+  return <Bar options={options} data={newData} className={className} />;
 }

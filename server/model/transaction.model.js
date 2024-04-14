@@ -26,7 +26,6 @@ const TransactionScheme = new mongoose.Schema({
     type : mongoose.Schema.Types.ObjectId,
     required : false
   },
-  
   quantity: {
     type: Number,
     required: true,
@@ -45,6 +44,10 @@ const TransactionScheme = new mongoose.Schema({
     default: "pending",
     required: true,
   },
+  typeOfCrop : {
+    type : String,
+    required : true
+  }
 },{
   timestamps: true
 });
