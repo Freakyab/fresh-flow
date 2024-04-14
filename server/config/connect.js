@@ -11,7 +11,6 @@ const connectUrl =
 const client = mongoose.connect(connectUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  
 });
 
 module.exports = client;
