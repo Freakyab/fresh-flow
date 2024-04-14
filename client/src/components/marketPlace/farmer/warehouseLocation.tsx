@@ -25,9 +25,11 @@ function WarehouseLocation({
     longitude: 0,
   });
   const mapRef = useRef<any>(null);
+  console.log(warehouseDetailData.location);
   useEffect(() => {
     setTimeout(() => {
       if (navigator.geolocation) {
+        console.log("Getting location");
         navigator.geolocation.getCurrentPosition((position) => {
           setUserLocation({
             latitude: position.coords.latitude,

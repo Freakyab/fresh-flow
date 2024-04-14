@@ -85,7 +85,9 @@ router.post("/order-top-request/:id", async (req, res) => {
     const type = typeOfId;
     let allTransaction;
     if (type === "warehouseId") {
-      allTransaction = await Transaction.find({ warehouseId: userId }).limit(3);
+      // get request of warehouse
+     allTransaction = await Transaction.find({ warehouseId: userId }).limit(3).sort({createdAt:-1}) ;
+      // allTransaction = await Transaction.find({ warehouseId: userId }).limit(3);
     }
     if (type === "farmerId") {
       allTransaction = await Transaction.find({ farmerId: userId }).limit(3);

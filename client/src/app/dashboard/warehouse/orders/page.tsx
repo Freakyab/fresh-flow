@@ -17,11 +17,12 @@ function Orders() {
   const fetchOrders = () => {
     fetch(
       // `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-blackend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
         body: JSON.stringify({ typeOfId: "warehouseId" }),
       }

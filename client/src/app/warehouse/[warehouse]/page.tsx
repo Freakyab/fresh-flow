@@ -40,10 +40,11 @@ function Page() {
   useEffect(() => {
     if (pathname) {
       // fetch(`http://localhost:5000/warehouse/getdatabyid/${pathname}`, {
-      fetch(`https://fresh-flow-blackend.vercel.app/warehouse/getdatabyid/${pathname}`, {
+      fetch(`https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
       })
         .then((res) => res.json())
@@ -54,7 +55,6 @@ function Page() {
         });
     }
   }, [pathname]);
-
   const handleSubmit = async (e: FormData) => {
     const duration = e.get("duration");
     const quantity = e.get("quantity");
@@ -84,13 +84,14 @@ function Page() {
     }
     await fetch(
       // `http://localhost:5000/transaction/farmer-purchase/${
-      `https://fresh-flow-blackend.vercel.app/transaction/farmer-purchase/${
+      `https://fresh-flow-backend.vercel.app/transaction/farmer-purchase/${
         getUserDetails().userDetails._id
       }`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
         body: JSON.stringify({
           duration: duration,
@@ -124,7 +125,7 @@ function Page() {
   };
   return (
     <>
-      {warehouseDetailData != null ? (
+      {warehouseDetailData?.location != null ? (
         <div className="flex flex-col md:flex-row items-stretch d-hight w-[99%] m-2 overflow-hidden border-2 border-black rounded-lg shadow-lg">
           <div className="w-full md:w-1/2 bg-gray-100 p-6 flex flex-col overflow-x-auto">
             <h1 className="text-2xl font-bold mb-2">

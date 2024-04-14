@@ -46,13 +46,21 @@ const FarmerMarketplacePage = () => {
 
   useEffect(() => {
     // fetch("http://localhost:5000/warehouse/allwarehouse",{
-    fetch("https://fresh-flow-blackend.vercel.app/warehouse/allwarehouse",{
+    fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse",{
+      // Access-Control-Allow-Origin : "*",
       method: "GET",
       headers : {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "accept": "/",
       }
+      
     })
-      .then((res) => res.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
       .then((data) => {
         if (data) {
           console.log(data)

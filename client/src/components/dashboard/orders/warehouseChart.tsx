@@ -58,11 +58,12 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
     fetch(
       // Change id
       // `http://localhost:5000/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
-      `https://fresh-flow-blackend.vercel.app/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
       }
     )
@@ -100,11 +101,12 @@ export function WarehouseOccupacyPie({ className }: { className: string }) {
     fetch(
       // Change id
       // `http://localhost:5000/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
-      `https://fresh-flow-blackend.vercel.app/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
       }
     )

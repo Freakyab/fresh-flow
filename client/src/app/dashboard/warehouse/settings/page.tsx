@@ -27,11 +27,12 @@ const Settings = () => {
     fetch(
       // Change id
       // `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-blackend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
       }
     )
@@ -347,11 +348,12 @@ const Settings = () => {
                 fetch(
                   // Change id
                   // `http://localhost:5000/warehouse/update/661922f36238f64733cc5736`,
-                  `https://fresh-flow-blackend.vercel.app/warehouse/update/661922f36238f64733cc5736`,
+                  `https://fresh-flow-backend.vercel.app/warehouse/update/661922f36238f64733cc5736`,
                   {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
+                      "accept": "/",
                     },
                     body: JSON.stringify(warehouseDetailData),
                   }

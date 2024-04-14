@@ -35,11 +35,12 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
     else {
       const user = userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
       // await fetch(`http://localhost:5000/${user}/login`, 
-      await fetch(`https://fresh-flow-blackend.vercel.app/${user}/login`, 
+      await fetch(`https://fresh-flow-backend.vercel.app/${user}/login`, 
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "accept": "/",
         },
         body: JSON.stringify({
           username: formData.username,
