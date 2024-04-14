@@ -20,16 +20,18 @@ import { latLngThreshold } from "@/components/marketPlace/location/filter";
 interface Props {
   cardRefs: React.RefObject<HTMLDivElement>[];
   className: string;
-  warehouseDetailData : warehouseDetailDataProps[];
+  warehouseDetailData: warehouseDetailDataProps[];
 }
 
-const Map = ({ cardRefs, className,warehouseDetailData }: Props) => {
-        const [routingControlAdded, setRoutingControlAdded] = useState(false);
+const Map = ({ cardRefs, className, warehouseDetailData }: Props) => {
+  if (warehouseDetailData.length == 0) return null;
+  const [routingControlAdded, setRoutingControlAdded] = useState(false);
   const markerRef = warehouseDetailData.map(() => useRef<any>(null));
   const mapRef = useRef<any>(null);
   const routingMachineRef = useRef<any>(null);
 
-  const { getFlyOn ,getSearch , getIsClicked ,getLoc,changeIsClicked} = useMapLoading();
+  const { getFlyOn, getSearch, getIsClicked, getLoc, changeIsClicked } =
+    useMapLoading();
 
   function LocationMarker() {
     const map = useMap();

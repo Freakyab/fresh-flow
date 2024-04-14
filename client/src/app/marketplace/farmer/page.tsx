@@ -32,6 +32,7 @@ interface CenterProp {
 
 const Map = dynamic(() => import("@/components/location"), { ssr: false });
 
+
 const FarmerMarketplacePage = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -67,7 +68,6 @@ const FarmerMarketplacePage = () => {
 
   useEffect(() => {
     navigator.geolocation.watchPosition((position) => {
-      console.log(position.coords.latitude, position.coords.longitude);
       setLocation({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
