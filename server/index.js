@@ -13,11 +13,11 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-app.use("/generate",require("./controller/generate.controller"))
+// app.use("/generate",require("./controller/generate.controller"))
 
-app.use("/farmer", require("./controller/farmer.controller"));
+// app.use("/farmer", require("./controller/farmer.controller"));
 app.use("/warehouse", require("./controller/warehouse.controller"));
-app.use("/customer", require("./controller/customer.controller"));
+// app.use("/customer", require("./controller/customer.controller"));
 app.use('/transaction', require("./controller/transaction.controller"));
 
 
