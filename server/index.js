@@ -20,7 +20,6 @@ app.use("/farmer", require("./controller/farmer.controller"));
 app.use("/warehouse", require("./controller/warehouse.controller"));
 app.use("/customer", require("./controller/customer.controller"));
 app.use('/transaction', require("./controller/transaction.controller"));
-app.use('/marketplace', require("./controller/marketPlace.controller"));
 
 
 app.listen(PORT, async () => {

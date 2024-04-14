@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import handleToast from "@/components/toastifyNotification";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 ChartJS.register(
   CategoryScale,
@@ -37,6 +38,7 @@ export const options = {
 
 export function WarehouseExpenseChart({ className }: { className: string }) {
   const [price, setPrice] = React.useState([]);
+  const { userDetails } = useUserDetails();
   const label = [
     "January",
     "February",
@@ -55,7 +57,8 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
   useEffect(() => {
     fetch(
       // Change id
-      "http://localhost:5000/warehouse/getWarehouseExpenseChart/661922f36238f64733cc5736",
+      // `http://localhost:5000/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
+      `https://fresh-flow-blackend.vercel.app/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {
@@ -91,10 +94,13 @@ export function WarehouseOccupacyPie({ className }: { className: string }) {
     totalSpace: 0,
   });
 
+  const { userDetails } = useUserDetails();
+
   useEffect(() => {
     fetch(
       // Change id
-      "http://localhost:5000/warehouse/getOccupiedWarehousePie/661922f36238f64733cc5736",
+      // `http://localhost:5000/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
+      `https://fresh-flow-blackend.vercel.app/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {

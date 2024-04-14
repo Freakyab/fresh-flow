@@ -6,12 +6,14 @@ const initialState: {
         username: string;
         _id: string;
         token: string;
+        type : string;
     };
 } = {
     userDetails: {
         username: "",
         _id: "",
         token: "",
+        type : ""
     }
 };
 
@@ -19,7 +21,7 @@ const userDetailsSlice = createSlice({
     name: "userDetails",
     initialState,
     reducers: {
-        signup(state, action: PayloadAction<{ username: string; _id: string ,token : string}>) {
+        signup(state, action: PayloadAction<{ username: string; _id: string ,token : string,type: string}>) {
             state.userDetails = action.payload;
         },
         logout(state) {
@@ -27,6 +29,7 @@ const userDetailsSlice = createSlice({
                 username: "",
                 _id: "",
                 token: "",
+                type : ""
             };
         },
     },

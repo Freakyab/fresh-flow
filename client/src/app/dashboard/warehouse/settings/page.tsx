@@ -10,6 +10,7 @@ import {
   CardFooter,
   Button,
 } from "@nextui-org/react";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
 import { FaUserEdit } from "react-icons/fa";
 import handleToast from "@/components/toastifyNotification";
 import { ToastContainer } from "react-toastify";
@@ -20,10 +21,13 @@ const Settings = () => {
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isGetCurrentLocation, setIsGetCurrentLocation] =
     useState<boolean>(true);
+
+  const { userDetails } = useUserDetails();
   useEffect(() => {
     fetch(
       // Change id
-      `http://localhost:5000/warehouse/getdatabyid/661922f36238f64733cc5736`,
+      // `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+      `https://fresh-flow-blackend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
@@ -342,7 +346,8 @@ const Settings = () => {
               onClick={() => {
                 fetch(
                   // Change id
-                  `http://localhost:5000/warehouse/update/661922f36238f64733cc5736`,
+                  // `http://localhost:5000/warehouse/update/661922f36238f64733cc5736`,
+                  `https://fresh-flow-blackend.vercel.app/warehouse/update/661922f36238f64733cc5736`,
                   {
                     method: "PUT",
                     headers: {

@@ -15,13 +15,13 @@ type loginComponentProps = {
 };
 
 const LoginComponent = ({ controls }: loginComponentProps) => {
-  const [userType, setUserType] = useState("Farmer");
+  const [userType, setUserType] = useState("");
   const [formData, setFormData] = useState({
-    username: "Rajesh",
+    username: "bhupendra",
     password: "Bangalore",
   });
   
-  const {signup,userDetails,logout} = useUserDetails();
+  const {signup,userDetails} = useUserDetails();
 
   const handleUserTypeChange = (type: string) => {
     setUserType(type);
@@ -32,8 +32,10 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
       alert("Please fill all the fields");
       return;
     }
-    else if(userType === "Farmer") {
-      await fetch("http://localhost:5000/farmer/login", 
+    else {
+      const user = userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
+      // await fetch(`http://localhost:5000/${user}/login`, 
+      await fetch(`https://fresh-flow-blackend.vercel.app/${user}/login`, 
       {
         method: "POST",
         headers: {
@@ -50,7 +52,7 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
           alert(data.error);
         }
         else {
-          signup(formData.username, data.id, data.token);
+          signup(formData.username, data.id, data.token,user);
           console.log(userDetails.userDetails);
         }
       })

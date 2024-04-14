@@ -44,7 +44,8 @@ const FarmerMarketplacePage = () => {
   >([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/warehouse/allwarehouse")
+    // fetch("http://localhost:5000/warehouse/allwarehouse")
+    fetch("https://fresh-flow-blackend.vercel.app/warehouse/allwarehouse")
       .then((res) => res.json())
       .then((data) => {
         if (data) {

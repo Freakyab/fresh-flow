@@ -6,7 +6,6 @@ import RegisterComponent from "../../components/register.component";
 
 export default function login() {
   const [isLogin, setIsLogin] = useState(true);
-  
 
   return (
     <>

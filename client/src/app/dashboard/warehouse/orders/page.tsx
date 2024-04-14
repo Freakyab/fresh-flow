@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
 import handleToast from "@/components/toastifyNotification";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 function Orders() {
   const [orders, setOrders] = useState<transactionProps[]>([]);
   const [status, setStatus] = useState("Pending");
+  const { userDetails } = useUserDetails();
 
   useEffect(() => {
     fetchOrders();
@@ -14,7 +16,8 @@ function Orders() {
 
   const fetchOrders = () => {
     fetch(
-      "http://localhost:5000/transaction/order-request/661922f36238f64733cc5736",
+      // `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
+      `https://fresh-flow-blackend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {

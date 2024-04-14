@@ -78,6 +78,30 @@ router.post("/order-request/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+router.post("/order-top-request/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { typeOfId } = req.body;
+    const type = typeOfId;
+    let allTransaction;
+    if (type === "warehouseId") {
+      allTransaction = await Transaction.find({ warehouseId: userId }).limit(3);
+    }
+    if (type === "farmerId") {
+      allTransaction = await Transaction.find({ farmerId: userId }).limit(3);
+    }
+    if (type === "customerId") {
+      allTransaction = await Transaction.find().limit(3);
+    }
+    if (allTransaction) {
+      res.status(200).json({ allTransaction });
+    } else {
+      res.status(400).json({ message: "no request found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 /*
  *Warehouse accept request

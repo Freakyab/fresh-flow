@@ -8,8 +8,8 @@ const useUserDetails = () => {
     const userDetails = useSelector((state: RootState) => state.userDetails);
     const dispatch = useDispatch<AppDispatch>();
 
-    const signup = (username: string, _id: string,token : string) => {
-        dispatch(userDetailsAction.signup({ username, _id ,token}));
+    const signup = (username: string, _id: string,token : string,type : string) => {
+        dispatch(userDetailsAction.signup({ username, _id ,token,type}));
     };
 
     const logout = () => {
@@ -19,12 +19,17 @@ const useUserDetails = () => {
     const getUserDetails = () => {
         return userDetails;
     }
+
+    const typeOfUser = () => {
+        return userDetails.userDetails.type;
+    } 
     
     return {
         userDetails,
         signup,
         logout,
-        getUserDetails
+        getUserDetails,
+        typeOfUser
     };
 };
 
