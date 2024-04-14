@@ -90,10 +90,10 @@ router.post("/order-top-request/:id", async (req, res) => {
       // allTransaction = await Transaction.find({ warehouseId: userId }).limit(3);
     }
     if (type === "farmerId") {
-      allTransaction = await Transaction.find({ farmerId: userId }).limit(3);
+      allTransaction = await Transaction.find({ farmerId: userId }).limit(3).sort({createdAt:-1});
     }
     if (type === "customerId") {
-      allTransaction = await Transaction.find().limit(3);
+      allTransaction = await Transaction.find().limit(3).sort({createdAt:-1});
     }
     if (allTransaction) {
       res.status(200).json({ allTransaction });
