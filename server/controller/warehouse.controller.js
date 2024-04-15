@@ -184,7 +184,7 @@ router.put("/update/:id", async (req, res) => {
       ];
       // 22-12-2011 to 22-DEC-2021
       return (
-        date.split("-")[2]+
+        date.split("-")[2] +
         "-" +
         monthNames[parseInt(date.split("-")[1]) - 1] +
         "-" +
@@ -193,7 +193,22 @@ router.put("/update/:id", async (req, res) => {
     };
 
     const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
-    const newRegistrationValidUpto = `${parseInt(newRegistrationDate.split("-")[0])-1}-${newRegistrationDate.split("-")[1]}-${parseInt(newRegistrationDate.split("-")[2])+5}`
+
+    var newDate = new Date(registrationDate);
+
+    // Subtract 5 years and 1 day
+    newDate.setFullYear(registrationDate.getFullYear() - 5);
+    newDate.setDate(registrationDate.getDate() - 1);
+
+    // Format the resulting date
+    const newRegistrationValidUpto =
+      newDate.getDate() +
+      "-" +
+      (newDate.getMonth() + 1) +
+      "-" +
+      newDate.getFullYear();
+
+    // const newRegistrationValidUpto = `${parseInt(newRegistrationDate.split("-")[0])-1}-${newRegistrationDate.split("-")[1]}-${parseInt(newRegistrationDate.split("-")[2])+5}`
     // const newRegistrationValidUpto = getDateInMonthAbbreviation(
     //   registrationValidUpto
     // );
@@ -380,6 +395,5 @@ router.get("/getOccupiedWarehousePie/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 module.exports = router;
