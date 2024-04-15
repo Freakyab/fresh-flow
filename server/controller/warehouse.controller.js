@@ -162,12 +162,13 @@ router.put("/update/:id", async (req, res) => {
       occupied,
       typeOfCrop,
     } = req.body;
-
+    
     // Check if the user already exists
     const user = await Warehouse.findOne({ _id: req.params.id });
     if (!user) return res.status(400).json({ msg: "User does not exists" });
 
     const getDateInMonthAbbreviation = (date) => {
+      console.log(date);
       const monthNames = [
         "Jan",
         "Feb",
@@ -194,24 +195,13 @@ router.put("/update/:id", async (req, res) => {
 
     const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
 
-    var newDate = new Date(registrationDate);
+    const newDate = new Date(newRegistrationDate)
 
-    // Subtract 5 years and 1 day
-    newDate.setFullYear(registrationDate.getFullYear() - 5);
-    newDate.setDate(registrationDate.getDate() - 1);
+    // add 5 years in newDate
+    newDate.setFullYear(newDate.getFullYear() + 5)
+    newDate.setDate(newDate.getDate() - 1)
 
-    // Format the resulting date
-    const newRegistrationValidUpto =
-      newDate.getDate() +
-      "-" +
-      (newDate.getMonth() + 1) +
-      "-" +
-      newDate.getFullYear();
-
-    // const newRegistrationValidUpto = `${parseInt(newRegistrationDate.split("-")[0])-1}-${newRegistrationDate.split("-")[1]}-${parseInt(newRegistrationDate.split("-")[2])+5}`
-    // const newRegistrationValidUpto = getDateInMonthAbbreviation(
-    //   registrationValidUpto
-    // );
+    const newRegistrationValidUpto = getDateInMonthAbbreviation(newDate.toISOString().split("T")[0]);
     // Create a new user
     const newUser = {
       ownerName,
@@ -380,9 +370,21 @@ router.get("/getOccupiedWarehousePie/:id", async (req, res) => {
         ];
       });
 
+      // if type of crop is same then add the quantity result should be in array
+      const result = occupied.reduce((acc, obj) => {
+        const found = acc.find((item) => item.type === obj.type);
+        if (found) {
+          found.quantity += obj.quantity;
+        } else {
+          acc.push({ type: obj.type, quantity: obj.quantity });
+        }
+        return acc;
+      }, []);
+
+
       const data = {
         unoccupied: freeSpace,
-        occupied: occupied,
+        occupied: result,
         totalSpace: parseInt(warehouse.capacity),
       };
       if (data) {

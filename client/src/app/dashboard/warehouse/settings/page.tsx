@@ -330,7 +330,7 @@ const Settings = () => {
               onClick={() => {
                 fetch(
                   // Change id
-                  // `http://localhost:5000/warehouse/update/661922f36238f64733cc5736`,
+                  // `http://localhost:5000/warehouse/update/${userDetails.userDetails._id}`,
                   `https://fresh-flow-backend.vercel.app/warehouse/update/${userDetails.userDetails._id}`,
                   {
                     method: "PUT",
