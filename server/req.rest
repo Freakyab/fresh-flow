@@ -1,19 +1,32 @@
 # Farmer
 
 # Registeration
+
 POST http://localhost:5000/farmer/register HTTP/1.1
 Content-Type: application/json
 
 {
     "adharNo" : "123456789012",
     "farmerName": "Rajesh",
-    "farmerContact": "1234567890",
-    "email": "temp@gmail.com",
-    "farmerLocation": "Bangalore",
     "username": "Rajesh",
     "password": "Bangalore",
-    "landSize": "10",
-    "typeOfCrop":["Rice","Wheat","Maize"]
+    "address": "Market yard Manchar",
+    "city": "Pune",
+    "state": "MAHARASHTRA",
+    "farmerContact": "1234567890",
+    "image": "/images/warehouse_1.jpg",
+    "email": "temp@gmail.com",
+    "location": [19.00436, 73.94346],
+    "availableCrops" : [{
+        "typeOfCrop" : "Rice",
+        "quantity" : 10,
+        "price" : 100
+    },
+    {
+        "typeOfCrop" : "Wheat",
+        "quantity" : 10,
+        "price" : 100
+    }]
 }
 
 ###
@@ -71,36 +84,24 @@ Content-Type: application/json
 
 ###
 
-# update
-
-PUT http://localhost:5000/warehouse/update HTTP/1.1
+POST http://localhost:5000/customer/register HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg3NGU5ZWZiNGNhMmQ0MGNjODk5MSIsInVzZXJuYW1lIjoiYmh1cGVuZHJhIiwiaWF0IjoxNzAwMjk4NDQzfQ.3dgzZcK4Sg-N10TMVeOdfyRvR9JpzLtrMlWOhSu6a0o
 
 {
-   "name": "bhupendra",
-   "username": "bhupendra",
-   "location": "Mumbai",
-   "facility": {
-     "temperature":{
-       "low": 10,
-       "high": 40
-     },
-    "capacity": 100,
-    "tempType": "hot"
-   },
-   "certifications": "higifh",
-   "security": "secure",
-   "phoneNo": 646254284,
-   "email": "bh@gmail.com",
-   "operatingHours":{
-     "open": 8,
-     "close": 9
-   },
-   "servicesOffered": "truck"
+    "fullName": "Aryan",
+    "email": "agriculturalproducemarketcommitteemanchar24@example.com",
+    "address": "Market yard Manchar",
+    "city": "Pune",
+    "state": "MAHARASHTRA",
+    "phoneNo": 9922861133,
+    "username": "Aryan",
+    "image": "/images/warehouse_1.jpg",
+    "password": "Bangalore",
+    "location": [19.00436, 73.94346],
+    
 }
 
-### 
+###
 GET http://localhost:5000/warehouse/waiting-list HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg3NGU5ZWZiNGNhMmQ0MGNjODk5MSIsInVzZXJuYW1lIjoiYmh1cGVuZHJhIiwiaWF0IjoxNzAwMzAxNDgxfQ.fJWyT4Abwt23Xr1l9EXN8Bogdyc3CTv6wcLG_uN0lKA

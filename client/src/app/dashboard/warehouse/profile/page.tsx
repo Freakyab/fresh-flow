@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Divider } from "@nextui-org/react";
 import { GoListUnordered } from "react-icons/go";
 import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
@@ -57,29 +56,29 @@ function page() {
   }, []);
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <div className="flex gap-3 h-[500px]">
-        <div className="bg-white rounded-xl p-3  ">
+      <div className="grid grid-cols-2 gap-3 h-[500px]">
+        <div className="bg-white rounded-xl p-3 ">
           <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
-          <div className="overflow-y-auto w-full h-[440px]">
+          <div className="overflow-y-auto h-[440px]">
             <WarehouseDetails
               warehouseDetailData={warehouseDetailData}
               className={"flex gap-3 p-3"}
             />
           </div>
         </div>
-        <div className="bg-white rounded-xl grid col-span-2 p-3 ">
+        <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
           <Title
             title="Recent's Order"
             Icon={<GoListUnordered />}
             link={"/dashboard/warehouse/orders"}
           />
           <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
-            {OrderData.map((order, index) => (
+            {OrderData.length !== 0 ?
+            OrderData.map((order, index) => (
               <div key={index}>
                 <OrderCardDetail {...order} />
-                <Divider />
               </div>
-            ))}
+            )) : <div>No order Found</div>}
           </div>
         </div>
       </div>

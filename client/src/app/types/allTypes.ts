@@ -1,7 +1,7 @@
 type warehouseDetailDataProps = {
+    _id: string;
     ownerName: string;
     name: string;
-    _id: string;
     address: string;
     city: string;
     state: string;
@@ -18,15 +18,53 @@ type warehouseDetailDataProps = {
     typeOfCrop: string[];
 };
 
-type CropsMapProps = {
-    id: number,
-    cropName: string,
-    price: number,
-    img: string,
-    farmerName: string,
-    farmerLocation: string,
-    farmerContact: number ,
+type customerDetailDataProps = {
+    _id : string,
+    fullName: string,
+    email: string,
+    address: string,
     city: string,
+    state : string,
+    phoneNo: string,
+    username: string,
+    password: string,
+    img : string,
+    location: number[],
+};
+
+type farmerDetailDataProps = {
+    _id : string;
+    farmerName: string;
+    adharNo: string;
+    username : string;
+    password : string;
+    address: string;
+    state: string;
+    farmerContact: string;
+    image : string;
+    email   : string;
+    location: number[];
+    city : string;
+    availableCrops: {
+        typeOfCrop: string;
+        quantity: number;
+        price: number;
+    }[],
+}
+
+type CropsMarketPlaceProps = {
+    _id : string,
+    farmerName: string;
+    address: string;
+    city : string;
+    state: string;
+    farmerContact: string;
+    image : string;
+    email   : string;
+    location: number[];
+    crop : string,
+    price: number;
+    availableQuantity: number;
 }
 
 type filterProps = {
@@ -37,10 +75,10 @@ type filterProps = {
 }
 
 type CustomerOrderCartItemsProps = {
-    id: number,
-    cropName: string,
+    _id: string,
+    crop: string,
     price: number,
-    img: string,
+    image: string,
     farmerName: string,
     farmerLocation: string,
     farmerContact: number,
@@ -80,6 +118,8 @@ type transactionProps = {
     status: string,
     typeOfCrop: string,
     createdAt: string,
+    customerName: string | undefined ,
+    customerId: string | undefined,
 }
 
 

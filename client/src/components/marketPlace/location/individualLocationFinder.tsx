@@ -15,29 +15,30 @@ import RoutingControl from "@/components/marketPlace/location/RoutingMachine";
 
 function WarehouseLocation({
   className,
-  warehouseDetailData,
+  location,
+  name,
 }: {
   className: string;
-  warehouseDetailData: warehouseDetailDataProps;
+  location: number[];
+  name: string;
 }) {
   const [userLocation, setUserLocation] = useState({
     latitude: 0,
     longitude: 0,
   });
   const mapRef = useRef<any>(null);
-  console.log(warehouseDetailData.location);
   useEffect(() => {
     setTimeout(() => {
       if (navigator.geolocation) {
-        console.log("Getting location");
         navigator.geolocation.getCurrentPosition((position) => {
+          console.log(position.coords.latitude, position.coords.longitude);
           setUserLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
         });
       }
-    }, 3000);
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -49,18 +50,11 @@ function WarehouseLocation({
         map?.removeLayer(layer);
       });
     }
-  }, [warehouseDetailData]);
+  }, [location]);
 
   return (
     <MapContainer
-      center={[
-        warehouseDetailData.location && warehouseDetailData.location[0]
-          ? warehouseDetailData.location[0]
-          : 0,
-        warehouseDetailData.location && warehouseDetailData.location[1]
-          ? warehouseDetailData.location[1]
-          : 0,
-      ]}
+      center={location ? [location[0],location[1]] : [0, 0]}
       zoom={12}
       className={className}
       ref={mapRef} // Assign ref to map container
@@ -70,26 +64,17 @@ function WarehouseLocation({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Marker
-        position={[
-          warehouseDetailData.location && warehouseDetailData.location[0],
-          warehouseDetailData.location && warehouseDetailData.location[1],
-        ]}
+        position={[location[0], location[1]]}
         eventHandlers={{
           click: (event: any) => {
             const map = event.target._map;
             if (map) {
-              map.flyTo(
-                [
-                  warehouseDetailData?.location[0],
-                  warehouseDetailData?.location[1],
-                ],
-                12
-              );
+              map.flyTo([location[0], location[1]], 12);
             }
           },
         }}
         icon={WarehouseIcon}>
-        <Popup>{warehouseDetailData?.name}</Popup>
+        <Popup>{name}</Popup>
       </Marker>
       {userLocation.latitude !== 0 && userLocation.longitude !== 0 && (
         <Marker
@@ -110,8 +95,8 @@ function WarehouseLocation({
         <RoutingControl
           position="topleft"
           end={[
-            warehouseDetailData?.location[0],
-            warehouseDetailData?.location[1],
+            location[0],
+            location[1],
           ]}
           start={[userLocation?.latitude, userLocation?.longitude]}
           color="#757de8"

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
 import { Button, Card, CardBody, Chip, Divider } from "@nextui-org/react";
 import Image from "next/image";
@@ -16,23 +16,29 @@ function CartItems() {
     addQuantity,
     removeQuantity,
     onPay,
+    setOrderItems,
   } = useCustomerOrderCardItem();
   const cartItem = getOrderItems();
+
+  useEffect(() => {
+    setOrderItems();
+  }, []);
+
   return (
     <div className="m-3 bg-white rounded-xl p-3 w-full">
       <h1 className="text-3xl py-2">Shopping Cart</h1>
       <div className="flex gap-3 ">
         <div className="flex gap-3 flex-col">
           {/* <div className="flex-col flex"> */}
-          {cartItem.map((item: CustomerOrderCartItemsProps) => (
-            <div key={item.id} className="w-full">
+          {cartItem.map((item) => (
+            <div key={item._id} className="w-full">
               <Card
-                key={item.id}
+                key={item._id}
                 className="w-full h-full bg-light-bg shadow-lg">
                 <CardBody className="flex flex-row">
                   <div>
                     <Image
-                      src={item.img}
+                      src={item.image}
                       alt="crop"
                       width={300}
                       height={300}
@@ -41,7 +47,7 @@ function CartItems() {
                   </div>
                   <div className="px-3 flex w-full flex-col gap-3 justify-between">
                     <h1 className="text-xl font-medium tracking-wide line-clamp-1">
-                      {item.cropName} - By {item.farmerName}
+                      {item.crop} - By {item.farmerName}
                     </h1>
                     <Divider />
                     <div className="flex">
@@ -71,7 +77,7 @@ function CartItems() {
                             color="danger"
                             variant="bordered"
                             className="ml-2">
-                            {item.farmerLocation}
+                            {item.location}
                           </Chip>
                         </p>
                       </div>
@@ -82,17 +88,17 @@ function CartItems() {
                             className="bg-white w-fit  rounded-xl text-lg shadow-xl"
                             color="danger"
                             variant="bordered"
-                            onClick={() => removeQuantity(item.id)}>
+                            onClick={() => removeQuantity(item._id,item.crop)}>
                             -
                           </Button>
                           <p className="bg-white p-1 px-2 rounded-xl text-lg">
-                            {item.quantity}
+                            {item.availableQuantity}
                           </p>
                           <Button
                             className="bg-white w-fit rounded-xl text-lg shadow-xl"
                             color="danger"
                             variant="bordered"
-                            onClick={() => addQuantity(item.id)}>
+                            onClick={() => addQuantity(item._id,item.crop)}>
                             +
                           </Button>
                         </div>
@@ -110,7 +116,9 @@ function CartItems() {
                     </div>
                   </div>
                 </CardBody>
-                <button onClick={() => removeOrderItem(item.id)}>Remove</button>
+                <button onClick={() => removeOrderItem(item._id,item.crop)}>
+                  Remove
+                </button>
               </Card>
             </div>
           ))}

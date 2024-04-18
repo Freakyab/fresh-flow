@@ -11,13 +11,13 @@ const useCropsMap = () => {
     const cropState = useSelector((state : RootState) => state.cropsMap);
     const dispatch = useDispatch<AppDispatch>();
 
-    const setCrops = (cropList: CropsMapProps[]) => {
+    const setCrops = (cropList: CropsMarketPlaceProps[]) => {
         dispatch(cropMapAction.setCrops(cropList));
     };
 
-    const setFilter = ({ cropName , priceRange , location } : filterProps) => {
-        dispatch(cropMapAction.setfilter({ cropName , priceRange , location }));
-    }
+    // const setFilter = ({ cropName , priceRange , location } : filterProps) => {
+    //     dispatch(cropMapAction.setfilter({ cropName , priceRange , location }));
+    // }
 
     const getCropsList = () => {
         return cropState.cropList;
@@ -26,7 +26,7 @@ const useCropsMap = () => {
     return {
         cropState,
         setCrops,
-        setFilter,
+        // setFilter,
         getCropsList,
     };
 }

@@ -21,7 +21,7 @@ const persistConfig = {
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, customerOrderCartItem);
+// const persistedReducer = persistReducer(persistConfig, customerOrderCartItem);
 const persistedUserReducer = persistReducer(persistConfig, userDetails);
  
 
@@ -29,7 +29,8 @@ export const store = configureStore({
   reducer: {
     mapLoading: mapLoadingReducer,
     cropsMap: cropsMap,
-    customerOrderCartItem: persistedReducer,
+    // customerOrderCartItem: persistedReducer,
+    customerOrderCartItem: customerOrderCartItem,
     userDetails: persistedUserReducer,
   },
   middleware: (getDefaultMiddleware) => {

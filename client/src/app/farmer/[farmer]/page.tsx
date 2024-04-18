@@ -19,7 +19,7 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
-import WarehouseDetails from "@/components/dashboard/profile/warehouseDetails";
+import FarmerDetails from "@/components/dashboard/profile/farmerDetails";
 
 const Map = dynamic(
   () => import("@/components/marketPlace/location/individualLocationFinder"),
@@ -27,11 +27,9 @@ const Map = dynamic(
 );
 
 function Page() {
-  const [warehouseDetailData, setWarehouseDetailData] =
-    useState<warehouseDetailDataProps | null>(
-      {} as warehouseDetailDataProps | null
-    );
-  const pathname = usePathname().split("/warehouse/")[1];
+  const [farmerDetailData, setFarmerDetailData] =
+    useState<farmerDetailDataProps | null>({} as farmerDetailDataProps | null);
+  const pathname = usePathname().split("/farmer/")[1];
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [display, setDisplay] = React.useState(false);
   const [selectedCrop, setSelectedCrop] = React.useState<string>("");
@@ -39,42 +37,36 @@ function Page() {
 
   useEffect(() => {
     if (pathname) {
-      // fetch(`http://localhost:5000/warehouse/getdatabyid/${pathname}`, {
-      fetch(`https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`, {
+      // fetch(`http://localhost:5000/farmer/getdatabyid/${pathname}`, {
+      fetch(`https://fresh-flow-backend.vercel.app/getdatabyid/${pathname}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
       })
         .then((res) => res.json())
         .then((data) => {
           if (data) {
-            setWarehouseDetailData(data);
+            setFarmerDetailData(data);
           }
         });
     }
   }, [pathname]);
   const handleSubmit = async (e: FormData) => {
-    const duration = e.get("duration");
     const quantity = e.get("quantity");
 
-    const newDuration = parseInt(duration as string);
     const newQuantity = parseInt(quantity as string);
-    const capacity = warehouseDetailData
-      ? parseFloat(warehouseDetailData.capacity)
-      : 0;
+    const capacity = farmerDetailData?.availableCrops.find(
+      (crop) => crop.typeOfCrop === selectedCrop
+    )?.quantity as number | 0;
+    console.log(capacity);
 
-    if (duration === "" || quantity === "" || selectedCrop === "") {
+    if (quantity === "" || selectedCrop === "") {
       handleToast("Please enter all the values", "error");
       return;
     } else {
-      if (
-        newDuration <= 0 ||
-        newQuantity <= 0 ||
-        isNaN(newDuration) ||
-        isNaN(newQuantity)
-      ) {
+      if (newQuantity <= 0 || isNaN(newQuantity)) {
         handleToast("Please enter valid values", "error");
         return;
       } else if (newQuantity > capacity) {
@@ -83,22 +75,20 @@ function Page() {
       }
     }
     await fetch(
-      // `http://localhost:5000/transaction/farmer-purchase/${
-      `https://fresh-flow-backend.vercel.app/transaction/farmer-purchase/${
+      // `http://localhost:5000/transaction/customer-purchase/${
+        `https://fresh-flow-backend.vercel.app/transaction/customer-purchase/${
         getUserDetails().userDetails._id
       }`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
         body: JSON.stringify({
-          duration: duration,
           quantity: quantity,
-          warehouseId: warehouseDetailData?._id,
-          price: warehouseDetailData?.price,
           typeOfCrop: selectedCrop,
+          farmerId: farmerDetailData?._id,
         }),
       }
     )
@@ -125,30 +115,17 @@ function Page() {
   };
   return (
     <>
-      {warehouseDetailData?.location != null ? (
+      {farmerDetailData?.location != null ? (
         <div className="flex flex-col md:flex-row items-stretch d-hight w-[99%] m-2 overflow-hidden border-2 border-black rounded-lg shadow-lg">
           <div className="w-full md:w-1/2 bg-gray-100 p-6 flex flex-col overflow-x-auto">
-            <h1 className="text-2xl font-bold mb-2">
-              {warehouseDetailData.name}
-              <Divider />
-            </h1>
-            <p className="text-lg font-semibold py-1">
-              {"₹"}
-              {warehouseDetailData.price}/sqft
-            </p>
-
-            <WarehouseDetails
-              warehouseDetailData={warehouseDetailData}
-              className=""
-            />
-            <div className="p-3 flex gap-3 items-center">
-              <p className="text-lg font-semibold cursor-pointer">Buy </p>
+            <FarmerDetails farmerDetailData={farmerDetailData} className="" />
+            <div className="py-3 flex gap-3 items-center">
               <Button
                 color="success"
                 variant="bordered"
                 onClick={handleModel}
                 className="m-3">
-                {warehouseDetailData.price}/sqft
+                Buy
               </Button>
             </div>
             <div className="absolute z-10">
@@ -162,13 +139,6 @@ function Page() {
                       <form action={handleSubmit}>
                         <ModalBody>
                           <div className="flex flex-col gap-3">
-                            <p>Enter the duration of the storage</p>
-                            <Input
-                              type="number"
-                              name="duration"
-                              label="Duration (in months)"
-                              placeholder="Enter your duration in months"
-                            />
                             <p>Enter the quantity of the product</p>
                             <Input
                               type="number"
@@ -180,12 +150,12 @@ function Page() {
                               name="typeOfCrop"
                               label="Type of Crop"
                               placeholder="Select the type of crop"
-                              onChange={(e) => setSelectedCrop(e.target.value)}
-                              >
-                              {warehouseDetailData.typeOfCrop.map((crop) => (
-                                <SelectItem key={crop} value={crop}
-                                >
-                                  {crop}
+                              onChange={(e) => setSelectedCrop(e.target.value)}>
+                              {farmerDetailData.availableCrops.map((crop) => (
+                                <SelectItem
+                                  key={crop.typeOfCrop}
+                                  value={crop.typeOfCrop}>
+                                  {crop.typeOfCrop}
                                 </SelectItem>
                               ))}
                             </Select>
@@ -210,23 +180,19 @@ function Page() {
             </div>
           </div>
           <div className="w-full md:w-1/2 bg-gray-300 p-6">
-            {!display && warehouseDetailData != undefined ? (
+            {!display && farmerDetailData != undefined ? (
               <Map
                 className="w-full h-64 md:h-full"
-                name={warehouseDetailData.name}
-                location={warehouseDetailData.location}
+                name={farmerDetailData.farmerName}
+                location={farmerDetailData.location}
               />
             ) : (
-              <div className="text-red-500 text-lg font-bold">
-                Loading map...
-              </div>
+              <div className=" text-lg font-bold">Loading map...</div>
             )}
           </div>
         </div>
       ) : (
-        <div className="text-red-500 text-lg font-bold">
-          Warehouse not found
-        </div>
+        <div className="text-red-500 text-lg font-bold">Farmer not found</div>
       )}
       <ToastContainer />
     </>

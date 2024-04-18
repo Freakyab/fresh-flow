@@ -1,95 +1,108 @@
-'use client';
-import React from "react";
-import { warehouseOrderType } from "../../../../components/dataSample/orderType";
-import { Card, CardBody, Chip, Divider } from "@nextui-org/react";
-import warehouseDetailData from "../../../../components/dataSample/warehouseData";
-import Title from "@/components/dashboard/profile/title";
+"use client";
+import React, { useEffect, useState } from "react";
+// import { warehouseOrderType } from "../../../../components/dataSample/orderType";
+// import warehouseDetailData from "../../../../components/dataSample/warehouseData";
 import { GoListUnordered } from "react-icons/go";
 import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
-import { ExpenseChart } from "@/components/dashboard/cartItems/chart";
+
+import Title from "@/components/dashboard/profile/title";
 import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
+import { CustomerExpenseChart } from "@/components/dashboard/orders/customerChart";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
+import CustomerDetails from "@/components/dashboard/profile/customerDetails";
 
 function page() {
+  const [customerDetailData, setCustomerDetailData] =
+    useState<customerDetailDataProps>({} as customerDetailDataProps);
+  const [OrderData, setOrderData] = useState<transactionProps[]>([]);
+  const { userDetails } = useUserDetails();
 
+  useEffect(() => {
+    fetch(
+      // `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id} `,
+      
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "/",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setCustomerDetailData(data);
+        }
+      });
+    fetch(
+      // `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "/",
+        },
+        body: JSON.stringify({
+          typeOfId: "customerId",
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setOrderData(data.allTransaction);
+        }
+      });
+  }, []);
 
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <div className="flex gap-3">
-        <div className="bg-white rounded-xl w-fit p-3">
-          <Title title="Customer Detail" Icon={<LuWarehouse />} link={'/dashboard/customer/profile'}/>
-          <div className="flex gap-3 p-3">
-            <Card shadow="sm" className="bg-light-bg ">
-              <CardBody className="flex justify-center text-nowrap gap-3">
-                <div className="flex gap-2">
-                Customer Name :
-                  <Chip variant="bordered">{warehouseDetailData[0].name}</Chip>
-                </div>
-                <div className="flex gap-2">
-                Customer Owner :
-                  <Chip color="primary">
-                    {warehouseDetailData[0].ownerName}
-                  </Chip>
-                </div>
-                <div className="flex gap-2">
-                  Username :
-                  <Chip color="primary">{warehouseDetailData[0].name}</Chip>
-                </div>
-                <div className="flex gap-2">
-                  City :
-                  <Chip color="primary">{warehouseDetailData[0].city}</Chip>
-                </div>
-                {/* <div className="flex gap-2">
-                  Temperature : low :-{" "}
-                  <Chip color="primary">
-                    {warehouseDetailData[0]}
-                  </Chip>
-                  high :-{" "}
-                  <Chip color="primary">
-                    {warehouseDetailData[0].facility.temperature.high}
-                  </Chip>
-                </div> */}
-              </CardBody>
-            </Card>
+      <div className="grid grid-cols-2 gap-3 h-[500px]">
+        <div className="bg-white rounded-xl p-3 ">
+          <Title title="Customer Detail" Icon={<LuWarehouse />} link="" />
+          <div className="overflow-y-auto h-[440px]">
+            <CustomerDetails
+              customerDetailData={customerDetailData}
+              className={"flex gap-3 p-3"}
+            />
           </div>
         </div>
-        <div className="bg-white rounded-xl w-full p-3">
-          <Title title="Recent's Order" Icon={<GoListUnordered />} link={'/dashboard/customer/orders'} />
-          <div className="flex gap-3 p-3 flex-col lg:flex-row">
-            {/* {warehouseOrderType.map((order, index) => (
+        <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
+          <Title
+            title="Recent's Order"
+            Icon={<GoListUnordered />}
+            link={"/dashboard/customer/orders"}
+          />
+          <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
+            {OrderData.length !== 0 ?
+            OrderData.map((order, index) => (
               <div key={index}>
                 <OrderCardDetail {...order} />
-                <Divider />
               </div>
-            ))} */}
+            )) : <div>No order Found</div>}
           </div>
         </div>
       </div>
       <div className="flex gap-3 h-full">
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Charts" Icon={<LuGanttChartSquare />} link={'/dashboard/customer/charts'}/>
-          <ExpenseChart className=""/>
+          <Title
+            title="Charts"
+            Icon={<LuGanttChartSquare />}
+            link={"/dashboard/warehouse/charts"}
+          />
+          <CustomerExpenseChart className="" />
+          {/* <WarehouseExpenseChart className="" /> */}
         </div>
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Settings" Icon={<CiSettings />} link={'/dashboard/customer/settings'}/>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-          eveniet iste cumque autem, quod veniam molestias placeat commodi enim
-          omnis minus possimus nulla non, totam deserunt hic voluptas, repellat
-          optio? Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Necessitatibus recusandae cum consequatur minima similique aliquam
-          laudantium provident iusto laboriosam, delectus molestiae temporibus
-          eligendi doloribus mollitia architecto molestias voluptas voluptate
-          explicabo quidem maxime cumque dolore dicta aperiam! Facere cupiditate
-          debitis illo laudantium nam alias totam quasi adipisci ipsum
-          doloribus, accusantium ullam nesciunt sequi velit itaque facilis
-          tempora deserunt officiis atque sed. Nihil officiis voluptate,
-          repellendus id illo fugiat veniam mollitia quasi a quibusdam, possimus
-          modi magnam odio nam. Obcaecati quibusdam accusamus sed, nisi id
-          temporibus, incidunt, soluta harum nulla accusantium architecto.
+          <Title title="Settings" Icon={<CiSettings />} link={""} />
+          Click on See More to access the settings
         </div>
       </div>
     </div>
   );
 }
-
 export default page;

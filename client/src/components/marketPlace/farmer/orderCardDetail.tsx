@@ -15,13 +15,16 @@ import "react-toastify/dist/ReactToastify.css";
 function OrderCardDetail(order: transactionProps) {
   const handleAccept = async () => {
     // await fetch(`http://localhost:5000/transaction/accept/${order._id}`, {
-    await fetch(`https://fresh-flow-backend.vercel.app/transaction/accept/${order._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "accept": "/",
-      },
-    })
+    await fetch(
+      `https://fresh-flow-backend.vercel.app/transaction/accept/${order._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "/",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         handleToast(data.message, "success");
@@ -33,13 +36,16 @@ function OrderCardDetail(order: transactionProps) {
 
   const handleReject = async () => {
     // await fetch(`http://localhost:5000/transaction/reject/${order._id}`, {
-    await fetch(`https://fresh-flow-backend.vercel.app/transaction/reject/${order._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "accept": "/",
-      },
-    })
+    await fetch(
+      `https://fresh-flow-backend.vercel.app/transaction/reject/${order._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "/",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         handleToast(data.message, "success");
@@ -59,9 +65,16 @@ function OrderCardDetail(order: transactionProps) {
               {order._id}
             </Chip>
           </div>
-          <div className="flex gap-2">
-            Farmer Name :<Chip variant="bordered">{order.farmerName}</Chip>
-          </div>
+          {!order.customerName ? (
+            <div className="flex gap-2">
+              Farmer Name :<Chip variant="bordered">{order.farmerName}</Chip>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              Customer Name :
+              <Chip variant="bordered">{order.customerName}</Chip>
+            </div>
+          )}
           <div className="flex gap-2">
             CreatedAt :
             <Chip color="primary">{order.createdAt.slice(0, 10)}</Chip>
@@ -78,12 +91,12 @@ function OrderCardDetail(order: transactionProps) {
               {order.price}
             </Chip>
           </div>
-          <div className="flex gap-2">
+          {order.duration && (<div className="flex gap-2">
             Duration :
             <Chip color="primary" variant="bordered">
               {order.duration}
             </Chip>
-          </div>
+          </div>)}
           <div className="flex gap-2">
             Type of Crop :
             <Chip color="primary" variant="bordered">
@@ -106,24 +119,24 @@ function OrderCardDetail(order: transactionProps) {
           </div>
         </CardBody>
         <Divider />
-        {
-          order.status === "pending" && 
+        {order.status === "pending" && (
           <CardFooter className="flex justify-end items-center gap-3 bg-light-bg">
-          <Button
-            color="success"
-            variant="shadow"
-            className="text-white"
-            onClick={handleAccept}>
-            Accept
-          </Button>
-          <Button
-            color="danger"
-            className="text-white"
-            variant="shadow"
-            onClick={handleReject}>
-            Reject
-          </Button>
-        </CardFooter>}
+            <Button
+              color="success"
+              variant="shadow"
+              className="text-white"
+              onClick={handleAccept}>
+              Accept
+            </Button>
+            <Button
+              color="danger"
+              className="text-white"
+              variant="shadow"
+              onClick={handleReject}>
+              Reject
+            </Button>
+          </CardFooter>
+        )}
       </Card>
       <ToastContainer />
     </div>

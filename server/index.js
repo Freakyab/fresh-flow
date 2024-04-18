@@ -22,6 +22,7 @@ app.get("/", (req, res) => {
 // app.use("/generate",require("./controller/generate.controller"))
 
 app.use("/farmer", require("./controller/farmer.controller"));
+app.use("/cartItems", require("./controller/cartItem.controller"));
 app.use("/warehouse", require("./controller/warehouse.controller"));
 app.use("/customer", require("./controller/customer.controller"));
 app.use("/transaction", require("./controller/transaction.controller"));

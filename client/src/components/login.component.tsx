@@ -4,6 +4,9 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import InputWithImageComponent from "./inputWithimage.component";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
+import handleToast from "./toastifyNotification";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type controlsProps = {
   isLogin: boolean;
@@ -28,9 +31,8 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
   };
 
   const handleLogin = async() => {
-    if(formData.username === "" || formData.password === "") {
-      alert("Please fill all the fields");
-      return;
+    if(formData.username === "" || formData.password === "" || userType === "") {
+      handleToast("Please fill all the fields", "error");
     }
     else {
       const user = userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
@@ -132,6 +134,7 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

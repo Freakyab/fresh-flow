@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
 const Farmer = require("../model/farmer.model");
 const Warehouse = require("../model/warehouse.model");
+const Customer = require("../model/customer.model");
 const Transaction = require("../model/transaction.model");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth.middleware");
@@ -12,7 +12,7 @@ const auth = require("../middleware/auth.middleware");
  */
 router.post("/farmer-purchase/:id", async (req, res) => {
   try {
-    const { warehouseId, quantity, price, duration,typeOfCrop } = req.body;
+    const { warehouseId, quantity, price, duration, typeOfCrop } = req.body;
     const farmerId = req.params.id;
     const farmer = await Farmer.findById(farmerId);
     if (!farmer) {
@@ -49,6 +49,48 @@ router.post("/farmer-purchase/:id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+/* customer purchase warehouse
+ * post /transaction/customer-purchase
+ */
+router.post("/customer-purchase/:id", async (req, res) => {
+  try {
+    const { farmerId, quantity, typeOfCrop } = req.body;
+    const customerId = req.params.id;
+    const farmer = await Farmer.findById(farmerId);
+    const customer = await Customer.findById(customerId);
+    if (!farmer) {
+      return res.status(400).json({ message: "Farmer not found" });
+    }
+
+    const farmerName = farmer.farmerName;
+    const customerName = customer.fullName;
+
+    const cropPrice = farmer.availableCrops.find(
+      (crop) => crop.cropName === typeOfCrop
+    ).price;
+
+    const Transcation = new Transaction({
+      farmerName,
+      price: cropPrice,
+      customerId,
+      customerName,
+      farmerId,
+      quantity,
+      duration,
+      typeOfCrop,
+    });
+
+    await Transcation.save();
+
+    if (Transcation) {
+      res.status(200).json({ Transcation });
+    } else {
+      res.status(400).json({ error: "Something went wrong" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 /*
  ! Warehouse Dashboard
  *Warehouse all request info 
@@ -58,6 +100,7 @@ router.post("/order-request/:id", async (req, res) => {
   try {
     const userId = req.params.id;
     const { typeOfId } = req.body;
+
     const type = typeOfId;
     let allTransaction;
     if (type === "warehouseId") {
@@ -67,7 +110,7 @@ router.post("/order-request/:id", async (req, res) => {
       allTransaction = await Transaction.find({ farmerId: userId });
     }
     if (type === "customerId") {
-      allTransaction = await Transaction.find();
+      allTransaction = await Transaction.find({ customerId: userId });
     }
     if (allTransaction) {
       res.status(200).json({ allTransaction });
@@ -85,15 +128,19 @@ router.post("/order-top-request/:id", async (req, res) => {
     const type = typeOfId;
     let allTransaction;
     if (type === "warehouseId") {
-      // get request of warehouse
-     allTransaction = await Transaction.find({ warehouseId: userId }).limit(3).sort({createdAt:-1}) ;
-      // allTransaction = await Transaction.find({ warehouseId: userId }).limit(3);
+      allTransaction = await Transaction.find({ warehouseId: userId })
+        .limit(3)
+        .sort({ createdAt: -1 });
     }
     if (type === "farmerId") {
-      allTransaction = await Transaction.find({ farmerId: userId }).limit(3).sort({createdAt:-1});
+      allTransaction = await Transaction.find({ farmerId: userId })
+        .limit(3)
+        .sort({ createdAt: -1 });
     }
     if (type === "customerId") {
-      allTransaction = await Transaction.find().limit(3).sort({createdAt:-1});
+      allTransaction = await Transaction.find({ customerId: userId })
+        .limit(3)
+        .sort({ createdAt: -1 });
     }
     if (allTransaction) {
       res.status(200).json({ allTransaction });
@@ -250,7 +297,5 @@ router.get("/farmer-all-request/:id", auth, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
 
 module.exports = router;
