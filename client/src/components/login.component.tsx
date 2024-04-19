@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import InputWithImageComponent from "./inputWithimage.component";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 import handleToast from "./toastifyNotification";
 import { ToastContainer } from "react-toastify";
+import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 
 type controlsProps = {
@@ -23,42 +24,58 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
     username: "bhupendra",
     password: "Bangalore",
   });
-  
-  const {signup,userDetails} = useUserDetails();
+
+  const router = useRouter();
+
+  const { signup, getUserDetails } = useUserDetails();
+
+  useEffect(() => {
+    if (getUserDetails().userDetails.username !== "") {
+      router.push(`/dashboard/${getUserDetails().userDetails.type}/profile`);
+    }
+  }, []);
 
   const handleUserTypeChange = (type: string) => {
     setUserType(type);
   };
 
-  const handleLogin = async() => {
-    if(formData.username === "" || formData.password === "" || userType === "") {
+  const handleLogin = async () => {
+    if (
+      formData.username === "" ||
+      formData.password === "" ||
+      userType === ""
+    ) {
       handleToast("Please fill all the fields", "error");
-    }
-    else {
-      const user = userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
-      // await fetch(`http://localhost:5000/${user}/login`, 
-      await fetch(`https://fresh-flow-backend.vercel.app/${user}/login`, 
-      {
+    } else {
+      const user =
+        userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
+      // await fetch(`http://localhost:5000/${user}/login`,
+      await fetch(`https://fresh-flow-backend.vercel.app/${user}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
         body: JSON.stringify({
           username: formData.username,
           password: formData.password,
         }),
       })
-      .then((res) => res.json())
-      .then((data) => {
-        if(data.error) {
-          alert(data.error);
-        }
-        else {
-          signup(formData.username, data.id, data.token,user);
-          console.log(userDetails.userDetails);
-        }
-      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            handleToast(data.error, "error");
+          } else {
+            signup(formData.username, data.id, data.token, user);
+            if (user === "farmer") {
+              router.push("/dashboard/farmer/profile");
+            } else if (user === "customer") {
+              router.push("/dashboard/customer/profile");
+            } else {
+              router.push("/dashboard/warehouse/profile");
+            }
+          }
+        });
     }
   };
 
@@ -92,14 +109,18 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
       </h2>
       <div className="flex flex-col w-full gap-4 mt-4">
         <InputWithImageComponent
-          Image={<MdEmail size={25} className={"input-icon-color"}/>}
+          Image={<MdEmail size={25} className={"input-icon-color"} />}
           placeholder="Enter the username"
           type="text"
-          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, username: e.target.value })
+          }
           value={formData.username}
         />
         <InputWithImageComponent
-          Image={<RiLockPasswordFill size={25} className={"input-icon-color"}/>}
+          Image={
+            <RiLockPasswordFill size={25} className={"input-icon-color"} />
+          }
           placeholder="Password"
           type="password"
           onChange={(e) =>
@@ -111,9 +132,9 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
           Forgot Password?
         </p>
 
-        <button className="w-full h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none"
-          onClick={handleLogin}
-        >
+        <button
+          className="w-full h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none"
+          onClick={handleLogin}>
           Login
         </button>
         <p className="text-center text-sm">

@@ -48,6 +48,23 @@ const customerOrderCartItemSlice = createSlice({
                 state.totalAmount += item.price;
             }
         },
+        setOrderQuantity(state, action: PayloadAction<{ id: string, quantity : number }>) {
+            const { id, quantity } = action.payload;
+            const item = state.orderItems.find((orderItem) => orderItem._id === id);
+            
+            if (item) {
+                if(item.availableQuantity < quantity){
+                    state.totalAmount += item.price * (quantity - item.availableQuantity)  ;
+                }
+                else if(item.availableQuantity === quantity){
+                    return ;
+                }
+                else{
+                    state.totalAmount -= item.price * (item.availableQuantity - quantity);
+                }
+                item.availableQuantity = quantity;
+            }
+        },
         removeQuantity(state, action: PayloadAction<string>) {
             const item = state.orderItems.find((orderItem) => orderItem._id === action.payload);
             if (item) {

@@ -1,12 +1,20 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { Select, SelectItem } from "@nextui-org/react";
+import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
+import handleToast from "@/components/toastifyNotification";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 function Orders() {
-  const [orderData, setOrderData] = useState<transactionProps[]>([]);
-  const [typeOf, setTypeOf] = useState<string>("Customer");
+  const [orders, setOrders] = useState<transactionProps[]>([]);
+  const [status, setStatus] = useState("Pending");
   const { userDetails } = useUserDetails();
+
   useEffect(() => {
+    fetchOrders();
+  }, [status]);
+
+  const fetchOrders = () => {
     fetch(
       // `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
       `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
@@ -14,26 +22,42 @@ function Orders() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          accept: "/",
+          "accept": "/",
         },
-        body: JSON.stringify({
-          typeOfId: "farmerId",
-        }),
+        body: JSON.stringify({ typeOfId: "customerId" }),
       }
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
-          setOrderData(data.allTransaction);
+        if (data.allTransaction) {
+          console.log(data.allTransaction);
+          setOrders(data.allTransaction);
+        } else {
+          handleToast("No data found", "info");
         }
+      })
+      .catch((err) => {
+        handleToast(err.message, "error");
       });
-  }, []);
+  };
 
   return (
-    <div>
-     order
-    </div>
-  );
+    <div className="m-3 p-3 w-full bg-white flex justify-center flex-col items-center rounded-xl">
+      <h1 className="text-2xl font-bold text-center text-primary">Orders</h1>
+      {orders.length === 0 ? (
+        <h1 className="text-center text-2xl text-primary">
+          No orders available
+        </h1>
+      ) : (
+        orders
+        .map((order, index) => (
+          <div key={index}>
+            {/* Check if order is empty */}
+            <OrderCardDetail {...order} />
+          </div>
+        ))
+    )}
+  </div>
+);
 }
-
 export default Orders;

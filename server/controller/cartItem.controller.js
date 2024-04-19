@@ -156,10 +156,10 @@ router.put("/addQuantity/:id", async (req, res) => {
  * @route POST /cartItems/removeQuantity
  */
 
-router.put("/removeQuantity/:id", async (req, res) => {
+router.put("/setOrderQuantity/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
-    const { id, crop } = req.body;
+    const { id, crop,quantity } = req.body;
     const cartExist = await CartItems.find({ customerId: customerId }).exec();
     if (cartExist[0]) {
       const orderItems = cartExist[0].orderItems;
@@ -169,8 +169,8 @@ router.put("/removeQuantity/:id", async (req, res) => {
           order._id.toString() == id &&
           order.crop.toLowerCase() == crop.toLowerCase()
         ) {
-          order.availableQuantity = order.availableQuantity - 1;
-          if (order.availableQuantity == 0) {
+          order.availableQuantity = quantity;
+          if (quantity == 0) {
             orderItems.splice(orderItems.indexOf(order), 1);
           }
         }
@@ -182,16 +182,16 @@ router.put("/removeQuantity/:id", async (req, res) => {
       if (!updatedCart) {
         res
           .status(200)
-          .json({ message: "Quantity Not Removed", isQuantityRemoved: false });
+          .json({ message: "Quantity Not Removed", isQuantitySet: false });
       } else {
         res
           .status(200)
-          .json({ message: "Quantity Removed", isQuantityRemoved: true });
+          .json({ message: "Quantity Removed", isQuantitySet: true });
       }
     } else {
       res
         .status(200)
-        .json({ message: "Order Not Found", isQuantityRemoved: false });
+        .json({ message: "Order Not Found", isQuantitySet: false });
     }
   } catch (error) {
     console.log(error);

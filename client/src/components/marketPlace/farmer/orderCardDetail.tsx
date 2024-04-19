@@ -9,10 +9,12 @@ import {
   Divider,
 } from "@nextui-org/react";
 import handleToast from "@/components/toastifyNotification";
+import { usePathname } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function OrderCardDetail(order: transactionProps) {
+  const pathname = usePathname();
   const handleAccept = async () => {
     // await fetch(`http://localhost:5000/transaction/accept/${order._id}`, {
     await fetch(
@@ -65,6 +67,21 @@ function OrderCardDetail(order: transactionProps) {
               {order._id}
             </Chip>
           </div>
+          {!order.customerName && (
+            <div className="flex gap-2">
+            Status :
+            <Chip
+              // variant="bordered"
+              color={`${
+                order.status === "pending"
+                  ? "danger"
+                  : order.status === "accepted"
+                  ? "success"
+                  : "warning"
+              }`}>
+              {order.status}
+            </Chip>
+          </div>)}
           {!order.customerName ? (
             <div className="flex gap-2">
               Farmer Name :<Chip variant="bordered">{order.farmerName}</Chip>
@@ -103,23 +120,10 @@ function OrderCardDetail(order: transactionProps) {
               {order.typeOfCrop}
             </Chip>
           </div>
-          <div className="flex gap-2">
-            Status :
-            <Chip
-              // variant="bordered"
-              color={`${
-                order.status === "pending"
-                  ? "danger"
-                  : order.status === "accepted"
-                  ? "success"
-                  : "warning"
-              }`}>
-              {order.status}
-            </Chip>
-          </div>
+          
         </CardBody>
         <Divider />
-        {order.status === "pending" && (
+                {order.status === "pending" && pathname.split('/')[2] == 'warehouse'  && (
           <CardFooter className="flex justify-end items-center gap-3 bg-light-bg">
             <Button
               color="success"

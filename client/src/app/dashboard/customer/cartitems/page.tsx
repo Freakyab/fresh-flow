@@ -1,28 +1,55 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
-import { Button, Card, CardBody, Chip, Divider } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Chip,
+  Divider,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import Image from "next/image";
 import { ToastContainer } from "react-toastify";
 import handleToast from "@/components/toastifyNotification";
 import "react-toastify/dist/ReactToastify.css";
+import { parse } from "path";
 
 function CartItems() {
+  const quantityArray = ["50", "100", "150", "200", "250", "300"];
   const {
     getOrderItems,
     removeOrderItem,
     clearOrderItems,
     customerOrderCartItemState,
-    addQuantity,
-    removeQuantity,
+    setOrderQuantity,
     onPay,
     setOrderItems,
   } = useCustomerOrderCardItem();
-  const cartItem = getOrderItems();
 
+  const cartItem = getOrderItems();
   useEffect(() => {
     setOrderItems();
   }, []);
+
+  const [status, setStatus] = useState([] as string[]);
+
+  useEffect(() => {
+    setStatus(cartItem.map((item) => (item.availableQuantity * 50).toString()));
+  }, [cartItem]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    _id: string,
+    index: number
+  ) => {
+    const newStatus = [...status];
+    newStatus[index] = (e.target.value).toString();
+    const quantity = parseInt(e.target.value) / 50;
+    if (!quantity) return;
+    setOrderQuantity(_id, quantity,cartItem[index].crop);
+  };
 
   return (
     <div className="m-3 bg-white rounded-xl p-3 w-full">
@@ -30,10 +57,9 @@ function CartItems() {
       <div className="flex gap-3 ">
         <div className="flex gap-3 flex-col">
           {/* <div className="flex-col flex"> */}
-          {cartItem.map((item) => (
-            <div key={item._id} className="w-full">
+          {cartItem.map((item, index) => (
+            <div key={index} className="w-full">
               <Card
-                key={item._id}
                 className="w-full h-full bg-light-bg shadow-lg">
                 <CardBody className="flex flex-row">
                   <div>
@@ -53,7 +79,7 @@ function CartItems() {
                     <div className="flex">
                       <div className="mx-3 bg-white w-[60%] flex flex-col justify-center gap-3 shadow-xl rounded-xl p-2">
                         <h2 className="text-xl tracking-tight">Details</h2>
-                        <p className="text-lg line-clamp-2 text-nowrap">
+                        <span className="text-lg line-clamp-2 text-nowrap">
                           Phone no. :
                           <Chip
                             color="primary"
@@ -61,8 +87,8 @@ function CartItems() {
                             className="ml-2">
                             {item.farmerContact}
                           </Chip>{" "}
-                        </p>
-                        <p className="text-lg line-clamp-2">
+                        </span>
+                        <span className="text-lg line-clamp-2">
                           City:
                           <Chip
                             color="primary"
@@ -70,8 +96,8 @@ function CartItems() {
                             className="ml-2">
                             {item.city}
                           </Chip>
-                        </p>
-                        <p className="text-lg line-clamp-2">
+                        </span>
+                        <span className="text-lg line-clamp-2">
                           Location:
                           <Chip
                             color="danger"
@@ -79,28 +105,23 @@ function CartItems() {
                             className="ml-2">
                             {item.location}
                           </Chip>
-                        </p>
+                        </span>
                       </div>
                       <div className="flex flex-col items-center justify-between bg-white shadow-xl rounded-xl p-2">
                         <h1 className="text-xl tracking-tight">Quantity</h1>
-                        <div className="flex gap-3 items-center py-2">
-                          <Button
-                            className="bg-white w-fit  rounded-xl text-lg shadow-xl"
-                            color="danger"
-                            variant="bordered"
-                            onClick={() => removeQuantity(item._id,item.crop)}>
-                            -
-                          </Button>
-                          <p className="bg-white p-1 px-2 rounded-xl text-lg">
-                            {item.availableQuantity}
-                          </p>
-                          <Button
-                            className="bg-white w-fit rounded-xl text-lg shadow-xl"
-                            color="danger"
-                            variant="bordered"
-                            onClick={() => addQuantity(item._id,item.crop)}>
-                            +
-                          </Button>
+                        <div className="w-full">
+                          {status.length !== 0 &&<Select
+                            key={index}
+                            name="quantity"
+                            label="Quantity in Kg's"
+                            defaultSelectedKeys={[status[index]]}
+                            onChange={(e) => handleChange(e, item._id, index)}>
+                            {quantityArray.map((quantity) => (
+                              <SelectItem key={quantity} value={quantity}>
+                                {quantity}
+                              </SelectItem>
+                            ))}
+                          </Select>}
                         </div>
                         <div className="flex items-center gap-3">
                           <p>Price : </p>
@@ -116,7 +137,7 @@ function CartItems() {
                     </div>
                   </div>
                 </CardBody>
-                <button onClick={() => removeOrderItem(item._id,item.crop)}>
+                <button onClick={() => removeOrderItem(item._id, item.crop)}>
                   Remove
                 </button>
               </Card>

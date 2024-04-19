@@ -1,9 +1,10 @@
 "use client";
-import React, { ReactNode, useState ,useEffect} from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import Link from "next/link";
 import { User, Button } from "@nextui-org/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 type Option = {
   title: string;
@@ -17,8 +18,10 @@ type SideNavProps = {
   ownerName: string;
 };
 
-const SideNav = ({ options , name , ownerName}: SideNavProps) => {
+const SideNav = ({ options, name, ownerName }: SideNavProps) => {
   const pathname = usePathname();
+  const { logout } = useUserDetails();
+  const router = useRouter();
   const activeComponent = pathname.split("/").filter((item) => item !== "")[2];
 
   // Find the index of the active component
@@ -29,6 +32,11 @@ const SideNav = ({ options , name , ownerName}: SideNavProps) => {
   const [selectedIndex, setSelectedIndex] = useState(
     activeIndex !== -1 ? activeIndex : 0
   );
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <div className="bg-white p-3 w-full flex flex-col justify-between">
@@ -65,7 +73,7 @@ const SideNav = ({ options , name , ownerName}: SideNavProps) => {
         </div>
       </div>
       <div>
-        <Button color="danger" variant="bordered">
+        <Button color="danger" variant="bordered" onClick={handleLogout}>
           <IoIosLogOut className="text-2xl" /> Logout
         </Button>
       </div>

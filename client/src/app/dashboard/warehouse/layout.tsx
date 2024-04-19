@@ -32,38 +32,19 @@ const WarehouseDashboard = ({ children }: { children: ReactNode }) => {
       link: "/dashboard/warehouse/settings",
     },
   ];
-  const { typeOfUser,userDetails } = useUserDetails();
-  const [warehouseDetailData, setWarehouseDetailData] = useState({} as warehouseDetailDataProps);
+  const { typeOfUser, getUserDetails} = useUserDetails();
   const router = useRouter();
   useEffect(() => {
     if (typeOfUser() !== "warehouse") {
       alert("You are not authorized to view this page");
       router.push("/login");
-    }else{
-      fetch(
-        // `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-        `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "accept": "/",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data) {
-            setWarehouseDetailData(data);
-          }
-        });
     }
   },[]);
 
   return (
     <div className=" bg-white flex flex-row overflow-hidden h-full">
       <section className="flex sideNav w-1/4 flex-col items-center  p-2">
-        <SideNav options={options} name={warehouseDetailData.name} ownerName={warehouseDetailData.ownerName}/>
+        <SideNav options={options} name={getUserDetails().userDetails.username} ownerName={""}/>
       </section>
 
       <div className="rounded-xl bg-light-bg m-3 w-full ">

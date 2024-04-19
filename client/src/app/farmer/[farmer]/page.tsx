@@ -38,7 +38,7 @@ function Page() {
   useEffect(() => {
     if (pathname) {
       // fetch(`http://localhost:5000/farmer/getdatabyid/${pathname}`, {
-      fetch(`https://fresh-flow-backend.vercel.app/getdatabyid/${pathname}`, {
+      fetch(`https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${pathname}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
