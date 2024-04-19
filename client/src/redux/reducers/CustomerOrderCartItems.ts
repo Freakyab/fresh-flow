@@ -17,7 +17,7 @@ const customerOrderCartItemSlice = createSlice({
     reducers: {
         setOrderItems(state, action: PayloadAction<CropsMarketPlaceProps[]>) {
             state.orderItems = action.payload;
-            state.totalAmount = action.payload.reduce((acc, item) => acc + item.price, 0);
+            state.totalAmount = action.payload.reduce((acc, item) => acc + item.price * item.availableQuantity, 0);
         },
         addOrderItem(state, action: PayloadAction<CropsMarketPlaceProps>) {
             const item = action.payload;
