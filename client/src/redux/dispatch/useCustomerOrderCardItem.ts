@@ -170,8 +170,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const setOrderQuantity = async(id: string,quantity: number,crop :string) => {
-        await fetch(`http://localhost:5000/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
+        // await fetch(`http://localhost:5000/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -197,8 +197,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const onPay = async(totalAmount: number) => {
-        // await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+        await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -206,12 +206,7 @@ const useCustomerOrderCardItem = () => {
             },
             body: JSON.stringify({ totalAmount })
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
+            .then((response) => response.json())
             .then((data) => {
                 if (data.isPaid) {
                     dispatch(customerOrderCartItemAction.onPay(totalAmount));

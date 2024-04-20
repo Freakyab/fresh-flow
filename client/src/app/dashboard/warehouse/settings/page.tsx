@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+
 import {
   Card,
   CardHeader,
@@ -10,11 +11,15 @@ import {
   CardFooter,
   Button,
 } from "@nextui-org/react";
+
 import useUserDetails from "@/redux/dispatch/useUserDetails";
-import { FaUserEdit } from "react-icons/fa";
-import handleToast from "@/components/toastifyNotification";
+
 import { ToastContainer } from "react-toastify";
+import handleToast from "@/components/toastifyNotification";
 import "react-toastify/dist/ReactToastify.css";
+
+import { FaUserEdit } from "react-icons/fa";
+
 const Settings = () => {
   const [warehouseDetailData, setWarehouseDetailData] =
     useState<warehouseDetailDataProps>({} as warehouseDetailDataProps);
@@ -25,14 +30,13 @@ const Settings = () => {
   const { userDetails } = useUserDetails();
   useEffect(() => {
     fetch(
-      // Change id
       // `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
       `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
       }
     )
@@ -40,6 +44,8 @@ const Settings = () => {
       .then((data) => {
         if (data) {
           setWarehouseDetailData(data);
+        } else {
+          handleToast("No data found", "error");
         }
       });
   }, []);
@@ -52,24 +58,24 @@ const Settings = () => {
   };
 
   const getCurrentLocation = () => {
-   if(isGetCurrentLocation)
-    { 
-    handleToast("Fetching current location", "info");
-    if (navigator.geolocation) {
-      setTimeout(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-          setWarehouseDetailData({
-            ...warehouseDetailData,
-            location: [position.coords.latitude, position.coords.longitude],
+    if (isGetCurrentLocation) {
+      handleToast("Fetching current location", "info");
+      if (navigator.geolocation) {
+        setTimeout(() => {
+          navigator.geolocation.getCurrentPosition((position) => {
+            setWarehouseDetailData({
+              ...warehouseDetailData,
+              location: [position.coords.latitude, position.coords.longitude],
+            });
           });
-        });
-      }, 2000);
-    } else {
-      handleToast("Geolocation is not supported by this browser", "error");
-    }}
+        }, 2000);
+      } else {
+        handleToast("Geolocation is not supported by this browser", "error");
+      }
+    }
     setIsGetCurrentLocation(false);
   };
-  
+
   return (
     <div className="w-full m-3">
       <Card className="border-none mb-3 bg-light-bg w-full">
@@ -89,8 +95,6 @@ const Settings = () => {
         <CardBody>
           <div className="flex flex-col gap-3 justify-center">
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Owner name : </p> */}
-              {/* <p>{warehouseDetailData.ownerName}</p> */}
               <Input
                 label="Owner name"
                 placeholder="Owner name"
@@ -106,8 +110,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Total Capacity (in MT) : </p> */}
-              {/* <p>{warehouseDetailData.capacity}</p> */}
               <Input
                 label="Total Capacity (in MT)"
                 placeholder="Total Capacity (in MT)"
@@ -123,8 +125,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Type of Storage : </p> */}
-              {/* <p>{warehouseDetailData.type}</p> */}
               <Select
                 label="Type of Storage"
                 placeholder={warehouseDetailData.type}
@@ -149,8 +149,6 @@ const Settings = () => {
               </Select>
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Status: </p> */}
-              {/* <p>{warehouseDetailData.status}</p> */}
               <Select
                 label="Status"
                 placeholder={warehouseDetailData.status}
@@ -191,8 +189,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Email: </p>
-              <p>{warehouseDetailData.email}</p> */}
               <Input
                 label="Email"
                 placeholder="Email"
@@ -208,8 +204,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Phone no: </p>
-              <p>{warehouseDetailData.phoneNo}</p> */}
               <Input
                 label="Phone no"
                 placeholder="Phone no"
@@ -225,8 +219,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Registration Date: </p>
-              <p>{warehouseDetailData.registrationDate}</p> */}
               <Input
                 label="Registration Date"
                 placeholder="Registration Date"
@@ -241,15 +233,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Location : </p>
-              <p>
-                Lat :{" "}
-                {warehouseDetailData.location &&
-                  warehouseDetailData.location[0]}
-                {","} Lng:{" "}
-                {warehouseDetailData.location &&
-                  warehouseDetailData.location[1]}
-              </p> */}
               <Input
                 label="Latitude"
                 placeholder="Latitude"
@@ -271,8 +254,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">Warehouse address : </p> */}
-              {/* <p>{warehouseDetailData.address}</p> */}
               <Input
                 label="Warehouse address"
                 placeholder="Warehouse address"
@@ -288,8 +269,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">City : </p> */}
-              {/* <p>{warehouseDetailData.city}</p> */}
               <Input
                 label="City"
                 placeholder="City"
@@ -305,8 +284,6 @@ const Settings = () => {
               />
             </div>
             <div className="flex gap-3 items-center">
-              {/* <p className="text-lg font-semibold">State : </p> */}
-              {/* <p>{warehouseDetailData.state}</p> */}
               <Input
                 label="State"
                 placeholder="State"
@@ -336,7 +313,7 @@ const Settings = () => {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
-                      "accept": "/",
+                      accept: "/",
                     },
                     body: JSON.stringify(warehouseDetailData),
                   }
@@ -351,7 +328,6 @@ const Settings = () => {
               }}>
               Update
             </Button>
-            
           </CardFooter>
         )}
       </Card>

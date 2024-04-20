@@ -6,16 +6,10 @@ import { Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Slider,
-  Button,
-} from "@nextui-org/react";
-// import { CropsMapList } from "@/components/dataSample/cropsMapList";
+import { Slider, Button } from "@nextui-org/react";
 import CropCard from "@/components/marketPlace/customer/cropCard";
 import useCropsMap from "@/redux/dispatch/useCropsMap";
-import cropsTypeList, { cropsType } from "@/components/dataSample/cropsType";
-// import { CustomerOrderCartItemsProps } from "@/redux/reducers/CustomerOrderCartItems";
-// import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
+import cropsTypeList from "@/components/dataSample/cropsType";
 
 const Page = () => {
   const [filterBuffer, setFilterBuffer] = React.useState({
@@ -38,7 +32,7 @@ const Page = () => {
     setNewCropTypeList(newCropType);
   }, []);
 
-  const { getCropsList, setCrops } = useCropsMap();
+  const { getCropsList, setCrops, setFilter } = useCropsMap();
 
   useEffect(() => {
     // fetch("http://localhost:5000/farmer/markertPlace", {
@@ -65,9 +59,8 @@ const Page = () => {
   }, [filterBuffer]);
 
   const handleFilter = () => {
-    // setFilter(filterBuffer);
-    // console.log(getCropsList());
-    getCropsList();
+    setFilter(filterBuffer);
+    // getCropsList();
   };
 
   return (
@@ -89,17 +82,16 @@ const Page = () => {
           <Select
             label="Select Crop"
             className="max-w-xs"
-            value={filterBuffer.cropName}>
-            {newCropTypeList.map((item) => (
-              <SelectItem
-                key={item.id}
-                value={item.label}
-                onClick={() =>
-                  setFilterBuffer({ ...filterBuffer, cropName: item.label })
-                }>
-                {item.label}
-              </SelectItem>
-            ))}
+            onChange={(e) =>
+              setFilterBuffer({ ...filterBuffer, cropName: e.target.value })
+            }>
+            {newCropTypeList
+              .sort((a, b) => a.label.localeCompare(b.label))
+              .map((item) => (
+                <SelectItem key={item.label} value={item.label}>
+                  {item.label.toUpperCase()}
+                </SelectItem>
+              ))}
           </Select>
           <Slider
             label="Price Range"

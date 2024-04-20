@@ -30,8 +30,14 @@ const Map = ({ cardRefs, className, warehouseDetailData }: Props) => {
   const mapRef = useRef<any>(null);
   const routingMachineRef = useRef<any>(null);
 
-  const { getFlyOn, getSearch, getIsClicked, getLoc, changeIsClicked } =
-    useMapLoading();
+  const {
+    getFlyOn,
+    getSearch,
+    getIsClicked,
+    getLoc,
+    changeIsClicked,
+    getFilterCrop,
+  } = useMapLoading();
 
   function LocationMarker() {
     const map = useMap();
@@ -120,6 +126,15 @@ const Map = ({ cardRefs, className, warehouseDetailData }: Props) => {
           </>
         ) : null}
         {warehouseDetailData
+          .filter((item) => {
+            const selectedCrop = getFilterCrop().toLowerCase();
+            if(selectedCrop === "all" || selectedCrop === "") return true;
+            else {
+              const itemCropTypes = item.typeOfCrop.map(crop => crop.toLowerCase());
+              return itemCropTypes.includes(selectedCrop);
+            }
+          })
+          .filter((_, index) => index < 30)
           .filter((warehouse) => {
             const searchLength = getSearch()?.length;
             const userLocation = getLoc();

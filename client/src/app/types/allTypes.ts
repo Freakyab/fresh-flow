@@ -131,3 +131,10 @@ type WarehouseOccupacyPieProps = {
     unoccupied: number,
     totalSpace: number
 }
+
+type cropsType =
+    {
+        id: number;
+        label: string;
+        image: string;
+    }

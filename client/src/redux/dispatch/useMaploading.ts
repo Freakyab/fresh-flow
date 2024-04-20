@@ -42,6 +42,14 @@ const useMapLoading = () => {
         return mapState.isClicked;
     };
 
+    const setFilterCrop = (filterCrop: string) => {
+        dispatch(mapLoadingAction.setFilterCrop(filterCrop));
+    }
+
+    const getFilterCrop = () => {
+        return mapState.filterCrop;
+    }
+
     return {
         mapState,
         setFlyOn,
@@ -52,6 +60,8 @@ const useMapLoading = () => {
         getSearch,
         getLoc,
         getIsClicked,
+        setFilterCrop,
+        getFilterCrop
     };
 };
 

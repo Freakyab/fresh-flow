@@ -1,11 +1,8 @@
 "use client";
 import React from "react";
-import useCropsMap from "@/redux/dispatch/useCropsMap";
-import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
-import { IoLocation } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
-// import Model from "@/components/marketPlace/model";
+import Image from "next/image";
 import {
   Card,
   CardBody,
@@ -14,18 +11,31 @@ import {
   Divider,
   CardHeader,
 } from "@nextui-org/react";
-import Image from "next/image";
+
+import useCropsMap from "@/redux/dispatch/useCropsMap";
+import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
+import useUserDetails from "@/redux/dispatch/useUserDetails";
+
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import handleToast from "@/components/toastifyNotification";
+import "react-toastify/dist/ReactToastify.css";
+
+import { IoLocation } from "react-icons/io5";
+
 
 function CropCard({ className }: { className: string }) {
   const router = useRouter();
+
   const { getCropsList } = useCropsMap();
   const { addOrderItem } = useCustomerOrderCardItem();
-
+  const { getUserDetails } = useUserDetails();
   const handleCartItems = (item: CropsMarketPlaceProps) => {
-
+    if (getUserDetails().userDetails.type !== "customer") {
+      return handleToast(
+        "Please login as customer to add items to cart",
+        "error"
+      );
+    }
     addOrderItem({
       _id: item._id,
       crop: item.crop,
@@ -44,7 +54,7 @@ function CropCard({ className }: { className: string }) {
   };
   return (
     <div className={className}>
-      {getCropsList().map((item,index) => (
+      {getCropsList().map((item, index) => (
         <div key={index} className="max-w-80 w-fit h-fit">
           <Card className="m-4 shadow-lg">
             <CardHeader>

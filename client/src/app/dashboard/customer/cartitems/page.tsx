@@ -1,6 +1,7 @@
 "use client";
-import React, { ReactElement, useEffect, useState } from "react";
-import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
+import React, { useEffect, useState } from "react";
+
+import Image from "next/image";
 import {
   Button,
   Card,
@@ -10,11 +11,12 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
-import Image from "next/image";
+
+import useCustomerOrderCardItem from "@/redux/dispatch/useCustomerOrderCardItem";
+
 import { ToastContainer } from "react-toastify";
 import handleToast from "@/components/toastifyNotification";
 import "react-toastify/dist/ReactToastify.css";
-import { parse } from "path";
 
 function CartItems() {
   const quantityArray = ["50", "100", "150", "200", "250", "300"];

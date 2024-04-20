@@ -1,15 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
+
+import useUserDetails from "@/redux/dispatch/useUserDetails";
+
+import Title from "@/components/dashboard/profile/title";
+import WarehouseDetails from "@/components/dashboard/profile/warehouseDetails";
+import { WarehouseExpenseChart } from "@/components/dashboard/orders/warehouseChart";
+import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
+
 import { GoListUnordered } from "react-icons/go";
 import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
-
-import Title from "@/components/dashboard/profile/title";
-import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
-import WarehouseDetails from "@/components/dashboard/profile/warehouseDetails";
-import { WarehouseExpenseChart } from "@/components/dashboard/orders/warehouseChart";
-
-import useUserDetails from "@/redux/dispatch/useUserDetails";
 function page() {
   const [warehouseDetailData, setWarehouseDetailData] =
     useState<warehouseDetailDataProps>({} as warehouseDetailDataProps);

@@ -1,12 +1,15 @@
 'use client';
 import { ReactNode ,useEffect} from "react";
+import { useRouter } from "next/navigation";
+
+import useUserDetails from "@/redux/dispatch/useUserDetails";
+import SideNav from "@/components/sideNav.component";
+
 import { CgProfile } from "react-icons/cg";
 import { GrAnalytics } from "react-icons/gr";
 import { IoMdReorder } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
-import SideNav from "../../../components/sideNav.component";
-import useUserDetails from "@/redux/dispatch/useUserDetails";
-import { useRouter } from "next/navigation";
+
 
 interface FarmerDashboardProps {
   children: ReactNode;

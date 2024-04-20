@@ -301,7 +301,6 @@ router.get("/getFarmerExpenseChart/:id", async (req, res) => {
           customerOrderList.push(item);
         }
       });
-
       if (allTransaction && allTransaction.length > 0) {
         const monthNames = [
           "January",
@@ -352,6 +351,7 @@ router.get("/getOccupiedWarehouseInventoryPie/:id", async (req, res) => {
     if (!farmer) {
       return res.status(400).json({ msg: "Farmer not found" });
     } else {
+
       let freeSpace = 0 ;
 
       let occupied = [];
@@ -381,7 +381,6 @@ router.get("/getOccupiedWarehouseInventoryPie/:id", async (req, res) => {
         occupied: result,
         totalSpace: freeSpace,
       };
-      console.log(data)
       if (data) {
         res.status(200).json(data);
       } else {

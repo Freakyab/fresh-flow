@@ -55,18 +55,18 @@ const cartItemsSchema = new mongoose.Schema({
     ref: "Customer",
     required: true,
   },
-  totalSpend: [
-    {
-      price : {
-        type: Number,
-        required: false
-      },
-      month : {
-        type: String,
-        required: false
-      }
-    }
-  ]
+  // totalSpend: [
+  //   {
+  //     price : {
+  //       type: Number,
+  //       required: false
+  //     },
+  //     month : {
+  //       type: String,
+  //       required: false
+  //     }
+  //   }
+  // ]
 });
 
 const CartItems = client.model("CartItems", cartItemsSchema);

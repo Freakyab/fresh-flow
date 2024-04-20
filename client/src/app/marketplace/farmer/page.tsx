@@ -4,9 +4,9 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import useMapLoading from "@/redux/dispatch/useMaploading";
 import { CiSearch } from "react-icons/ci";
-import cropsType from "@/components/dataSample/cropsType";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
 import { useRouter } from "next/navigation";
+import cropsTypeList from "@/components/dataSample/cropsType";
 
 import {
   Card,
@@ -32,7 +32,6 @@ interface CenterProp {
 
 const Map = dynamic(() => import("@/components/location"), { ssr: false });
 
-
 const FarmerMarketplacePage = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -44,35 +43,54 @@ const FarmerMarketplacePage = () => {
     warehouseDetailDataProps[]
   >([]);
 
+  const [newCropTypeList, setNewCropTypeList] = React.useState<cropsType[]>([]);
+
+  const lastIndex = {
+    id: cropsTypeList.length + 1,
+    label: "All",
+    image: "",
+  };
+
+  useEffect(() => {
+    let newCropType = [...cropsTypeList, lastIndex];
+    setNewCropTypeList(newCropType);
+  }, []);
+
   useEffect(() => {
     // fetch("http://localhost:5000/warehouse/allwarehouse",{
-    fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse",{
+    fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse", {
       // Access-Control-Allow-Origin : "*",
       method: "GET",
-      headers : {
+      headers: {
         "Content-Type": "application/json",
-        "accept": "/",
-      }
-      
+        accept: "/",
+      },
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((data) => {
         if (data) {
-          console.log(data)
+          console.log(data);
           setWarehouseDetailData(data);
-        }else{
+        } else {
           console.log(data);
         }
       });
   }, []);
 
-  const { setFlyOn, getLoc, setSearch, getSearch, changeIsClicked } =
-    useMapLoading();
+  const {
+    setFlyOn,
+    getLoc,
+    setSearch,
+    getSearch,
+    changeIsClicked,
+    setFilterCrop,
+    getFilterCrop,
+  } = useMapLoading();
 
   useEffect(() => {
     navigator.geolocation.watchPosition((position) => {
@@ -110,13 +128,16 @@ const FarmerMarketplacePage = () => {
           <div className="flex gap-3">
             <Select
               label="Select Crop Type"
-              placeholder={cropsType[0].label}
-              className="max-w-xs">
-              {cropsType.map((e) => (
-                <SelectItem key={e.id} value={e.label}>
-                  {e.label}
-                </SelectItem>
-              ))}
+              placeholder="use the dropdown to select crop type"
+              className="max-w-xs"
+              onChange={(e) => setFilterCrop(e.target.value)}>
+              {newCropTypeList
+                .sort((a, b) => a.label.localeCompare(b.label))
+                .map((e) => (
+                  <SelectItem key={e.label} value={e.label}>
+                    {e.label.toLocaleUpperCase()}
+                  </SelectItem>
+                ))}
             </Select>
             <form action={handleSubmit} className="flex gap-3">
               <Input
@@ -138,6 +159,18 @@ const FarmerMarketplacePage = () => {
             {warehouseDetailData &&
               warehouseDetailData.length > 0 &&
               warehouseDetailData
+                .filter((item) => {
+                  const selectedCrop = getFilterCrop().toLowerCase();
+                  if (selectedCrop === "all" || selectedCrop === "")
+                    return true;
+                  else {
+                    const itemCropTypes = item.typeOfCrop.map((crop) =>
+                      crop.toLowerCase()
+                    );
+                    return itemCropTypes.includes(selectedCrop);
+                  }
+                })
+                .filter((_, index) => index < 30)
                 .filter((warehouse) => {
                   const searchLength = getSearch()?.length;
                   const userLocation = getLoc();
@@ -249,10 +282,13 @@ const FarmerMarketplacePage = () => {
                         </div>
                       </CardBody>
                       <Divider />
-                      <CardFooter
-                        className="flex justify-between items-center p-3"
-                        onClick={() => handleRoute(warehouse._id)}>
-                        View Details
+                      <CardFooter className="flex justify-between items-center p-3">
+                        <Button
+                          color="primary"
+                          variant="bordered"
+                          onClick={() => handleRoute(warehouse._id)}>
+                          View Details
+                        </Button>
                         <Button
                           color="success"
                           variant="bordered"

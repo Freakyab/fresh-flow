@@ -104,9 +104,6 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
           Warehouse
         </button>
       </div>
-      <h2 className="text-2xl font-bold mt-4 ease-in duration-300">
-        Hello {userType},
-      </h2>
       <div className="flex flex-col w-full gap-4 mt-4">
         <InputWithImageComponent
           Image={<MdEmail size={25} className={"input-icon-color"} />}

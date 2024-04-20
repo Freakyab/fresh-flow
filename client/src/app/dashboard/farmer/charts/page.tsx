@@ -1,9 +1,11 @@
+import React from "react";
+
+import { Card, Divider } from "@nextui-org/react";
+
 import {
   FarmerExpenseChart,
-  WarehouseInventoryPie
+  WarehouseInventoryPie,
 } from "@/components/dashboard/orders/farmerChart";
-import React from "react";
-import { Card, Divider } from "@nextui-org/react";
 
 function Charts() {
   return (

@@ -1,6 +1,8 @@
-import { CustomerExpenseChart } from "@/components/dashboard/orders/customerChart";
 import React from "react";
+
 import { Card, Divider } from "@nextui-org/react";
+
+import { CustomerExpenseChart } from "@/components/dashboard/orders/customerChart";
 
 function Charts() {
   return (

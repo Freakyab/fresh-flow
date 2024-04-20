@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const CartItems = require("../model/cartItem.model");
 const Transaction = require("../model/transaction.model");
+const Farmer = require("../model/farmer.model");
 const Customer = require("../model/customer.model");
 const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
@@ -159,7 +160,7 @@ router.put("/addQuantity/:id", async (req, res) => {
 router.put("/setOrderQuantity/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
-    const { id, crop,quantity } = req.body;
+    const { id, crop, quantity } = req.body;
     const cartExist = await CartItems.find({ customerId: customerId }).exec();
     if (cartExist[0]) {
       const orderItems = cartExist[0].orderItems;
@@ -239,50 +240,74 @@ router.post("/clearOrderItems/:id", async (req, res) => {
 router.post("/onPay/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
-    const cartExist = await CartItems.find({ customerId: customerId }).exec();
-    const customer = await Customer.findById(customerId).exec();
+    const cartExist = await CartItems.findOne({ customerId: customerId });
+    const customer = await Customer.findById(customerId);
 
-    if (cartExist[0]) {
-
-      const orderItems = cartExist[0].orderItems;
+    if (cartExist) {
+      const orderItems = cartExist.orderItems;
 
       // Array to hold promises for saving transactions
       const transactionPromises = [];
 
-      orderItems.forEach((order)=>{
-        const transaction = new Transaction ({
-          farmerId : order._id,
-          farmerName : order.farmerName,
-          customerId : customerId,
-          customerName :  customer.fullName,
-          quantity : order.availableQuantity,
-          price : order.price,
-          typeOfCrop : order.crop,
-          status : "accepted"
-        });
-        transactionPromises.push(transaction.save()); // Push promise to array
-      });
+      for (const order of orderItems) {
+        const farmer = await Farmer.findById(order._id);
+        if (!farmer) {
+          return res.status(400).json({ message: "Farmer not found" });
+        } else {
+          const newAvailableCrops = farmer.availableCrops.map((crop) => {
+            if (crop.typeOfCrop.toLowerCase() === order.crop.toLowerCase()) {
+              crop.quantity -= (order.availableQuantity * 50) / 100;
+              if (crop.quantity < 0) {
+                // If quantity is not available, cancel the transaction
+                return res
+                  .status(400)
+                  .json({
+                    message: "Not enough quantity available",
+                    isPaid: false,
+                  });
+              }
+            }
+            return crop; // Return the modified crop
+          });
+
+          const transaction = new Transaction({
+            farmerId: order._id,
+            farmerName: order.farmerName,
+            customerId: customerId,
+            customerName: customer.fullName,
+            quantity: order.availableQuantity,
+            price: order.price,
+            typeOfCrop: order.crop,
+            status: "accepted",
+          });
+
+          await Farmer.findByIdAndUpdate(order._id, {
+            availableCrops: newAvailableCrops,
+          });
+
+          transactionPromises.push(transaction.save()); // Push promise to array
+        }
+      }
 
       // Wait for all transaction saves to complete
       await Promise.all(transactionPromises);
 
-      const updatedCart = await CartItems.findByIdAndUpdate(cartExist[0]._id, {
+      const updatedCart = await CartItems.findByIdAndUpdate(cartExist._id, {
         orderItems: [],
       });
 
       if (!updatedCart) {
-        res.status(200).json({ message: "Payment Failed", isPaid: false });
+        res.status(400).json({ message: "Payment Failed", isPaid: false });
       } else {
         res.status(200).json({ message: "Payment Success", isPaid: true });
       }
     } else {
-      res.status(200).json({ message: "Order Not Found", isPaid: false });
+      res.status(404).json({ message: "Order Not Found", isPaid: false });
     }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server Error", isPaid: false });
   }
 });
-
 
 module.exports = router;

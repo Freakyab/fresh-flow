@@ -35,18 +35,22 @@ function Page() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [display, setDisplay] = React.useState(false);
   const [selectedCrop, setSelectedCrop] = React.useState<string>("");
+  const [isValid, setIsValid] = React.useState<boolean>(false);
   const { getUserDetails } = useUserDetails();
 
   useEffect(() => {
     if (pathname) {
       // fetch(`http://localhost:5000/warehouse/getdatabyid/${pathname}`, {
-      fetch(`https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "accept": "/",
-        },
-      })
+      fetch(
+        `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data) {
@@ -55,6 +59,14 @@ function Page() {
         });
     }
   }, [pathname]);
+
+  useEffect(() => {
+    if (getUserDetails().userDetails.type === "farmer") {
+      setIsValid(true);
+    } else {
+      handleToast("Login from farmer's Account", "error");
+    }
+  }, []);
   const handleSubmit = async (e: FormData) => {
     const duration = e.get("duration");
     const quantity = e.get("quantity");
@@ -91,7 +103,7 @@ function Page() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
         body: JSON.stringify({
           duration: duration,
@@ -141,16 +153,18 @@ function Page() {
               warehouseDetailData={warehouseDetailData}
               className=""
             />
-            <div className="p-3 flex gap-3 items-center">
-              <p className="text-lg font-semibold cursor-pointer">Buy </p>
-              <Button
-                color="success"
-                variant="bordered"
-                onClick={handleModel}
-                className="m-3">
-                {warehouseDetailData.price}/sqft
-              </Button>
-            </div>
+            {isValid && (
+              <div className="p-3 flex gap-3 items-center">
+                <p className="text-lg font-semibold cursor-pointer">Buy </p>
+                <Button
+                  color="success"
+                  variant="bordered"
+                  onClick={handleModel}
+                  className="m-3">
+                  {warehouseDetailData.price}/sqft
+                </Button>
+              </div>
+            )}
             <div className="absolute z-10">
               <Modal isOpen={isOpen} onClose={handleClose}>
                 <ModalContent>
@@ -180,11 +194,9 @@ function Page() {
                               name="typeOfCrop"
                               label="Type of Crop"
                               placeholder="Select the type of crop"
-                              onChange={(e) => setSelectedCrop(e.target.value)}
-                              >
+                              onChange={(e) => setSelectedCrop(e.target.value)}>
                               {warehouseDetailData.typeOfCrop.map((crop) => (
-                                <SelectItem key={crop} value={crop}
-                                >
+                                <SelectItem key={crop} value={crop}>
                                   {crop}
                                 </SelectItem>
                               ))}
@@ -209,6 +221,7 @@ function Page() {
               </Modal>
             </div>
           </div>
+
           <div className="w-full md:w-1/2 bg-gray-300 p-6">
             {!display && warehouseDetailData != undefined ? (
               <Map
