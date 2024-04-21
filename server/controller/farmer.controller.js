@@ -121,8 +121,11 @@ router.post("/login", async (req, res) => {
  * @route PUT /farmer/update
  */
 
-router.put("/update", auth, async (req, res) => {
+router.put("/update/:id", async (req, res) => {
   try {
+    const user = await Farmer.findOne({ _id: req.params.id });
+    if (!user) return res.status(400).json({ msg: "User does not exists" });
+
     const {
       adharNo,
       farmerName,
@@ -138,39 +141,26 @@ router.put("/update", auth, async (req, res) => {
       availableCrops,
     } = req.body;
 
-    // Check if the user already exists
-    const existingUser = await Farmer.findById(req.userId);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Update the user fields
-    await Farmer.updateOne(
-      { _id: req.userId },
-      {
-        adharNo,
-        farmerName,
-        username,
-        password,
-        address,
-        city,
-        state,
-        farmerContact,
-        image,
-        email,
-        location,
-        availableCrops,
-      }
-    );
+    const updatedUser = {
+      adharNo,
+      farmerName,
+      username,
+      password: hashedPassword,
+      address,
+      city,
+      state,
+      farmerContact,
+      image,
+      email,
+      location,
+      availableCrops,
+    };
 
-    // Sign the token
-    const token = jwt.sign(
-      { id: existingUser._id, username: existingUser.username },
-      process.env.JWT_SECRET
-    );
-
-    if (token) {
-      res.status(201).json({ message: "Farmer updated successfully", token });
-    } else {
-      res.status(400).json({ message: "Farmer update failed" });
-    }
+    await Farmer.findByIdAndUpdate(req.params.id, updatedUser);
+    res.json({ msg: "User updated" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server Error" });

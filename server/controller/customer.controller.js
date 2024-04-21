@@ -116,29 +116,54 @@ router.post("/login", async (req, res) => {
  * @route PUT /Customer/update
  */
 
-router.put("/update", auth, async (req, res) => {
+router.put("/update/:id", async (req, res) => {
   try {
-    const { fullName, email, username } = req.body;
+    const {
+      fullName,
+      email,
+      username,
+      password,
+      address,
+      city,
+      state,
+      phoneNo,
+      image,
+      location,
+    } = req.body;
 
     // Check if the user already exists
-    const existingUser = await Customer.findById(req.userId);
+    const user = await Customer.findOne({ _id: req.params.id });
+    if (!user) return res.status(400).json({ msg: "User does not exists" });
 
-    // Update the user fields
-    await Customer.updateOne(
-      { _id: req.userId },
-      {
-        fullName,
-        email,
-        username,
-      }
-    );
+    // Create a new user
+    const newUser = {
+      fullName,
+      email,
+      username,
+      password,
+      address,
+      city,
+      state,
+      phoneNo,
+      image,
+      location,
+    };
 
-    // Sign the token
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Replace the password with the hashed password
+    newUser.password = hashedPassword;
+
+    // Save the user
     const token = jwt.sign(
-      { id: existingUser._id, username: existingUser.username },
+      { id: user._id, username: user.username },
       process.env.JWT_SECRET
     );
 
+    await Customer.findByIdAndUpdate(req.params.id, newUser);
+    
     if (token) {
       res.status(201).json({ message: "Customer updated successfully", token });
     } else {

@@ -151,7 +151,6 @@ router.put("/update/:id", async (req, res) => {
       state,
       capacity,
       registrationDate,
-      registrationValidUpto,
       phoneNo,
       status,
       type,
