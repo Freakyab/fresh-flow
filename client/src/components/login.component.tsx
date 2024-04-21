@@ -66,6 +66,10 @@ const LoginComponent = ({ controls }: loginComponentProps) => {
           if (data.error) {
             handleToast(data.error, "error");
           } else {
+            if (!data.id) {
+              handleToast("User not found", "error");
+              return;
+            }
             signup(formData.username, data.id, data.token, user);
             if (user === "farmer") {
               router.push("/dashboard/farmer/profile");

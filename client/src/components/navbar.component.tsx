@@ -6,7 +6,7 @@ import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 function Header() {
   const router = useRouter();
-  const { getUserDetails } = useUserDetails();
+  const { getUserDetails ,logout} = useUserDetails();
 
   const handleSubmit = () => {
     if (getUserDetails().userDetails.username) {
@@ -35,6 +35,7 @@ function Header() {
           <h1
             className="text-3xl font-bold text-white"
             onClick={() => {
+              // logout();
               router.push("/");
             }}>
             Fresh Flow
