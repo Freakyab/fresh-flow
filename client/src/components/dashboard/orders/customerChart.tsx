@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
+import handleToast from "@/components/toastifyNotification";
 
 ChartJS.register(
   CategoryScale,
@@ -68,8 +69,11 @@ export function CustomerExpenseChart({ className }: { className: string }) {
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
+        if (data.isFound) {
           setPrice(data);
+        }
+        else{
+          handleToast("No data found", "error");
         }
       });
   }, []);

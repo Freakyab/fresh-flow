@@ -50,7 +50,7 @@ const FarmerDashboard = ({ children }: FarmerDashboardProps) => {
   return (
     <div className=" bg-white flex flex-row overflow-hidden h-full">
         <section className="flex sideNav w-1/4 flex-col items-center  p-2">
-          <SideNav options={options} name={getUserDetails().userDetails.username} ownerName={""} />
+          <SideNav options={options} name={getUserDetails().userDetails.username} ownerName={"Username"} />
         </section>
 
       <div className="rounded-xl bg-light-bg m-3 w-full ">

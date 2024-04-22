@@ -21,9 +21,6 @@ const useCustomerOrderCardItem = () => {
             body: JSON.stringify({ order }),
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
                 return response.json();
             })
             .then((data) => {
@@ -48,9 +45,6 @@ const useCustomerOrderCardItem = () => {
             body: JSON.stringify({ id, crop })
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
                 return response.json();
             })
             .then((data) => {
@@ -58,7 +52,6 @@ const useCustomerOrderCardItem = () => {
                     dispatch(customerOrderCartItemAction.removeOrderItem(id));
                 } 
             });
-        dispatch(customerOrderCartItemAction.removeOrderItem(id));
     };
 
     const addQuantity = async(id: string,crop :string) => {
@@ -99,9 +92,6 @@ const useCustomerOrderCardItem = () => {
             },
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
                 return response.json();
             })
             .then((data) => {
@@ -125,9 +115,6 @@ const useCustomerOrderCardItem = () => {
             body: JSON.stringify({ id,crop })
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
                 return response.json();
             })
             .then((data) => {
@@ -154,9 +141,6 @@ const useCustomerOrderCardItem = () => {
             },
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
                 return response.json();
             })
             .then((data) => {
@@ -180,9 +164,6 @@ const useCustomerOrderCardItem = () => {
             body: JSON.stringify({ id,quantity ,crop})
         })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
                 return response.json();
             })
             .then((data) => {

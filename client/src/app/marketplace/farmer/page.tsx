@@ -1,12 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import useMapLoading from "@/redux/dispatch/useMaploading";
-import { CiSearch } from "react-icons/ci";
-import { latLngThreshold } from "@/components/marketPlace/location/filter";
 import { useRouter } from "next/navigation";
+
+import useMapLoading from "@/redux/dispatch/useMaploading";
+import { latLngThreshold } from "@/components/marketPlace/location/filter";
 import cropsTypeList from "@/components/dataSample/cropsType";
+
+import { CiSearch } from "react-icons/ci";
 
 import {
   Card,
@@ -24,8 +27,9 @@ import {
   Button,
   DropdownItem,
 } from "@nextui-org/react";
-
-// import warehouseDetailData from "@/components/dataSample/warehouseData";
+import handleToast from "@/components/toastifyNotification";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 interface CenterProp {
   location: number[];
 }
@@ -44,6 +48,7 @@ const FarmerMarketplacePage = () => {
   >([]);
 
   const [newCropTypeList, setNewCropTypeList] = React.useState<cropsType[]>([]);
+  const [isLoaded, setIsLoaded] = React.useState(false);
 
   const lastIndex = {
     id: cropsTypeList.length + 1,
@@ -74,10 +79,10 @@ const FarmerMarketplacePage = () => {
       })
       .then((data) => {
         if (data) {
-          console.log(data);
           setWarehouseDetailData(data);
+          toggleLoad();
         } else {
-          console.log(data);
+          handleToast("No data found", "error");
         }
       });
   }, []);
@@ -119,6 +124,10 @@ const FarmerMarketplacePage = () => {
 
   const handleRoute = (id: string) => {
     router.push(`/warehouse/${id}`);
+  };
+
+  const toggleLoad = () => {
+    setIsLoaded(!isLoaded);
   };
 
   return (
@@ -307,6 +316,7 @@ const FarmerMarketplacePage = () => {
           warehouseDetailData={warehouseDetailData}
         />
       </div>
+      <ToastContainer />
     </div>
   );
 };

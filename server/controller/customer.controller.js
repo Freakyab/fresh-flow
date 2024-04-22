@@ -165,13 +165,13 @@ router.put("/update/:id", async (req, res) => {
     await Customer.findByIdAndUpdate(req.params.id, newUser);
     
     if (token) {
-      res.status(201).json({ message: "Customer updated successfully", token });
+      res.status(201).json({ message: "Customer updated successfully", token  , isUpdated: true});
     } else {
-      res.status(400).json({ message: "Customer update failed" });
+      res.status(400).json({ message: "Customer update failed", isUpdated: false});
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "Server Error" , isUpdated: false});
   }
 });
 
@@ -199,11 +199,11 @@ router.delete("/delete/:id", auth, async (req, res) => {
 router.post("/getdatabyid/:id", async (req, res) => {
   try {
     const user = await Customer.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user) return res.status(400).json({ msg: "User does not exists" , isAvailable: false});
 
-    res.status(200).json(user);
+    res.status(200).json({ user , isAvailable: true });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message , isAvailable: false});
   }
 });
 
@@ -242,13 +242,13 @@ router.get("/getCustomerExpenseChart/:id", async (req, res) => {
           return acc;
         }, {});
         
-        res.status(200).json(ExpensesPerMonth);
+        res.status(200).json({ ExpensesPerMonth , isFound : true });
       } else {
-        res.status(400).json({ msg: "No data found" });
+        res.status(400).json({ msg: "No data found" , isFound : false });
       }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message , isFound : false });
   }
 });
 

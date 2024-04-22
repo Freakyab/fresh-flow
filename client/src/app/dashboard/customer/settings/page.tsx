@@ -8,6 +8,7 @@ import {
   Input,
   CardFooter,
   Button,
+  Skeleton
 } from "@nextui-org/react";
 
 import useUserDetails from "@/redux/dispatch/useUserDetails";
@@ -22,6 +23,7 @@ const Settings = () => {
   const [customerDetailData, setCustomerDetailData] =
     useState<customerDetailDataProps>({} as customerDetailDataProps);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const [isGetCurrentLocation, setIsGetCurrentLocation] =
     useState<boolean>(true);
 
@@ -40,8 +42,9 @@ const Settings = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
+        if (data.isAvailable) {
           setCustomerDetailData(data);
+          toggleLoad();
         } else {
           handleToast("No data found", "error");
         }
@@ -53,6 +56,10 @@ const Settings = () => {
     if (!isEdit) {
       handleToast("Edit mode enabled", "info");
     }
+  };
+
+  const toggleLoad = () => {
+    setIsLoaded(!isLoaded);
   };
 
   const getCurrentLocation = () => {
@@ -80,6 +87,7 @@ const Settings = () => {
 
   return (
     <div className="w-full m-3">
+      <Skeleton isLoaded={isLoaded}>
       <Card className="border-none mb-3 bg-light-bg w-full">
         <CardHeader className="bg-white text-black text-lg font-semibold">
           <div className="flex justify-between w-full">
@@ -255,9 +263,11 @@ const Settings = () => {
                 )
                   .then((res) => res.json())
                   .then((data) => {
-                    if (data) {
+                    if (data.isUpdated) {
                       handleToast("Customer details updated", "success");
                       setIsEdit(false);
+                    }else{
+                      handleToast("Failed to update customer details", "error");
                     }
                   });
               }}>
@@ -267,6 +277,7 @@ const Settings = () => {
         )}
       </Card>
       <ToastContainer />
+      </Skeleton>
     </div>
   );
 };

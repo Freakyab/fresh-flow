@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { Skeleton } from "@nextui-org/react";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 import Title from "@/components/dashboard/profile/title";
@@ -16,6 +17,7 @@ function page() {
   const [farmerDetailData, setFarmerDetailData] =
     useState<farmerDetailDataProps>({} as farmerDetailDataProps);
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const { userDetails } = useUserDetails();
 
   useEffect(() => {
@@ -34,6 +36,7 @@ function page() {
       .then((data) => {
         if (data) {
           setFarmerDetailData(data);
+          toggleLoad();
         }
       });
     fetch(
@@ -58,8 +61,13 @@ function page() {
       });
   }, []);
 
+  const toggleLoad = () => {
+    setIsLoaded(!isLoaded);
+  };
+
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
+      <Skeleton isLoaded={isLoaded}>
       <div className="grid grid-cols-2 gap-3 h-[500px]">
         <div className="bg-white grid rounded-xl p-3 ">
           <Title title="Farmer's Detail" Icon={<LuWarehouse />} link={""} />
@@ -117,6 +125,7 @@ function page() {
           </div>
         </div>
       </div>
+    </Skeleton>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { Skeleton } from "@nextui-org/react";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 import Title from "@/components/dashboard/profile/title";
@@ -15,6 +16,7 @@ function page() {
   const [warehouseDetailData, setWarehouseDetailData] =
     useState<warehouseDetailDataProps>({} as warehouseDetailDataProps);
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const { userDetails } = useUserDetails();
   useEffect(() => {
     fetch(
@@ -24,7 +26,7 @@ function page() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
       }
     )
@@ -41,7 +43,7 @@ function page() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
         body: JSON.stringify({
           typeOfId: "warehouseId",
@@ -52,51 +54,66 @@ function page() {
       .then((data) => {
         if (data) {
           setOrderData(data.allTransaction);
+          toggleLoad();
         }
       });
   }, []);
+
+  const toggleLoad = () => {
+    setIsLoaded(!isLoaded);
+  };
+
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <div className="grid grid-cols-2 gap-3 h-[500px]">
-        <div className="bg-white rounded-xl p-3 ">
-          <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
-          <div className="overflow-y-auto h-[440px]">
-            <WarehouseDetails
-              warehouseDetailData={warehouseDetailData}
-              className={"flex gap-3 p-3"}
+      <Skeleton className="w-full h-full" isLoaded={isLoaded}>
+        <div className="grid grid-cols-2 gap-3 h-[500px]">
+          <div className="bg-white rounded-xl p-3 ">
+            <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
+            <div className="overflow-y-auto h-[440px]">
+              <WarehouseDetails
+                warehouseDetailData={warehouseDetailData}
+                className={"flex gap-3 p-3"}
+              />
+            </div>
+          </div>
+          <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
+            <Title
+              title="Recent's Order"
+              Icon={<GoListUnordered />}
+              link={"/dashboard/warehouse/orders"}
             />
+            <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
+              {OrderData.length !== 0 ? (
+                OrderData.map((order, index) => (
+                  <div key={index}>
+                    <OrderCardDetail {...order} />
+                  </div>
+                ))
+              ) : (
+                <div>No order Found</div>
+              )}
+            </div>
           </div>
         </div>
-        <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
-          <Title
-            title="Recent's Order"
-            Icon={<GoListUnordered />}
-            link={"/dashboard/warehouse/orders"}
-          />
-          <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
-            {OrderData.length !== 0 ?
-            OrderData.map((order, index) => (
-              <div key={index}>
-                <OrderCardDetail {...order} />
-              </div>
-            )) : <div>No order Found</div>}
+        <div className="flex gap-3 h-full">
+          <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+            <Title
+              title="Charts"
+              Icon={<LuGanttChartSquare />}
+              link={"/dashboard/warehouse/charts"}
+            />
+            <WarehouseExpenseChart className="" />
+          </div>
+          <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+            <Title
+              title="Settings"
+              Icon={<CiSettings />}
+              link={"/dashboard/warehouse/settings"}
+            />
+            Click on See More to access the settings
           </div>
         </div>
-      </div>
-      <div className="flex gap-3 h-full">
-        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title
-            title="Charts"
-            Icon={<LuGanttChartSquare />}
-            link={"/dashboard/warehouse/charts"}
-          />
-          <WarehouseExpenseChart className="" />
-        </div>
-        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Settings" Icon={<CiSettings />} link={"/dashboard/warehouse/settings"} />
-          Click on See More to access the settings
-        </div>
-      </div>
+      </Skeleton>
     </div>
   );
 }

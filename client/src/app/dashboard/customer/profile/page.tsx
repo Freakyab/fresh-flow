@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+import { Skeleton } from "@nextui-org/react";
 
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
@@ -13,18 +14,22 @@ import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
 import { GoListUnordered } from "react-icons/go";
 
+import handleToast from "@/components/toastifyNotification";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 function page() {
   const [customerDetailData, setCustomerDetailData] =
     useState<customerDetailDataProps>({} as customerDetailDataProps);
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
   const { userDetails } = useUserDetails();
-
+  const [isLoaded, setIsLoaded] = React.useState(false); 
   useEffect(() => {
     fetch(
       // `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id}`,
       `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id} `,
-      
+
       {
         method: "POST",
         headers: {
@@ -35,8 +40,10 @@ function page() {
     )
       .then((res) => res.json())
       .then((data) => {
-        if (data) {
+        if (data.isAvailable) {
           setCustomerDetailData(data);
+        }else{
+          handleToast("No data found", "error");
         }
       });
     fetch(
@@ -57,53 +64,64 @@ function page() {
       .then((data) => {
         if (data) {
           setOrderData(data.allTransaction);
+          toggleLoad();
         }
       });
   }, []);
 
+  const toggleLoad = () => {
+    setIsLoaded(!isLoaded);
+  };
+
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <div className="grid grid-cols-2 gap-3 h-[500px]">
-        <div className="bg-white rounded-xl p-3 ">
-          <Title title="Customer Detail" Icon={<LuWarehouse />} link="" />
-          <div className="overflow-y-auto h-[440px]">
-            <CustomerDetails
-              customerDetailData={customerDetailData}
-              className={"flex gap-3 p-3"}
+      <Skeleton isLoaded={isLoaded}>
+        <div className="grid grid-cols-2 gap-3 h-[500px]">
+          <div className="bg-white rounded-xl p-3 ">
+            <Title title="Customer Detail" Icon={<LuWarehouse />} link="" />
+            <div className="overflow-y-auto h-[440px]">
+              <CustomerDetails
+                customerDetailData={customerDetailData}
+                className={"flex gap-3 p-3"}
+              />
+            </div>
+          </div>
+          <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
+            <Title
+              title="Recent's Order"
+              Icon={<GoListUnordered />}
+              link={"/dashboard/customer/orders"}
             />
+            <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
+              {OrderData.length !== 0 ? (
+                OrderData.map((order, index) => (
+                  <div key={index}>
+                    <OrderCardDetail {...order} />
+                  </div>
+                ))
+              ) : (
+                <div>No order Found</div>
+              )}
+            </div>
           </div>
         </div>
-        <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
-          <Title
-            title="Recent's Order"
-            Icon={<GoListUnordered />}
-            link={"/dashboard/customer/orders"}
-          />
-          <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
-            {OrderData.length !== 0 ?
-            OrderData.map((order, index) => (
-              <div key={index}>
-                <OrderCardDetail {...order} />
-              </div>
-            )) : <div>No order Found</div>}
+        <div className="flex gap-3 h-full">
+          <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+            <Title
+              title="Charts"
+              Icon={<LuGanttChartSquare />}
+              link={"/dashboard/warehouse/charts"}
+            />
+            <CustomerExpenseChart className="" />
+            {/* <WarehouseExpenseChart className="" /> */}
+          </div>
+          <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+            <Title title="Settings" Icon={<CiSettings />} link={""} />
+            Click on See More to access the settings
           </div>
         </div>
-      </div>
-      <div className="flex gap-3 h-full">
-        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title
-            title="Charts"
-            Icon={<LuGanttChartSquare />}
-            link={"/dashboard/warehouse/charts"}
-          />
-          <CustomerExpenseChart className="" />
-          {/* <WarehouseExpenseChart className="" /> */}
-        </div>
-        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Title title="Settings" Icon={<CiSettings />} link={""} />
-          Click on See More to access the settings
-        </div>
-      </div>
+      </Skeleton>
+      <ToastContainer />
     </div>
   );
 }
