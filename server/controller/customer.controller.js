@@ -135,32 +135,23 @@ router.put("/update/:id", async (req, res) => {
     const user = await Customer.findOne({ _id: req.params.id });
     if (!user) return res.status(400).json({ msg: "User does not exists" });
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+
     // Create a new user
     const newUser = {
       fullName,
       email,
       username,
-      password,
       address,
+      password: hashedPassword,
       city,
       state,
       phoneNo,
       image,
       location,
     };
-
-    // Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Replace the password with the hashed password
-    newUser.password = hashedPassword;
-
-    // Save the user
-    const token = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET
-    );
 
     await Customer.findByIdAndUpdate(req.params.id, newUser);
     
