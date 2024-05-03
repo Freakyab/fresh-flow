@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, ChangeEvent } from "react";
-import InputRadioWithImageComponent from "./inputRadioWithImage.component";
+import React from "react";
 
 import { GiFarmer } from "react-icons/gi";
 import { FaWarehouse } from "react-icons/fa";
@@ -10,52 +9,53 @@ import FarmerRegisterform from "./farmerRegisterform.component";
 import WarehouseOwnerRegisterform from "./warehouseOwnerRegisterform.component";
 import CustomerRegisterform from "./customerRegisterform.component";
 
-const RegisterComponent = () => {
-  const [selectedUserType, setSelectedUserType] = useState("");
+import { Tabs, Tab } from "@nextui-org/react";
 
-  const handleUserTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const userType = e.target.value;
-    setSelectedUserType(userType);
-  };
+const RegisterComponent = () => {
 
   return (
-    <div className="flex flex-col  w-[500px] min-h-[500px]  p-4 bg-white text-black rounded-b-md shadow-lg">
-      {selectedUserType === "" && (
-        <div className="flex flex-col justify-center h-full items-center">
-          <h2 className="text-2xl mb-4 font-bold">Who are you?</h2>
-          <div className="flex flex-col gap-4 max-w-[500px] ">
-            <InputRadioWithImageComponent
-              Image={<GiFarmer size={25} className={"input-icon-color"}/>}
-              handleUserTypeChange={handleUserTypeChange}
-              name="userType"
-              value="Farmer"
-            />
-            <InputRadioWithImageComponent
-              Image={<FaWarehouse size={25} className={"input-icon-color"}/>}
-              handleUserTypeChange={handleUserTypeChange}
-              name="userType"
-              value="Warehouse Owner"
-            />
-            <InputRadioWithImageComponent
-              Image={<IoPeopleSharp size={25} className={"input-icon-color"}/>}
-              handleUserTypeChange={handleUserTypeChange}
-              name="userType"
-              value="Customer"
-            />
-          </div>
-        </div>
-      )}
-
-      {selectedUserType === "Farmer" && (
-        <FarmerRegisterform setSelectedUserType={setSelectedUserType} />
-      )}
-      {selectedUserType === "Warehouse Owner" && (
-        <WarehouseOwnerRegisterform setSelectedUserType={setSelectedUserType} />
-      )}
-      {selectedUserType === "Customer" && (
-        <CustomerRegisterform setSelectedUserType={setSelectedUserType} />
-      )}
-
+    
+    <div className="flex flex-col items-center w-[500px] h-full justify-center bg-white text-black rounded-md shadow-lg">
+      <div className="w-full h-full p-3 text-center">
+        <Tabs aria-label="Options">
+          <Tab
+            key="Customer"
+            title={
+              <div className="flex gap-1 justify-center items-center">
+                <GiFarmer size={20} />
+                <span>Customer</span>
+              </div>
+            }>
+            <div className="max-w-[500px]">
+              <CustomerRegisterform />
+            </div>
+          </Tab>
+          <Tab
+            key="Famer"
+            title={
+              <div className="flex gap-1 justify-center items-center">
+                <FaWarehouse size={20} />
+                <span>Famer</span>
+              </div>
+            }>
+            <div className="max-w-[500px]">
+              <FarmerRegisterform />
+            </div>
+          </Tab>
+          <Tab
+            key="Warehouse Owner"
+            title={
+              <div className="flex gap-1 justify-center items-center">
+                <IoPeopleSharp size={20} />
+                <span>Warehouse Owner</span>
+              </div>
+            }>
+            <div className="max-w-[500px]">
+              <WarehouseOwnerRegisterform />
+            </div>
+            </Tab>
+        </Tabs>
+      </div>
     </div>
   );
 };

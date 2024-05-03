@@ -12,6 +12,8 @@ const auth = require("../middleware/auth.middleware");
 
 router.post("/register", async (req, res) => {
   try {
+
+    console.log(req.body);
     const {
       fullName,
       email,
@@ -235,7 +237,7 @@ router.get("/getCustomerExpenseChart/:id", async (req, res) => {
         
         res.status(200).json({ ExpensesPerMonth , isFound : true });
       } else {
-        res.status(400).json({ msg: "No data found" , isFound : false });
+        res.status(400).json({ msg: "No data found for charts" , isFound : false });
       }
     }
   } catch (error) {

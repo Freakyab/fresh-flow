@@ -65,9 +65,9 @@ function page() {
 
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <Skeleton className="w-full h-full" isLoaded={isLoaded}>
-        <div className="grid grid-cols-2 gap-3 h-[500px]">
-          <div className="bg-white rounded-xl p-3 ">
+      <div className="grid grid-cols-2 gap-3 h-[500px]">
+        <div className="bg-white rounded-xl p-3 ">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
             <div className="overflow-y-auto h-[440px]">
               <WarehouseDetails
@@ -75,8 +75,10 @@ function page() {
                 className={"flex gap-3 p-3"}
               />
             </div>
-          </div>
-          <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
+          </Skeleton>
+        </div>
+        <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title
               title="Recent's Order"
               Icon={<GoListUnordered />}
@@ -93,27 +95,31 @@ function page() {
                 <div>No order Found</div>
               )}
             </div>
-          </div>
+          </Skeleton>
         </div>
-        <div className="flex gap-3 h-full">
-          <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+      </div>
+      <div className="flex gap-3 h-full">
+        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title
               title="Charts"
               Icon={<LuGanttChartSquare />}
               link={"/dashboard/warehouse/charts"}
             />
             <WarehouseExpenseChart className="" />
-          </div>
-          <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+          </Skeleton>
+        </div>
+        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title
               title="Settings"
               Icon={<CiSettings />}
               link={"/dashboard/warehouse/settings"}
             />
             Click on See More to access the settings
-          </div>
+          </Skeleton>
         </div>
-      </Skeleton>
+      </div>
     </div>
   );
 }

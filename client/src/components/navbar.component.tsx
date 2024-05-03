@@ -8,6 +8,7 @@ function Header() {
   const router = useRouter();
   const { getUserDetails ,logout} = useUserDetails();
 
+  console.log(getUserDetails().userDetails.type);
   const handleSubmit = () => {
     if (getUserDetails().userDetails.username) {
       if (getUserDetails().userDetails.type == "farmer") {

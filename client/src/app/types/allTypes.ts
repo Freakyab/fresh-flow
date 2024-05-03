@@ -45,11 +45,13 @@ type farmerDetailDataProps = {
     email   : string;
     location: number[];
     city : string;
-    availableCrops: {
-        typeOfCrop: string;
-        quantity: number;
-        price: number;
-    }[],
+    availableCrops: availableCropsProps[];
+}
+
+type availableCropsProps = {
+    typeOfCrop: string;
+    quantity: number;
+    price: number;
 }
 
 type CropsMarketPlaceProps = {

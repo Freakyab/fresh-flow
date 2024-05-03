@@ -40,8 +40,9 @@ function page() {
     )
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data.isAvailable) {
-          setCustomerDetailData(data);
+          setCustomerDetailData(data.user);
         }else{
           handleToast("No data found", "error");
         }

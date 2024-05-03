@@ -73,6 +73,12 @@ function Page() {
 
     const newDuration = parseInt(duration as string);
     const newQuantity = parseInt(quantity as string);
+
+    if(newDuration > 24){
+      handleToast("Duration should be less than 24 months", "error");
+      return;
+    }
+
     const capacity = warehouseDetailData
       ? parseFloat(warehouseDetailData.capacity)
       : 0;

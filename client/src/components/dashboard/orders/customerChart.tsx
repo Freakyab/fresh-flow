@@ -72,9 +72,7 @@ export function CustomerExpenseChart({ className }: { className: string }) {
         if (data.isFound) {
           setPrice(data);
         }
-        else{
-          handleToast("No data found", "error");
-        }
+       
       });
   }, []);
 
