@@ -1,32 +1,39 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
 const Farmer = require("../model/farmer.model");
 const Warehouse = require("../model/warehouse.model");
+const Customer = require("../model/customer.model");
 const Transaction = require("../model/transaction.model");
 const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth.middleware");
 
 /* Farmer purchase warehouse
- * GET /transaction/farmer-purchase
+ * post /transaction/farmer-purchase
  */
-router.post("/farmer-purchase", auth, async (req, res) => {
+router.post("/farmer-purchase/:id", async (req, res) => {
   try {
-    const { warehouseId, crop, quantity, duration } = req.body;
-    const farmerId = req.userId;
-
+    const { warehouseId, quantity, price, duration, typeOfCrop } = req.body;
+    const farmerId = req.params.id;
+    const farmer = await Farmer.findById(farmerId);
+    if (!farmer) {
+      return res.status(400).json({ message: "Farmer not found" });
+    }
     const warehouse = await Warehouse.findById(warehouseId);
-    if (!warehouse.typeOfCrop.includes(crop)) {
-      return res
-        .status(400)
-        .json({ message: "Warehouse doesn't have this crop" });
+    if (!warehouse) {
+      return res.status(400).json({ message: "Warehouse not found" });
     } else {
+      const farmerName = farmer.farmerName;
+      const warehouseName = warehouse.name;
+
       const Transcation = new Transaction({
+        farmerName,
+        warehouseName,
         warehouseId,
+        price,
         farmerId,
-        crop,
         quantity,
         duration,
+        typeOfCrop,
         status: "pending",
       });
 
@@ -39,41 +46,104 @@ router.post("/farmer-purchase", auth, async (req, res) => {
       }
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
+/* customer purchase warehouse
+ * post /transaction/customer-purchase
+ */
+router.post("/customer-purchase/:id", async (req, res) => {
+  try {
+    const { farmerId, quantity, typeOfCrop } = req.body;
+    const customerId = req.params.id;
+    const farmer = await Farmer.findById(farmerId);
+    const customer = await Customer.findById(customerId);
+    if (!farmer) {
+      return res.status(400).json({ message: "Farmer not found" });
+    }
 
+    const farmerName = farmer.farmerName;
+    const customerName = customer.fullName;
+
+    const cropPrice = farmer.availableCrops.find(
+      (crop) => crop.cropName === typeOfCrop
+    ).price;
+
+    const Transcation = new Transaction({
+      farmerName,
+      price: cropPrice,
+      customerId,
+      customerName,
+      farmerId,
+      quantity,
+      duration,
+      typeOfCrop,
+    });
+
+    await Transcation.save();
+
+    if (Transcation) {
+      res.status(200).json({ Transcation });
+    } else {
+      res.status(400).json({ error: "Something went wrong" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 /*
  ! Warehouse Dashboard
  *Warehouse all request info 
  */
 
-router.post("/warehouse-request/:id", auth, async (req, res) => {
+router.post("/order-request/:id", async (req, res) => {
   try {
-    const warehouseId = req.params.id;
-    const { status } = req.body;
-    const allTransaction = await Transaction.find({ warehouseId: warehouseId });
-    let farmerInfo = [];
-    let Ids = [];
-    for (let i = 0; i < allTransaction.length; i++) {
-      let farmer = await Farmer.findById(allTransaction[i].farmerId);
+    const userId = req.params.id;
+    const { typeOfId } = req.body;
 
-      if (allTransaction[i].status === status) {
-        farmerInfo.push({
-          // id: allTransaction[i]._id,
-          Name: farmer.fullName,
-          Quantity: allTransaction[i].quantity,
-          Crop: allTransaction[i].crop,
-          Dutration: allTransaction[i].duration,
-          PhoneNo: farmer.phoneNo,
-          Email: farmer.email,
-        });
-        Ids.push(allTransaction[i]._id);
-      }
+    const type = typeOfId;
+    let allTransaction;
+    if (type === "warehouseId") {
+      allTransaction = await Transaction.find({ warehouseId: userId });
     }
-    if (farmerInfo) {
-      res.status(200).json({ farmerInfo, Ids });
+    if (type === "farmerId") {
+      allTransaction = await Transaction.find({ farmerId: userId });
+    }
+    if (type === "customerId") {
+      allTransaction = await Transaction.find({ customerId: userId });
+    }
+    if (allTransaction) {
+      res.status(200).json({ allTransaction });
+    } else {
+      res.status(400).json({ message: "no request found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.post("/order-top-request/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { typeOfId } = req.body;
+    const type = typeOfId;
+    let allTransaction;
+    if (type === "warehouseId") {
+      allTransaction = await Transaction.find({ warehouseId: userId })
+        .limit(3)
+        .sort({ createdAt: -1 });
+    }
+    if (type === "farmerId") {
+      allTransaction = await Transaction.find({ farmerId: userId })
+        .limit(3)
+        .sort({ createdAt: -1 });
+    }
+    if (type === "customerId") {
+      allTransaction = await Transaction.find({ customerId: userId })
+        .limit(3)
+        .sort({ createdAt: -1 });
+    }
+    if (allTransaction) {
+      res.status(200).json({ allTransaction });
     } else {
       res.status(400).json({ message: "no request found" });
     }
@@ -86,23 +156,27 @@ router.post("/warehouse-request/:id", auth, async (req, res) => {
  *Warehouse accept request
  */
 
-router.put("/accept", auth, async (req, res) => {
+router.put("/accept/:id", async (req, res) => {
   try {
-    const { transactionId } = req.body;
-    const warehouse = await Warehouse.findById(req.userId);
+    const transactionId = req.params.id;
     const transaction = await Transaction.findById(transactionId);
-    transaction.status = "accepted";
-    if (warehouse.facility.capacity < 0) {
-      res.status(400).json({ message: "no space available" });
-    }
-    if (warehouse.facility.capacity < transaction.quantity) {
-      res.status(400).json({ message: "no space available" });
-    }
-
-    await transaction.save();
-    warehouse.facility.capacity -= transaction.quantity;
-    await warehouse.save();
+    const warehouse = await Warehouse.findById(transaction.warehouseId);
     if (transaction) {
+      transaction.status = "accepted";
+      if (warehouse.capacity < 0) {
+        res.status(400).json({ message: "no space available" });
+      }
+      if (warehouse.capacity < transaction.quantity) {
+        res.status(400).json({ message: "no space available" });
+      }
+      let capacity = parseFloat(warehouse.capacity);
+      capacity -= transaction.quantity;
+      let occupied = parseFloat(warehouse.occupied) || 0;
+      occupied += transaction.quantity;
+      warehouse.capacity = capacity.toString();
+      warehouse.occupied = occupied.toString();
+      await transaction.save();
+      await warehouse.save();
       res.status(200).json({ message: "status updated" });
     } else {
       res.status(400).json({ message: "no request found" });
@@ -115,9 +189,9 @@ router.put("/accept", auth, async (req, res) => {
  *Warehouse  decline request
  */
 
-router.put("/decline", auth, async (req, res) => {
+router.put("/reject/:id", async (req, res) => {
   try {
-    const { transactionId } = req.body;
+    const transactionId = req.params.id;
     const transaction = await Transaction.findByIdAndUpdate(transactionId, {
       status: "rejected",
     });

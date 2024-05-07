@@ -7,7 +7,7 @@ import { mapLoadingAction } from '@/redux/reducers/mapLoading';
 
 const useMapLoading = () => {
 
-    const mapState = useSelector((state : RootState) => state.mapLoading);
+    const mapState = useSelector((state: RootState) => state.mapLoading);
     const dispatch = useDispatch<AppDispatch>();
 
     const setFlyOn = (lat: number, lng: number) => {
@@ -22,8 +22,8 @@ const useMapLoading = () => {
         dispatch(mapLoadingAction.setLoc({ lat, lng }));
     };
 
-    const setIsClicked = (isClicked: boolean) => {
-        dispatch(mapLoadingAction.setIsClicked(isClicked));
+    const changeIsClicked = (isClicked: boolean) => {
+        dispatch(mapLoadingAction.changeIsClicked(isClicked));
     };
 
     const getFlyOn = () => {
@@ -42,16 +42,26 @@ const useMapLoading = () => {
         return mapState.isClicked;
     };
 
+    const setFilterCrop = (filterCrop: string) => {
+        dispatch(mapLoadingAction.setFilterCrop(filterCrop));
+    }
+
+    const getFilterCrop = () => {
+        return mapState.filterCrop;
+    }
+
     return {
         mapState,
         setFlyOn,
         setSearch,
         setLoc,
-        setIsClicked,
+        changeIsClicked,
         getFlyOn,
         getSearch,
         getLoc,
         getIsClicked,
+        setFilterCrop,
+        getFilterCrop
     };
 };
 

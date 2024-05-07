@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import useMapLoading from "@/redux/dispatch/useMaploading";
 import {
   TileLayer,
@@ -15,20 +15,29 @@ import LocationSearch from "@/components/marketPlace/location/loactionSearch";
 import { userIcon, WarehouseIcon } from "./marketPlace/location/MarkerIcons";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
 
-import warehouseDetailData from "./dataSample/warehouseData";
+// import warehouseDetailData from "./dataSample/warehouseData";
 
 interface Props {
   cardRefs: React.RefObject<HTMLDivElement>[];
   className: string;
+  warehouseDetailData: warehouseDetailDataProps[];
 }
 
-const Map = ({ cardRefs, className }: Props) => {
-  const markerRef = warehouseDetailData.map(() => useRef<any>(null));
-  const { getFlyOn, getLoc, getSearch, setIsClicked, getIsClicked } =
-    useMapLoading();
-  const mapRef = useRef<any>(null);
+const Map = ({ cardRefs, className, warehouseDetailData }: Props) => {
+  if (warehouseDetailData.length == 0) return null;
   const [routingControlAdded, setRoutingControlAdded] = useState(false);
+  const markerRef = warehouseDetailData.map(() => useRef<any>(null));
+  const mapRef = useRef<any>(null);
   const routingMachineRef = useRef<any>(null);
+
+  const {
+    getFlyOn,
+    getSearch,
+    getIsClicked,
+    getLoc,
+    changeIsClicked,
+    getFilterCrop,
+  } = useMapLoading();
 
   function LocationMarker() {
     const map = useMap();
@@ -42,21 +51,27 @@ const Map = ({ cardRefs, className }: Props) => {
 
     // Use setTimeout to load the popup after the map uses flyto
 
-    if (getFlyOn().lat !== 0 && getFlyOn().lng !== 0 && getSearch().length == 0) {
+    if (
+      (getFlyOn().lat !== 0 &&
+        getFlyOn().lng !== 0 &&
+        getSearch().length == 0) ||
+      (getSearch().length !== 0 &&
+        getLoc().lat !== 0 &&
+        getLoc().lng !== 0 &&
+        getIsClicked())
+    ) {
       map.flyTo([getFlyOn().lat, getFlyOn().lng], 12);
       setTimeout(() => {
         if (markerRef[index]?.current) {
           markerRef[index].current.openPopup();
         }
       }, 500);
-    }else if(getSearch().length !== 0 && getLoc().lat !== 0 && getLoc().lng !== 0 && getIsClicked()){
-      map.flyTo([getFlyOn()?.lat, getFlyOn()?.lng], 12);
     }
 
     return null;
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (getSearch()?.length === 0 && routingControlAdded) {
       if (routingMachineRef.current) {
         const map = routingMachineRef.current.leafletElement._map; // Get the Leaflet map instance
@@ -64,33 +79,29 @@ const Map = ({ cardRefs, className }: Props) => {
         map.removeControl(routingMachineRef.current); // Remove the control
         setRoutingControlAdded(false);
       }
+      changeIsClicked(false);
     }
-    setIsClicked(false);
   }, [getSearch(), routingControlAdded]);
 
   function Test() {
     const map = useMap();
-    console.log(getLoc(), getSearch());
     if (getSearch()?.length == 0) map.flyTo([21, 85], 5);
     if (getLoc()) map.flyTo(getLoc(), 12);
 
     return location ? (
-      <Marker
-        position={getLoc()}
-        icon={userIcon}>
+      <Marker position={getLoc()} draggable={true} icon={userIcon}>
         <Popup>You are here: {getSearch()}</Popup>
       </Marker>
     ) : null;
   }
-
   return (
     <>
       <MapContainer
         ref={mapRef}
         // @ts-ignore
-        center={[21, 85]}
+        center={[19, 76]}
         scrollWheelZoom={true}
-        zoom={5}
+        zoom={7}
         className={className}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -115,13 +126,41 @@ const Map = ({ cardRefs, className }: Props) => {
           </>
         ) : null}
         {warehouseDetailData
+          .filter((item) => {
+            const selectedCrop = getFilterCrop().toLowerCase();
+            if(selectedCrop === "all" || selectedCrop === "") return true;
+            else {
+              const itemCropTypes = item.typeOfCrop.map(crop => crop.toLowerCase());
+              return itemCropTypes.includes(selectedCrop);
+            }
+          })
+          .filter((_, index) => index < 30)
           .filter((warehouse) => {
-            if (getSearch()?.length === 0) return warehouse;
-            if (!getLoc()) return warehouse;
-            const latDiff = Math.abs(warehouse.location[0] - getLoc()?.lat);
-            const lngDiff = Math.abs(warehouse.location[1] - getLoc()?.lng);
+            const searchLength = getSearch()?.length;
+            const userLocation = getLoc();
 
-            return latDiff <= latLngThreshold && lngDiff <= latLngThreshold;
+            if (searchLength === 0 || !userLocation) return true; // No filtering required
+
+            const earthRadius = 6371; // Earth's radius in kilometers
+            const lat1 = userLocation.lat * (Math.PI / 180); // Convert latitude to radians
+            const lat2 = warehouse.location[0] * (Math.PI / 180);
+            const lon1 = userLocation.lng * (Math.PI / 180); // Convert longitude to radians
+            const lon2 = warehouse.location[1] * (Math.PI / 180);
+
+            const latDiff = Math.abs(lat2 - lat1); // Calculate absolute latitude difference
+            const lonDiff = Math.abs(lon2 - lon1); // Calculate absolute longitude difference
+
+            // Haversine formula to calculate distance between two points on a sphere
+            const a =
+              Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+              Math.cos(lat1) *
+                Math.cos(lat2) *
+                Math.sin(lonDiff / 2) *
+                Math.sin(lonDiff / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = earthRadius * c; // Distance in kilometers
+
+            return distance <= latLngThreshold; // Compare distance with threshold in kilometers
           })
           .map((warehouse, index) => (
             <Marker
@@ -148,11 +187,8 @@ const Map = ({ cardRefs, className }: Props) => {
               <Popup>{warehouse.name}</Popup>
             </Marker>
           ))}
-        <LayersControl
-          position="topright">
-          <LayersControl.BaseLayer
-            checked
-            name="Map">
+        <LayersControl position="topright">
+          <LayersControl.BaseLayer checked name="Map">
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

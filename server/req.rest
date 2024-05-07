@@ -7,14 +7,26 @@ Content-Type: application/json
 
 {
     "adharNo" : "123456789012",
-    "fullName": "Rajesh",
-    "phoneNo": "1234567890",
-    "email": "temp@gmail.com",
-    "address": "Bangalore",
+    "farmerName": "Rajesh",
     "username": "Rajesh",
     "password": "Bangalore",
-    "landSize": "10",
-    "typeOfCrop":["Rice","Wheat","Maize"]
+    "address": "Market yard Manchar",
+    "city": "Pune",
+    "state": "MAHARASHTRA",
+    "farmerContact": "1234567890",
+    "image": "/images/warehouse_1.jpg",
+    "email": "temp@gmail.com",
+    "location": [19.00436, 73.94346],
+    "availableCrops" : [{
+        "typeOfCrop" : "Rice",
+        "quantity" : 10,
+        "price" : 100
+    },
+    {
+        "typeOfCrop" : "Wheat",
+        "quantity" : 10,
+        "price" : 100
+    }]
 }
 
 ###
@@ -29,90 +41,7 @@ Content-Type: application/json
     "password": "Bangalore"
 }
 
-
 ###
-
-# update
-
-PUT http://localhost:5000/farmer/update HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg3NWYwOTI3ODA2N2IzMWYwM2IxNCIsInVzZXJuYW1lIjoiUmFqZXNoIiwiaWF0IjoxNzAwMjk2MTc2fQ.3k3HKmpyHk8kT3JsvVyBlwDvz0hp7rPXwnuFBVg5clU
-
-{
-    "adharNo" : "12",
-    "fullName": "Rajesh",
-    "phoneNo": "1234567890",
-    "email": "temp@gmail.com",
-    "address": "Bangalore",
-    "username": "Rajesh",
-    "password": "Bangalore",
-    "landSize": "10",
-    "typeOfCrop":["Rice","Wheat","Maize"]
-}
-
-### 
-
-# delete
-
-DELETE http://localhost:5000/farmer/delete/65586eb95a4f35d460e56b17 HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg2ZWI5NWE0ZjM1ZDQ2MGU1NmIxNyIsInVzZXJuYW1lIjoiUmFqZXNoIiwiaWF0IjoxNzAwMjk0MzI5fQ.F_01JSrGwMCiDzb8zYbIN_WAWBMP5WxDj3IXxus0eHI
-
-###
-
-# Customer
-
-# Registeration
-
-POST http://localhost:5000/customer/register HTTP/1.1
-Content-Type: application/json
-
-{
-    "fullName": "Rajesh",
-    "email": "temp@gmail.com",
-    "username": "Rajesh",
-    "password": "Bangalore"
-}
-
-###
-
-#login
-
-POST http://localhost:5000/customer/login HTTP/1.1
-Content-Type: application/json
-
-{
-    "username": "Rajesh",
-    "password": "Bangalore"
-}
-
-
-###
-
-# update
-
-PUT http://localhost:5000/customer/update/ HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg3NGM4MjNhYmU5NjI5NWNiOTU1NSIsInVzZXJuYW1lIjoiUmFqZXNoIiwiaWF0IjoxNzAwMjk1ODk2fQ.76KE8MwyKhluUEkOHaQl8L6Fh0XdhNGyFYXHy9UiDx8
-
-{
-    "fullName": "Rajesh1",
-    "email": "temp1@gmail.com",
-    "username": "Rajesh",
-    "password": "Bangalore"
-}
-
-### 
-
-# delete
-
-DELETE http://localhost:5000/customer/delete/655874c823abe96295cb9555 HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg2ZWI5NWE0ZjM1ZDQ2MGU1NmIxNyIsInVzZXJuYW1lIjoiUmFqZXNoIiwiaWF0IjoxNzAwMjk0MzI5fQ.F_01JSrGwMCiDzb8zYbIN_WAWBMP5WxDj3IXxus0eHI
-
-###
-
-# Farmer
 
 # Registeration
 
@@ -120,15 +49,24 @@ POST http://localhost:5000/warehouse/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "adharNo" : "123456789012",
-    "fullName": "Rajesh",
-    "phoneNo": "1234567890",
-    "email": "temp@gmail.com",
-    "address": "Bangalore",
-    "username": "Rajesh",
+    "ownerName": "Agricultural Produce Market Committee Manchar",
+    "name": "Agricultural Produce Market Committee Manchar",
+    "username": "bhupendra",
     "password": "Bangalore",
-    "landSize": "10",
-    "typeOfCrop":["Rice","Wheat","Maize"]
+    "address": "Market yard Manchar",
+    "city": "Pune",
+    "state": "MAHARASHTRA",
+    "capacity": "1147",
+    "registrationDate": "19-Feb-24",
+    "registrationValidUpto": "18-Feb-29",
+    "phoneNo": 9922861133,
+    "status": "Active",
+    "type": "hot",
+    "image": "/images/warehouse_1.jpg",
+    "location": [19.00436, 73.94346],
+    "price": 2271,
+    "email": "agriculturalproducemarketcommitteemanchar24@example.com",
+    "typeOfCrop": ["Rice","Wheat","Maize"]
 }
 
 ###
@@ -146,36 +84,24 @@ Content-Type: application/json
 
 ###
 
-# update
-
-PUT http://localhost:5000/warehouse/update HTTP/1.1
+POST http://localhost:5000/customer/register HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg3NGU5ZWZiNGNhMmQ0MGNjODk5MSIsInVzZXJuYW1lIjoiYmh1cGVuZHJhIiwiaWF0IjoxNzAwMjk4NDQzfQ.3dgzZcK4Sg-N10TMVeOdfyRvR9JpzLtrMlWOhSu6a0o
 
 {
-   "name": "bhupendra",
-   "username": "bhupendra",
-   "location": "Mumbai",
-   "facility": {
-     "temperature":{
-       "low": 10,
-       "high": 40
-     },
-    "capacity": 100,
-    "tempType": "hot"
-   },
-   "certifications": "higifh",
-   "security": "secure",
-   "phoneNo": 646254284,
-   "email": "bh@gmail.com",
-   "operatingHours":{
-     "open": 8,
-     "close": 9
-   },
-   "servicesOffered": "truck"
+    "fullName": "Aryan",
+    "email": "agriculturalproducemarketcommitteemanchar24@example.com",
+    "address": "Market yard Manchar",
+    "city": "Pune",
+    "state": "MAHARASHTRA",
+    "phoneNo": 9922861133,
+    "username": "Aryan",
+    "image": "/images/warehouse_1.jpg",
+    "password": "Bangalore",
+    "location": [19.00436, 73.94346],
+    
 }
 
-### 
+###
 GET http://localhost:5000/warehouse/waiting-list HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NTg3NGU5ZWZiNGNhMmQ0MGNjODk5MSIsInVzZXJuYW1lIjoiYmh1cGVuZHJhIiwiaWF0IjoxNzAwMzAxNDgxfQ.fJWyT4Abwt23Xr1l9EXN8Bogdyc3CTv6wcLG_uN0lKA

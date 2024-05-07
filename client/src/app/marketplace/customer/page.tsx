@@ -1,20 +1,15 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
-import { IoLocation } from "react-icons/io5";
+
 import { Select, SelectItem } from "@nextui-org/react";
-import {
-  Slider,
-  Card,
-  CardBody,
-  CardFooter,
-  Button,
-  Divider,
-} from "@nextui-org/react";
-import { CropsMapList } from "@/components/dataSample/cropsMapList";
-import Model from "@/components/marketPlace/model";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Slider, Button } from "@nextui-org/react";
+import CropCard from "@/components/marketPlace/customer/cropCard";
 import useCropsMap from "@/redux/dispatch/useCropsMap";
-import cropsTypeList, { cropsType } from "@/components/dataSample/cropsType";
+import cropsTypeList from "@/components/dataSample/cropsType";
 
 const Page = () => {
   const [filterBuffer, setFilterBuffer] = React.useState({
@@ -23,6 +18,8 @@ const Page = () => {
     location: "All",
   });
   const [newCropTypeList, setNewCropTypeList] = React.useState<cropsType[]>([]);
+
+  const router = useRouter();
 
   const lastIndex = {
     id: cropsTypeList.length + 1,
@@ -37,14 +34,33 @@ const Page = () => {
 
   const { getCropsList, setCrops, setFilter } = useCropsMap();
 
-  React.useEffect(() => {
-    setCrops(CropsMapList);
+  useEffect(() => {
+    // fetch("http://localhost:5000/farmer/markertPlace", {
+    fetch(`https://fresh-flow-backend.vercel.app/farmer/markertPlace`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "/",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data) {
+          setCrops(data);
+        } else {
+          console.log(data);
+        }
+      });
   }, [filterBuffer]);
 
   const handleFilter = () => {
     setFilter(filterBuffer);
-    getCropsList();
-    console.log(filterBuffer);
+    // getCropsList();
   };
 
   return (
@@ -66,17 +82,16 @@ const Page = () => {
           <Select
             label="Select Crop"
             className="max-w-xs"
-            value={filterBuffer.cropName}>
-            {newCropTypeList.map((item) => (
-              <SelectItem
-                key={item.id}
-                value={item.label}
-                onClick={() =>
-                  setFilterBuffer({ ...filterBuffer, cropName: item.label })
-                }>
-                {item.label}
-              </SelectItem>
-            ))}
+            onChange={(e) =>
+              setFilterBuffer({ ...filterBuffer, cropName: e.target.value })
+            }>
+            {newCropTypeList
+              .sort((a, b) => a.label.localeCompare(b.label))
+              .map((item) => (
+                <SelectItem key={item.label} value={item.label}>
+                  {item.label.toUpperCase()}
+                </SelectItem>
+              ))}
           </Select>
           <Slider
             label="Price Range"
@@ -104,47 +119,22 @@ const Page = () => {
               Reset
             </Button>
           </div>
+          <div className="w-full justify-self items-center">
+            <Button
+              color="primary"
+              variant="bordered"
+              className="w-full"
+              onClick={() => {
+                toast.info("loading..");
+                router.push("/dashboard/customer/cartitems");
+              }}>
+              Cart Items
+            </Button>
+          </div>
         </div>
-        <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {getCropsList().map((item) => (
-            <div key={item.id} className="max-w-80 w-fit max-h-96 h-fit">
-              <Card key={item.id} className="w-full h-full m-4 shadow-lg">
-                <CardBody>
-                  <div className="flex flex-col justify-between items-center">
-                    <div className="w-full h-fit">
-                      <Image
-                        src={item.img}
-                        alt="crop"
-                        className="rounded-xl object-contain h-full shadow-md"
-                        width={800}
-                        height={800}
-                      />
-                    </div>
-                    <div className="py-3 flex items-center justify-between w-full">
-                      <span className="text-xl capitalize line-clamp-2 tracking-wider">
-                        {item.cropName}
-                      </span>
-                      <div className="flex justify-center items-center">
-                        <span>
-                          <IoLocation className="text-xl" />
-                        </span>
-                        <span>{item.city}</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardBody>
-                <Divider />
-                <CardFooter className="flex justify-between items-center gap-3 p-3">
-                  <Model {...item} />
-                  <Button color="success" className="text-xl ml-auto">
-                    {item.price}/Kg
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          ))}
-        </div>
+        <CropCard className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" />
       </div>
+      <ToastContainer />
     </div>
   );
 };

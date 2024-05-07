@@ -11,6 +11,7 @@ const initialState: {
         lat: number,
         lng: number
     },
+    filterCrop : string,
     isClicked : boolean,
 }= {
     FlyOn : {
@@ -23,6 +24,7 @@ const initialState: {
         lng: 0
     },
     isClicked : false,
+    filterCrop : "",
 };
 
 const mapLoadingSlice = createSlice({
@@ -39,9 +41,12 @@ const mapLoadingSlice = createSlice({
         setLoc(state, action: PayloadAction<{ lat: number, lng: number }>) {
             state.loc = action.payload;
         },
-        setIsClicked(state, action: PayloadAction<boolean>) {
+        changeIsClicked(state, action: PayloadAction<boolean>) {
             state.isClicked = action.payload;
         },
+        setFilterCrop(state, action: PayloadAction<string>) {
+            state.filterCrop = action.payload;
+        }
     },
 });
 

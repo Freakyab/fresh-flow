@@ -4,15 +4,27 @@ const client = require("../config/connect");
 const TransactionScheme = new mongoose.Schema({
     warehouseId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: false,
+  },
+  farmerName : {
+    type : String,
+    required : true
+  },
+  customerName : {
+    type : String,
+    required : false
+  },
+  warehouseName : {
+    type : String,
+    required : false
   },
   farmerId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  crop: {
-    type: String,
-    required: true,
+  customerId : {
+    type : mongoose.Schema.Types.ObjectId,
+    required : false
   },
   quantity: {
     type: Number,
@@ -20,18 +32,24 @@ const TransactionScheme = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: false,
+    required: true,
   },
   duration : {
     type : Number,
-    required : true
+    required : false
   },
   status: {
     enum: ["pending", "accepted", "rejected"],
     type: String,
     default: "pending",
-    required: true,
+    required: false,
   },
+  typeOfCrop : {
+    type : String,
+    required : true
+  }
+},{
+  timestamps: true
 });
 
 const Transaction = client.model("Transaction", TransactionScheme);
