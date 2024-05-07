@@ -1,14 +1,17 @@
 "use client";
 // import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Providers } from "./provider/provider";
 import ReduxProvider from "./provider/reduxProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Montserrat } from "next/font/google";
 
 import "./globals.css";
 import Navbar from "@/components/navbar.component";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ 
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"]
+});
 
 // "use server";
 // export const metadata = {
@@ -23,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={montserrat.className}>
         <ReduxProvider>
           <Providers>
             <Navbar />
