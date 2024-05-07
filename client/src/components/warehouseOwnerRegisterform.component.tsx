@@ -72,7 +72,7 @@ const WarehouseOwnerRegisterform = () => {
     setIsGetCurrentLocation(false);
   };
   return (
-    <Card className="m-3" shadow="lg">
+    <Card className="m-3 h-[555px]" shadow="lg">
       <CardHeader>
         <div className="w-full flex gap-1 items-center">
           <CgProfile size={25} className="text-primary" />
@@ -85,8 +85,8 @@ const WarehouseOwnerRegisterform = () => {
           navigation={true}
           modules={[Pagination, Navigation]}>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10 ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-8">
                 <Input
                   label="Name"
                   type="text"
@@ -148,8 +148,8 @@ const WarehouseOwnerRegisterform = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10 ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-8">
                 <Input
                   label="Registration Date"
                   type="text"
@@ -201,8 +201,8 @@ const WarehouseOwnerRegisterform = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10 ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-8">
                 <Select
                   label="type"
                   variant="bordered"
@@ -258,7 +258,7 @@ const WarehouseOwnerRegisterform = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="grid grid-cols-3 gap-4 p-12">
+            <div className="grid grid-cols-3 gap-4 p-12 px-6">
               {cropsTypeList.map((crop) => (
                 <Chip
                   key={crop.id}
@@ -299,7 +299,7 @@ const WarehouseOwnerRegisterform = () => {
               Submit
             </Button>
           </SwiperSlide>
-        </Swiper>
+        </Swiper> 
       </CardBody>
       <ToastContainer />
     </Card>
