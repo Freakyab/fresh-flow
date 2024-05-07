@@ -23,6 +23,11 @@ const config: Config = {
 
       colors: {
         "light-bg" :"#f0f4f8",
+
+        "primary-color": "var(--primary)",
+        "secondary-color": "var(--secondary)",
+        "tertiary": "var(--tertiary)",
+        "quaternary": "var(--quaternary)",
         
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
