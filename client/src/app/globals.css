@@ -101,3 +101,7 @@
 .d-hight{
   height: calc(100vh - 7rem);
 }
+
+.min-d-height{
+  min-height: calc(100vh - 7rem);
+}

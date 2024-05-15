@@ -74,7 +74,7 @@ function Page() {
     const newDuration = parseInt(duration as string);
     const newQuantity = parseInt(quantity as string);
 
-    if(newDuration > 24){
+    if (newDuration > 24) {
       handleToast("Duration should be less than 24 months", "error");
       return;
     }
@@ -150,7 +150,7 @@ function Page() {
               {warehouseDetailData.name}
               <Divider />
             </h1>
-            <p className="text-lg font-semibold py-1">
+            <p className="text-lg font-semibold py-2">
               {"₹"}
               {warehouseDetailData.price}/sqft
             </p>
@@ -160,14 +160,13 @@ function Page() {
               className=""
             />
             {isValid && (
-              <div className="p-3 flex gap-3 items-center">
-                <p className="text-lg font-semibold cursor-pointer">Buy </p>
+              <div >
                 <Button
                   color="success"
                   variant="bordered"
                   onClick={handleModel}
                   className="m-3">
-                  {warehouseDetailData.price}/sqft
+                  Buy
                 </Button>
               </div>
             )}
@@ -196,6 +195,10 @@ function Page() {
                               label="Quantity (in Mt)"
                               placeholder="Enter your quantity in Mt"
                             />
+                            <p>
+                              Select the type of crop you want to store in the
+                              warehouse
+                            </p>
                             <Select
                               name="typeOfCrop"
                               label="Type of Crop"

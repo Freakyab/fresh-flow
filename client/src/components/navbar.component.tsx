@@ -6,7 +6,7 @@ import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 function Header() {
   const router = useRouter();
-  const { getUserDetails ,logout} = useUserDetails();
+  const { getUserDetails } = useUserDetails();
 
   console.log(getUserDetails().userDetails.type);
   const handleSubmit = () => {
@@ -17,7 +17,7 @@ function Header() {
         router.push("/marketplace/customer");
       }
     } else {
-      router.push("/register");
+      router.push("/login");
     }
   };
 

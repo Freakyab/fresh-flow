@@ -34,13 +34,9 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
         ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
       )
     );
-    setSelectedIndex(
-      activeIndex !== -1
-        ? options.findIndex(
-            ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
-          )
-        : 0
-    );
+    setSelectedIndex(activeIndex !== -1 ? options.findIndex(
+      ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
+    ) : 0);
   }, [pathname]);
   // Find the index of the active component
 
@@ -63,7 +59,7 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
           name={name}
           description={ownerName}
           avatarProps={{
-            src: "https://i.pravatar.cc/150?u=a04258114e29026702d",
+            src: "/profile_img.png",
           }}
         />
       </div>

@@ -5,27 +5,26 @@ import LoginComponent from "../../components/login.component";
 import RegisterComponent from "../../components/register.component";
 import { Tabs, Tab } from "@nextui-org/react";
 
-export default function login() {
+export default function Login() {
   return (
-    <>
-      <div className="w-full min-h-screen p-3 flex flex-col justify-center items-center bg-black">
-        <Tabs aria-label="Options">
+    <div className="relative min-d-height h-full w-screen flex flex-col">
+      <div className="flex-grow flex flex-col justify-center items-center p-3">
+        <Tabs aria-label="Options" className="bg-white p-4 rounded-md shadow-lg">
           <Tab key="login" title="Login">
-            <RegisterComponent />
+            <LoginComponent />
           </Tab>
           <Tab key="register" title="Register">
-            <LoginComponent />
+            <RegisterComponent />
           </Tab>
         </Tabs>
       </div>
-
-      {/* <Image
-        src={"/login.jpg"}
+      <Image
+        src="/login.jpg"
         alt="Next.js"
-        width={900}
-        height={600}
-        className="h-screen top-0 inset-0 z-[-10] w-screen absolute blur-sm"
-      /> */}
-    </>
+        layout="fill"
+        objectFit="cover"
+        className="z-[-1] blur-sm absolute top-24"
+      />
+    </div>
   );
 }

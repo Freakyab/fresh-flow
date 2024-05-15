@@ -30,6 +30,7 @@ import {
 import handleToast from "@/components/toastifyNotification";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 interface CenterProp {
   location: number[];
 }
@@ -122,9 +123,9 @@ const FarmerMarketplacePage = () => {
     setSearch(searchValue !== null ? searchValue.toString() : "");
   };
 
-  const handleRoute = (id: string) => {
-    router.push(`/warehouse/${id}`);
-  };
+  // const handleRoute = (id: string) => {
+  //   router.push(`/warehouse/${id}`);
+  // };
 
   const toggleLoad = () => {
     setIsLoaded(!isLoaded);
@@ -136,9 +137,9 @@ const FarmerMarketplacePage = () => {
         <div className="bg-white p-3 w-1/2 h-full flex flex-col gap-3">
           <div className="flex gap-3">
             <Select
-              label="Select Crop Type"
               placeholder="use the dropdown to select crop type"
               className="max-w-xs"
+              size="lg"
               onChange={(e) => setFilterCrop(e.target.value)}>
               {newCropTypeList
                 .sort((a, b) => a.label.localeCompare(b.label))
@@ -164,7 +165,7 @@ const FarmerMarketplacePage = () => {
               </Button>
             </form>
           </div>
-          <div className="overflow-auto p-2 gap-3">
+          <div className="overflow-auto p-2 gap-6">
             {warehouseDetailData &&
               warehouseDetailData.length > 0 &&
               warehouseDetailData
@@ -214,73 +215,76 @@ const FarmerMarketplacePage = () => {
                       handleCenter({ location: warehouse.location })
                     }
                     key={index}
-                    className="cursor-pointer">
-                    <Card
-                      // key={warehouse._id}
-                      className="border-none mb-3 bg-primary-50">
-                      <CardBody className="px-3 py-0 text-small text-default-400 flex flex-row">
-                        <div className="p-3 w-fit">
+                    className="cursor-pointer transition-transform transform hover:shadow-xl  m-4">
+                    <Card className="border-2 bg-gradient-to-r from-gray-200  to-gray-50 text-black shadow-xl rounded-lg overflow-hidden">
+                      <CardBody className="p-6 flex flex-col gap-4">
+                        <div className="flex-shrink-0">
                           <Image
                             alt="Warehouse"
-                            className="object-cover h-full"
-                            height={200}
+                            className="object-cover h-40 w-full rounded-lg"
+                            height={160}
                             src={warehouse.image}
-                            width={200}
+                            width={500}
                           />
                         </div>
-                        <div className="p-3">
+                        <div className="flex-grow ">
                           <User
                             name={warehouse.name}
                             description={warehouse.name}
                             avatarProps={{
                               src: warehouse.image,
                             }}
+                            className="mb-4"
                           />
-                          <div className="flex flex-col gap-3">
+                          <div className="flex flex-col gap-2">
                             <span className="flex gap-2 items-center">
-                              Type:{" "}
-                              <Chip variant="bordered">{warehouse.type}</Chip>
+                              <strong>Type:</strong>
+                              <Chip color="primary" variant="bordered">
+                                {warehouse.type}
+                              </Chip>
                             </span>
-
                             <span className="flex gap-2 items-center">
-                              Max Capacity (in Mt):{" "}
-                              <Chip variant="bordered">
+                              <strong>Max Capacity (in Mt):</strong>
+                              <Chip color="primary" variant="bordered">
                                 {warehouse.capacity}
                               </Chip>
                             </span>
                             <span className="flex gap-2 items-center">
-                              Registration Date :{" "}
-                              <Chip variant="bordered">
+                              <strong>Registration Date:</strong>
+                              <Chip color="primary" variant="bordered">
                                 {warehouse.registrationDate}
                               </Chip>
                             </span>
                             <span className="flex gap-2 items-center">
-                              City | District :{" "}
-                              <Chip variant="bordered">{warehouse.city}</Chip>
+                              <strong>City | District:</strong>
+                              <Chip color="primary" variant="bordered">
+                                {warehouse.city}
+                              </Chip>
                             </span>
                             <span className="flex gap-2 items-center">
-                              Address:{" "}
-                              <Chip variant="bordered">
+                              <strong>Address:</strong>
+                              <Chip color="primary" variant="bordered">
                                 {warehouse.address}
                               </Chip>
                             </span>
-
                             <Dropdown>
                               <DropdownTrigger>
-                                <Button variant="bordered">Get Contacts</Button>
+                                <Button variant="bordered" color="default">
+                                  Get Contacts
+                                </Button>
                               </DropdownTrigger>
                               <DropdownMenu
                                 aria-label="Static Actions"
-                                className="flex justify-center items-center gap-3"
+                                className="flex flex-col gap-2 "
                                 onClick={() => setOpen(!open)}>
                                 <DropdownItem key="phone">
-                                  <span>Phone no.:</span>
+                                  <span>Phone no.: </span>
                                   <Chip color="primary" variant="solid">
                                     {warehouse.phoneNo}
                                   </Chip>
                                 </DropdownItem>
                                 <DropdownItem key="email">
-                                  <span>Email:</span>
+                                  <span>Email: </span>
                                   <Chip color="success" variant="flat">
                                     {warehouse.email}
                                   </Chip>
@@ -291,18 +295,20 @@ const FarmerMarketplacePage = () => {
                         </div>
                       </CardBody>
                       <Divider />
-                      <CardFooter className="flex justify-between items-center p-3">
-                        <Button
-                          color="primary"
-                          variant="bordered"
-                          onClick={() => handleRoute(warehouse._id)}>
-                          View Details
+                      <CardFooter className="flex justify-between items-center p-4">
+                        <Button color="primary" variant="bordered">
+                          <Link
+                            href={`/warehouse/${warehouse._id}`}
+                            target="_blank">
+                            View Details
+                          </Link>
                         </Button>
-                        <Button
-                          color="success"
-                          variant="bordered"
-                          onClick={() => handleRoute(warehouse._id)}>
-                          {warehouse.price}/sqft
+                        <Button color="success" variant="bordered">
+                          <Link
+                            href={`/warehouse/${warehouse._id}`}
+                            target="_blank">
+                            {warehouse.price}/sqft
+                          </Link>
                         </Button>
                       </CardFooter>
                     </Card>

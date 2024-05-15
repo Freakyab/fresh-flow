@@ -7,7 +7,6 @@ import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
 
-
 function Orders() {
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
   const [typeOf, setTypeOf] = useState<string>("Customer");
@@ -52,12 +51,17 @@ function Orders() {
       </div>
       <div className="bg-white my-3 rounded-xl p-3">
         {OrderData.length !== 0 && typeOf === "Customer" ? (
-          OrderData.filter((order) => order.customerId != undefined).map(
-            (order, index) => (
-              <div key={index}>
-                <OrderCardDetail {...order} />
-              </div>
+          OrderData.filter((order) => order.customerId != undefined).length !=
+          0 ? (
+            OrderData.filter((order) => order.customerId != undefined).map(
+              (order, index) => (
+                <div key={index}>
+                  <OrderCardDetail {...order} />
+                </div>
+              )
             )
+          ) : (
+            <div>No order Found</div>
           )
         ) : (
           <div>
@@ -78,7 +82,8 @@ function Orders() {
                 </SelectItem>
               </Select>
             </div>
-            {OrderData.length !== 0 ? (
+            {OrderData.filter((order) => order.customerName == undefined)
+              .length !== 0 ? (
               OrderData.filter((order) => order.customerName == undefined)
                 .filter((order) => order.status === status.toLocaleLowerCase())
                 .map((order, index) => (

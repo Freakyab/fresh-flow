@@ -13,7 +13,7 @@ export const Footer = () => {
             </li>
             <li>
               {" "}
-              <Link href="/register/farmer">Register</Link>
+              <Link href="/login">Register</Link>
             </li>
             <li>
               <Link href="/login">Login</Link>
@@ -22,16 +22,6 @@ export const Footer = () => {
           <p className="mt-2 md:mt-0">
             Copyright @2023 MindStack Inc. All rights reserved.
           </p>
-        </div>
-        <div className="flex items-center justify-center md:ml-8">
-          <h3 className="text-sm md:text-xl">Mindstack</h3>
-          <Image
-            src={"/Mindstack.png"}
-            width={40}
-            height={40}
-            alt="Mindstack Logo"
-            className="ml-2 rounded-3xl"
-          />
         </div>
       </div>
     </div>

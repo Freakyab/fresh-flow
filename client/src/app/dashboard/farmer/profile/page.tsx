@@ -12,7 +12,6 @@ import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { GoListUnordered } from "react-icons/go";
 import { CiSettings } from "react-icons/ci";
 
-
 function page() {
   const [farmerDetailData, setFarmerDetailData] =
     useState<farmerDetailDataProps>({} as farmerDetailDataProps);
@@ -67,20 +66,34 @@ function page() {
 
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <Skeleton isLoaded={isLoaded}>
       <div className="grid grid-cols-2 gap-3 h-[500px]">
         <div className="bg-white grid rounded-xl p-3 ">
           <Title title="Farmer's Detail" Icon={<LuWarehouse />} link={""} />
           <div className="overflow-y-auto h-[440px]">
-            <FarmerDetails
-              farmerDetailData={farmerDetailData}
-              className={"flex gap-3 p-3"}
-            />
+            <Skeleton isLoaded={isLoaded}>
+              <FarmerDetails
+                farmerDetailData={farmerDetailData}
+                className={"flex gap-3 p-3"}
+              />
+            </Skeleton>
           </div>
         </div>
         <div className="bg-white rounded-xl p-3 ">
-          <Title title="Settings" Icon={<GoListUnordered />} link={""} />
-          <div className="flex gap-3 p-3 flex-col lg:flex-row"></div>
+          <Title
+            title="Settings"
+            Icon={<GoListUnordered />}
+            link={"/dashboard/farmer/settings"}
+          />
+          <Skeleton isLoaded={isLoaded}>
+            <div className="flex gap-3 p-3 flex-col">
+              <p>
+                <span className="font-bold">Name:</span>{" "}
+                {farmerDetailData?.farmerName}
+              </p>
+              <p>...</p>
+              <p>Click on see more to update your profile</p>
+            </div>
+          </Skeleton>
         </div>
       </div>
       <div className="flex gap-3 h-full">
@@ -88,44 +101,49 @@ function page() {
           <Title
             title="Recent Order's (Customer)"
             Icon={<LuGanttChartSquare />}
-            link={""}
+            link={"/dashboard/farmer/orders"}
           />
-          <div className="p-3">
-            {OrderData?.length !== 0 ? (
-              OrderData.filter((order) => order.customerId != undefined).map(
-                (order, index) => (
-                  <div key={index}>
-                    <OrderCardDetail {...order} />
-                  </div>
+          <Skeleton isLoaded={isLoaded}>
+            <div className="p-3">
+              {OrderData.filter((order) => order.customerId != undefined)
+                ?.length !== 0 ? (
+                OrderData.filter((order) => order.customerId != undefined).map(
+                  (order, index) => (
+                    <div key={index}>
+                      <OrderCardDetail {...order} />
+                    </div>
+                  )
                 )
-              )
-            ) : (
-              <div>No order Found</div>
-            )}
-          </div>
+              ) : (
+                <div>No order Found</div>
+              )}
+            </div>
+          </Skeleton>
         </div>
         <div className="bg-white rounded-xl p-3 w-1/2 h-[500px] overflow-auto">
           <Title
             title="Recent Order's (Warehouse)"
             Icon={<CiSettings />}
-            link={""}
+            link={"/dashboard/farmer/orders"}
           />
-          <div className="p-3">
-            {OrderData?.length !== 0 ? (
-              OrderData.filter((order) => order.customerName == undefined).map(
-                (order, index) => (
+          <Skeleton isLoaded={isLoaded}>
+            <div className="p-3">
+              {OrderData.filter((order) => order.customerName == undefined)
+                ?.length !== 0 ? (
+                OrderData.filter(
+                  (order) => order.customerName == undefined
+                ).map((order, index) => (
                   <div key={index}>
                     <OrderCardDetail {...order} />
                   </div>
-                )
-              )
-            ) : (
-              <div>No order Found</div>
-            )}
-          </div>
+                ))
+              ) : (
+                <div>No order Found</div>
+              )}
+            </div>
+          </Skeleton>
         </div>
       </div>
-    </Skeleton>
     </div>
   );
 }

@@ -118,7 +118,7 @@ const CustomerRegisterform = () => {
   };
 
   return (
-    <Card className="m-3" shadow="lg">
+    <Card className="m-3 h-[555px]" shadow="lg">
       <CardHeader>
         <div className="w-full flex gap-1 items-center">
           <CgProfile size={25} className="text-primary" />
@@ -131,8 +131,8 @@ const CustomerRegisterform = () => {
           navigation={true}
           modules={[Pagination, Navigation]}>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10  ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-10">
                 <Input
                   label="Full Name"
                   type="text"
@@ -188,8 +188,8 @@ const CustomerRegisterform = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10 ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-10">
                 <Input
                   label="Email"
                   type="email"
@@ -236,8 +236,8 @@ const CustomerRegisterform = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10  ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-10">
                 <Input
                   label="City"
                   type="text"
@@ -263,13 +263,13 @@ const CustomerRegisterform = () => {
                     setFormData({ ...formData, image: e.target.value })
                   }
                 />
-              </div>
-            </div>
               <Button onClick={handleSubmit}
                 color="danger"
                 variant="shadow"
                 className="w-[50%] ml-[30px]"
               >Submit</Button>
+              </div>
+            </div>
           </SwiperSlide>
         </Swiper>
       </CardBody>
