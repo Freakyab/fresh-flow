@@ -118,7 +118,7 @@ const CustomerRegisterform = () => {
   };
 
   return (
-    <Card className="m-3 h-[555px]" shadow="lg">
+    <Card className="m-3 h-[555px] bg-secondary" shadow="lg">
       <CardHeader>
         <div className="w-full flex gap-1 items-center">
           <CgProfile size={25} className="text-primary" />
