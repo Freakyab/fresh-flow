@@ -22,12 +22,27 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
   const pathname = usePathname();
   const { logout } = useUserDetails();
   const router = useRouter();
-  const activeComponent = pathname.split("/").filter((item) => item !== "")[2];
+  const [activeIndex, setActiveIndex] = useState(-1);
 
+  useEffect(() => {
+    const activeComponent = pathname
+      .split("/")
+      .filter((item) => item !== "")[2];
+
+    setActiveIndex(
+      options.findIndex(
+        ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
+      )
+    );
+    setSelectedIndex(
+      activeIndex !== -1
+        ? options.findIndex(
+            ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
+          )
+        : 0
+    );
+  }, [pathname]);
   // Find the index of the active component
-  const activeIndex = options.findIndex(
-    (option) => option.title.toLowerCase() === activeComponent
-  );
 
   const [selectedIndex, setSelectedIndex] = useState(
     activeIndex !== -1 ? activeIndex : 0
