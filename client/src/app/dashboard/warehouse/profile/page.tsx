@@ -65,25 +65,25 @@ function page() {
 
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
-      <div className="grid grid-cols-2 gap-3 h-[500px]">
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-3 h-[500px]">
         <div className="bg-white rounded-xl p-3 ">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
             <div className="overflow-y-auto h-[440px]">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
               <WarehouseDetails
                 warehouseDetailData={warehouseDetailData}
-                className={"flex gap-3 p-3"}
-              />
+                className={"flex gap-3 p-3 overflow-scroll h-[440px] w-full"}
+                />
+                </Skeleton>
             </div>
-          </Skeleton>
         </div>
         <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title
               title="Recent's Order"
               Icon={<GoListUnordered />}
               link={"/dashboard/warehouse/orders"}
             />
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <div className="flex gap-3 h-[440px] w-full py-3 flex-col overflow-y-auto">
               {OrderData.length !== 0 ? (
                 OrderData.map((order, index) => (
@@ -95,27 +95,27 @@ function page() {
                 <div>No order Found</div>
               )}
             </div>
-          </Skeleton>
+              </Skeleton>
         </div>
       </div>
-      <div className="flex gap-3 h-full">
+      <div className="flex flex-col md:flex-row gap-3 h-full">
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <Title
               title="Charts"
               Icon={<LuGanttChartSquare />}
               link={"/dashboard/warehouse/charts"}
             />
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <WarehouseExpenseChart className="" />
           </Skeleton>
         </div>
-        <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
+        <div className="bg-white rounded-xl p-3 flex-1">
             <Title
               title="Settings"
               Icon={<CiSettings />}
               link={"/dashboard/warehouse/settings"}
             />
+              <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             Click on See More to access the settings
           </Skeleton>
         </div>

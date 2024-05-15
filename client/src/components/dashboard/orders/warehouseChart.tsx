@@ -14,6 +14,8 @@ import { Bar, Pie } from "react-chartjs-2";
 import handleToast from "@/components/toastifyNotification";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
+
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -54,6 +56,8 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
     "December",
   ];
 
+
+
   useEffect(() => {
     fetch(
       // Change id
@@ -72,6 +76,8 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
         if (data) {
           setPrice(data);
         }
+
+
       });
   }, []);
 
@@ -81,12 +87,16 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
       {
         label: "Total Earned",
         data: price,
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: "rgba(99, 132, 255, 0.5)",
       },
     ],
   };
 
-  return <Bar options={options} data={newData} className={className} />;
+  return (
+  <> 
+  <Bar options={options} data={newData} className={className}/>
+  </>
+);
 }
 export function WarehouseOccupacyPie({ className }: { className: string }) {
   const [pieData, setPieData] = React.useState<WarehouseOccupacyPieProps>({
@@ -139,7 +149,7 @@ export function WarehouseOccupacyPie({ className }: { className: string }) {
           ...pieData.occupied?.map((data) => data.quantity),
         ],
         backgroundColor: [
-          "#FF6384",
+          "lightblue",
           ...pieData.occupied?.map(() => getRandomColor()),
         ],
       },
