@@ -22,7 +22,6 @@ router.post("/register", async (req, res) => {
       state,
       capacity,
       registrationDate,
-      registrationValidUpto,
       phoneNo,
       status,
       type,
@@ -38,6 +37,41 @@ router.post("/register", async (req, res) => {
     const user = await Warehouse.findOne({ username });
     if (user) return res.status(400).json({ msg: "Username already exists" });
 
+    const getDateInMonthAbbreviation = (date) => {
+      const monthNames = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      // 22-12-2011 to 22-DEC-2021
+      return (
+        date.split("-")[2] +
+        "-" +
+        monthNames[parseInt(date.split("-")[1]) - 1] +
+        "-" +
+        date.split("-")[0]
+      );
+    };
+
+    const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
+
+    const newDate = new Date(newRegistrationDate)
+
+    // add 5 years in newDate
+    newDate.setFullYear(newDate.getFullYear() + 5)
+    newDate.setDate(newDate.getDate() - 1)
+
+    const newRegistrationValidUpto = getDateInMonthAbbreviation(newDate.toISOString().split("T")[0]);
+
     // Create a new user
     const newUser = new Warehouse({
       ownerName,
@@ -48,8 +82,8 @@ router.post("/register", async (req, res) => {
       city,
       state,
       capacity,
-      registrationDate,
-      registrationValidUpto,
+      registrationDate : newRegistrationDate,
+      registrationValidUpto: newRegistrationValidUpto,
       phoneNo,
       status,
       type,
@@ -167,7 +201,6 @@ router.put("/update/:id", async (req, res) => {
     if (!user) return res.status(400).json({ msg: "User does not exists" });
 
     const getDateInMonthAbbreviation = (date) => {
-      console.log(date);
       const monthNames = [
         "Jan",
         "Feb",
