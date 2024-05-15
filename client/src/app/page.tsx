@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../components/navbar.component";
 import { Footer } from "../components/footer.component";
 
 

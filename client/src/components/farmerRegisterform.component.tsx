@@ -68,7 +68,7 @@ const FarmerRegisterform = () => {
   };
 
   return (
-    <Card className="m-3" shadow="lg">
+    <Card className="m-3 h-[555px]" shadow="lg">
       <CardHeader>
         <div className="w-full flex gap-1 items-center">
           <CgProfile size={25} className="text-primary" />
@@ -81,8 +81,8 @@ const FarmerRegisterform = () => {
           navigation={true}
           modules={[Pagination, Navigation]}>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10 ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-10">
                 <Input
                   label="Farmer Name"
                   type="text"
@@ -139,8 +139,8 @@ const FarmerRegisterform = () => {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10 ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-10">
                 <Input
                   variant="flat"
                   label="Aadhar Number"
@@ -263,8 +263,8 @@ const FarmerRegisterform = () => {
             </SwiperSlide>
           )}
           <SwiperSlide>
-            <div className="flex p-4  ml-[100px] gap-4 flex-col h-full w-[60%]">
-              <div className="flex flex-col gap-4">
+            <div className="flex p-1 my-10  ml-[100px] gap-4 flex-col h-full w-[60%]">
+              <div className="flex flex-col gap-10">
                 <Input
                   variant="flat"
                   label="City"
@@ -298,8 +298,6 @@ const FarmerRegisterform = () => {
                     })
                   }
                 />
-              </div>
-            </div>
             <Button
               // onClick={handleSubmit}
               onClick={() => console.log(formData)}
@@ -308,6 +306,8 @@ const FarmerRegisterform = () => {
               className="w-[50%] ml-[30px]">
               Submit
             </Button>
+              </div>
+            </div>
           </SwiperSlide>
         </Swiper>
       </CardBody>

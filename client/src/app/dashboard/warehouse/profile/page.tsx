@@ -84,7 +84,7 @@ function page() {
               Icon={<GoListUnordered />}
               link={"/dashboard/warehouse/orders"}
             />
-            <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
+            <div className="flex gap-3 h-[440px] w-full py-3 flex-col overflow-y-auto">
               {OrderData.length !== 0 ? (
                 OrderData.map((order, index) => (
                   <div key={index}>
