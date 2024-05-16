@@ -230,7 +230,6 @@ function Page() {
               </Modal>
             </div>
           </div>
-
           <div className="w-full md:w-1/2 bg-gray-300 p-6">
             {!display && warehouseDetailData != undefined ? (
               <Map

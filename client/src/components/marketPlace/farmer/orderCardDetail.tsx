@@ -58,8 +58,8 @@ function OrderCardDetail(order: transactionProps) {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <Card className="border-none mb-3 bg-light-bg" shadow="lg">
+    <div className="flex justify-center items-center bg-white p-3">
+      <Card className="border-none mb-3 bg-light-bg w-[440px] p-2" shadow="lg">
         <CardBody className="flex justify-center text-nowrap gap-3">
           <div className="flex gap-2">
             Order no. :

@@ -24,11 +24,11 @@ const Title = ({ title, Icon, className, link }: TitleProps) => {
           </div>
         </div>
         <div className="px-2 w-fit ">
-          {link != "" && <p
-            className="capitalize tracking-tighter cursor-pointer "
+          {link != "" && <button
+            className="capitalize tracking-tighter cursor-pointer text-primary p-1 rounded-3xl hover:bg-primary hover:text-light-bg transition-all duration-300 ease-in-out"
             onClick={() => router.push(link ? link : "")}>
             See more {">>"}
-          </p>}
+          </button>}
         </div>
       </div>
       <Divider className="my-1" />

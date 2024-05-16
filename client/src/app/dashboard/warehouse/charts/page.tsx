@@ -2,6 +2,7 @@ import React from "react";
 
 import { Card, Divider } from "@nextui-org/react";
 
+
 import {
   WarehouseExpenseChart,
   WarehouseOccupacyPie,

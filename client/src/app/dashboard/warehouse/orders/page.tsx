@@ -45,9 +45,9 @@ function Orders() {
   };
 
   return (
-    <div className="m-3 p-3 w-full bg-white flex justify-center flex-col items-center rounded-xl">
-      <h1 className="text-2xl font-bold text-center text-primary">Orders</h1>
-      <div className="py-2 w-full flex justify-center items-center">
+    <div className="m-3 p-3 w-full bg-primary  flex-col items-center rounded-xl">
+      <h1 className="text-2xl font-bold text-center text-white">Orders</h1>
+      <div className="py-2 pb-8 w-full flex-row justify-evenly items-center">
         <Select
           label="Select status"
           placeholder={status}
@@ -65,14 +65,14 @@ function Orders() {
         </Select>
       </div>
       {orders.length === 0 ? (
-        <h1 className="text-center text-2xl text-primary">
+        <h1 className="text-center text-2xl text-white">
           No orders available
         </h1>
       ) : (
         orders
         .filter((order) => order.status === status.toLocaleLowerCase())
         .map((order, index) => (
-          <div key={index}>
+          <div key={index} >
             {/* Check if order is empty */}
             <OrderCardDetail {...order} />
           </div>

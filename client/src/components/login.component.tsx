@@ -126,7 +126,7 @@ const LoginComponent = () => {
           type={isVisible ? "text" : "password"}
         />
         <Button
-          className="w-full h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none"
+          className="w-full h-12 bg-primary text-white rounded-md hover:bg-gray-800 focus:outline-none"
           onClick={handleLogin}>
           Login
         </Button>
