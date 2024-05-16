@@ -64,7 +64,7 @@ function Orders() {
           </SelectItem>
         </Select>
       </div>
-      {orders.length === 0 ? (
+      {orders.filter((order) => order.status === status.toLocaleLowerCase()).length === 0 ? (
         <h1 className="text-center text-2xl text-white">
           No orders available
         </h1>

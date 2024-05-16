@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname,useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,6 +27,7 @@ const Map = dynamic(
 );
 
 function Page() {
+  const router = useRouter();
   const [warehouseDetailData, setWarehouseDetailData] =
     useState<warehouseDetailDataProps | null>(
       {} as warehouseDetailDataProps | null
@@ -127,6 +128,7 @@ function Page() {
           handleToast(data.error, "error");
         } else {
           handleToast("Transcation successful, Check order history", "success");
+          router.push('/dashboard/farmer/orders');
         }
       });
     handleClose();

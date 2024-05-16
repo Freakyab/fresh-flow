@@ -53,15 +53,15 @@ function Orders() {
 
   return (
     <Skeleton className="w-full h-full" isLoaded={isLoaded}>
-      <div className="m-3 p-3 w-full bg-white flex justify-center flex-col items-center rounded-xl">
-        <h1 className="text-2xl font-bold text-center text-primary">Orders</h1>
+      <div className="m-3 bg-primary p-3 w-full text-white flex justify-center flex-col items-center rounded-xl">
+        <h1 className="text-2xl font-bold text-center">Orders</h1>
         {orders.length === 0 ? (
-          <h1 className="text-center text-2xl text-primary">
+          <h1 className="text-center text-2xl">
             No orders available
           </h1>
         ) : (
           orders.map((order, index) => (
-            <div key={index}>
+            <div key={index} className="">
               {/* Check if order is empty */}
               <OrderCardDetail {...order} />
             </div>

@@ -81,7 +81,7 @@ function page() {
         <div className="bg-white rounded-xl p-3 ">
           <Title
             title="Settings"
-            Icon={<GoListUnordered />}
+            Icon={<CiSettings />}
             link={"/dashboard/farmer/settings"}
           />
           <Skeleton isLoaded={isLoaded}>
@@ -100,7 +100,8 @@ function page() {
         <div className="bg-white rounded-xl p-3 w-1/2 h-[500px] overflow-auto">
           <Title
             title="Recent Order's (Customer)"
-            Icon={<LuGanttChartSquare />}
+            // Icon={<LuGanttChartSquare />}
+            Icon={<GoListUnordered/>}
             link={"/dashboard/farmer/orders"}
           />
           <Skeleton isLoaded={isLoaded}>
