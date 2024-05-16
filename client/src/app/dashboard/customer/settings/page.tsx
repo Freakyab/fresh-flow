@@ -251,8 +251,8 @@ const Settings = () => {
               onClick={() => {
                 fetch(
                   // Change id
-                  // `http://localhost:5000/customer/update/${userDetails.userDetails._id}`,
-                  `https://fresh-flow-backend.vercel.app/customer/update/${userDetails.userDetails._id}`,
+                  `http://localhost:5000/customer/update/${userDetails.userDetails._id}`,
+                  // `https://fresh-flow-backend.vercel.app/customer/update/${userDetails.userDetails._id}`,
                   {
                     method: "PUT",
                     headers: {
