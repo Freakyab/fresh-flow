@@ -178,8 +178,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const onPay = async(totalAmount: number) => {
-        await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+        //await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+         await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
