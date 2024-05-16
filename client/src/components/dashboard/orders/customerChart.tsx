@@ -70,7 +70,8 @@ export function CustomerExpenseChart({ className }: { className: string }) {
       .then((res) => res.json())
       .then((data) => {
         if (data.isFound) {
-          setPrice(data);
+          console.log(data)
+          setPrice(data.ExpensesPerMonth);
         }
        
       });
@@ -82,6 +83,7 @@ export function CustomerExpenseChart({ className }: { className: string }) {
       {
         label: "Total Earned",
         data: price,
+    
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
