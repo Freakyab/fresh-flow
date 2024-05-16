@@ -124,7 +124,6 @@ router.put("/update/:id", async (req, res) => {
       fullName,
       email,
       username,
-      password,
       address,
       city,
       state,
@@ -137,8 +136,7 @@ router.put("/update/:id", async (req, res) => {
     const user = await Customer.findOne({ _id: req.params.id });
     if (!user) return res.status(400).json({ msg: "User does not exists" });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = user.password;
 
 
     // Create a new user
@@ -146,8 +144,8 @@ router.put("/update/:id", async (req, res) => {
       fullName,
       email,
       username,
+      password : hashedPassword,
       address,
-      password: hashedPassword,
       city,
       state,
       phoneNo,
@@ -155,10 +153,10 @@ router.put("/update/:id", async (req, res) => {
       location,
     };
 
-    await Customer.findByIdAndUpdate(req.params.id, newUser);
+    const update = await Customer.findByIdAndUpdate(req.params.id, newUser);
     
-    if (token) {
-      res.status(201).json({ message: "Customer updated successfully", token  , isUpdated: true});
+    if (update) {
+      res.status(201).json({ message: "Customer updated successfully", isUpdated: true});
     } else {
       res.status(400).json({ message: "Customer update failed", isUpdated: false});
     }

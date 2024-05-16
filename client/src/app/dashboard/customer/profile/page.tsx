@@ -113,7 +113,7 @@ function page() {
           <Title
             title="Charts"
             Icon={<LuGanttChartSquare />}
-            link={"/dashboard/warehouse/charts"}
+            link={"/dashboard/customer/charts"}
           />
           <Skeleton className="w-full h-full" isLoaded={isLoaded}>
 
