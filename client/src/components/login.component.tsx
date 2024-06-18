@@ -80,8 +80,8 @@ const LoginComponent = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-[500px] h-full justify-center p-8 bg-white text-black rounded-md shadow-lg">
-      <div className="flex gap-3">
+    <div className="flex flex-col items-center w-auto sm:w-[500px] h-full justify-center p-8 bg-white text-black rounded-md shadow-lg">
+      <div className="max-[424px]:flex min-[320px]:gap-2 min-[320px]:flex-col max-[425px]:gap-x-3 sm:px-4">
         <Button
           color={userType === "Farmer" ? "success" : "primary"}
           variant="bordered"
@@ -101,7 +101,7 @@ const LoginComponent = () => {
           Warehouse
         </Button>
       </div>
-      <div className="flex flex-col w-full gap-4 mt-4">
+      <div className="flex flex-col sm:w-full gap-4 mt-4">
         <Input
           placeholder="Enter the username"
           value={formData.username}

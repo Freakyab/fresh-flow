@@ -5,7 +5,7 @@ function CustomerDetails({
   customerDetailData,
   className,
 }: {
-    customerDetailData: customerDetailDataProps;
+  customerDetailData: customerDetailDataProps;
   className: string;
 }) {
   return (
@@ -16,44 +16,43 @@ function CustomerDetails({
         </CardHeader>
         <CardBody>
           <div className="flex flex-col gap-3 justify-center">
-            <div className="flex gap-3 items-center">
-              <p className="text-lg font-semibold">Customer name : </p>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
+              <p className="text-lg font-semibold">Customer name: </p>
               <p>{customerDetailData.fullName}</p>
             </div>
-            <div className="flex gap-3 items-center">
-              <p className="text-lg font-semibold">Username : </p>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
+              <p className="text-lg font-semibold">Username: </p>
               <p>{customerDetailData.username}</p>
             </div>
-            <div className="flex gap-3 items-center">
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
               <p className="text-lg font-semibold">Email: </p>
               <p>{customerDetailData.email}</p>
             </div>
-            <div className="flex gap-3 items-center">
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
               <p className="text-lg font-semibold">Phone no: </p>
               <p>{customerDetailData.phoneNo}</p>
             </div>
-            <div className="flex gap-3 items-center">
-              <p className="text-lg font-semibold">Location : </p>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
+              <p className="text-lg font-semibold">Location: </p>
               <p>
-                Lat :{" "}
+                Lat:{" "}
                 {customerDetailData.location && customerDetailData.location[0]}
-                {","} Lng:{" "}
+                , Lng:{" "}
                 {customerDetailData.location && customerDetailData.location[1]}
               </p>
             </div>
-            <div className="flex gap-3 items-center">
-              <p className="text-lg font-semibold">Warehouse address : </p>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
+              <p className="text-lg font-semibold">Warehouse address: </p>
               <p>{customerDetailData.address}</p>
             </div>
-            <div className="flex gap-3 items-center">
-              <p className="text-lg font-semibold">City : </p>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
+              <p className="text-lg font-semibold">City: </p>
               <p>{customerDetailData.city}</p>
             </div>
-            <div className="flex gap-3 items-center">
-              <p className="text-lg font-semibold">State : </p>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-3 items-center">
+              <p className="text-lg font-semibold">State: </p>
               <p>{customerDetailData.state}</p>
             </div>
-            
           </div>
         </CardBody>
       </Card>

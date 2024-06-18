@@ -15,7 +15,7 @@ const RegisterComponent = () => {
 
   return (
     
-    <div className="flex flex-col items-center w-[500px] h-full justify-center bg-white text-black rounded-md shadow-lg">
+    <div className="flex flex-col items-center sm:w-[500px] h-full justify-center bg-white text-black rounded-md shadow-lg">
       <div className="w-full h-full p-3 text-center">
         <Tabs aria-label="Options">
           <Tab

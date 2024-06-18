@@ -34,9 +34,13 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
         ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
       )
     );
-    setSelectedIndex(activeIndex !== -1 ? options.findIndex(
-      ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
-    ) : 0);
+    setSelectedIndex(
+      activeIndex !== -1
+        ? options.findIndex(
+            ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
+          )
+        : 0
+    );
   }, [pathname]);
   // Find the index of the active component
 
@@ -50,7 +54,7 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
   };
 
   return (
-    <div className="bg-white p-3 w-full flex flex-col justify-between">
+    <div className="bg-white p-3 w-full flex flex-col justify-between md:w-64">
       <h1 className="text-xl capitalize tracking-tighter">
         start your day be productive
       </h1>
@@ -76,7 +80,8 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
                   ? "bg-black text-white"
                   : "bg-white hover:bg-light-bg"
               }`}
-              onClick={() => setSelectedIndex(index)}>
+              onClick={() => setSelectedIndex(index)}
+            >
               {Icon}
               <p className="text-xl font-light">{title}</p>
             </Link>
