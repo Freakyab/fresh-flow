@@ -78,14 +78,14 @@ function page() {
       <div className="grid grid-cols-2 gap-3 h-[500px]">
         <div className="bg-white rounded-xl p-3 ">
           <Title title="Customer Detail" Icon={<LuWarehouse />} link="" />
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <div className="overflow-y-auto h-[440px]">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
               <CustomerDetails
                 customerDetailData={customerDetailData}
                 className={"flex gap-3 p-3"}
               />
-            </div>
           </Skeleton>
+            </div>
         </div>
         <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
           <Title
@@ -93,8 +93,8 @@ function page() {
             Icon={<GoListUnordered />}
             link={"/dashboard/customer/orders"}
           />
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
               {OrderData.length !== 0 ? (
                 OrderData.map((order, index) => (
                   <div key={index}>
@@ -104,8 +104,8 @@ function page() {
               ) : (
                 <div>No order Found</div>
               )}
-            </div>
           </Skeleton>
+            </div>
         </div>
       </div>
       <div className="flex gap-3 h-full">

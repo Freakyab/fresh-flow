@@ -58,7 +58,7 @@ function OrderCardDetail(order: transactionProps) {
   };
 
   return (
-    <div className="flex justify-center items-center bg-white p-3">
+    <div className="flex justify-center items-center  p-3 w-full">
       <Card className="border-none mb-3 bg-light-bg w-[440px] p-2" shadow="lg">
         <CardBody className="flex justify-center text-nowrap gap-3">
           <div className="flex gap-2">
@@ -69,19 +69,20 @@ function OrderCardDetail(order: transactionProps) {
           </div>
           {!order.customerName && (
             <div className="flex gap-2">
-            Status :
-            <Chip
-              // variant="bordered"
-              color={`${
-                order.status === "pending"
-                  ? "danger"
-                  : order.status === "accepted"
-                  ? "success"
-                  : "warning"
-              }`}>
-              {order.status}
-            </Chip>
-          </div>)}
+              Status :
+              <Chip
+                // variant="bordered"
+                color={`${
+                  order.status === "pending"
+                    ? "danger"
+                    : order.status === "accepted"
+                    ? "success"
+                    : "warning"
+                }`}>
+                {order.status}
+              </Chip>
+            </div>
+          )}
           {!order.customerName ? (
             <div className="flex gap-2">
               Farmer Name :<Chip variant="bordered">{order.farmerName}</Chip>
@@ -99,7 +100,7 @@ function OrderCardDetail(order: transactionProps) {
           <div className="flex gap-2">
             Quantity :
             <Chip color="primary" variant="bordered">
-              {order.quantity}
+              {!order.customerName ? order.quantity : order.quantity * 10}
             </Chip>
           </div>
           <div className="flex gap-2">
@@ -108,39 +109,41 @@ function OrderCardDetail(order: transactionProps) {
               {order.price}
             </Chip>
           </div>
-          {order.duration && (<div className="flex gap-2">
-            Duration :
-            <Chip color="primary" variant="bordered">
-              {order.duration}
-            </Chip>
-          </div>)}
+          {order.duration && (
+            <div className="flex gap-2">
+              Duration :
+              <Chip color="primary" variant="bordered">
+                {order.duration}
+              </Chip>
+            </div>
+          )}
           <div className="flex gap-2">
             Type of Crop :
             <Chip color="primary" variant="bordered">
               {order.typeOfCrop}
             </Chip>
           </div>
-          
         </CardBody>
         <Divider />
-                {order.status === "pending" && pathname.split('/')[2] == 'warehouse'  && (
-          <CardFooter className="flex justify-end items-center gap-3 bg-light-bg">
-            <Button
-              color="success"
-              variant="shadow"
-              className="text-white"
-              onClick={handleAccept}>
-              Accept
-            </Button>
-            <Button
-              color="danger"
-              className="text-white"
-              variant="shadow"
-              onClick={handleReject}>
-              Reject
-            </Button>
-          </CardFooter>
-        )}
+        {order.status === "pending" &&
+          pathname.split("/")[2] == "warehouse" && (
+            <CardFooter className="flex justify-end items-center gap-3 bg-light-bg">
+              <Button
+                color="success"
+                variant="shadow"
+                className="text-white"
+                onClick={handleAccept}>
+                Accept
+              </Button>
+              <Button
+                color="danger"
+                className="text-white"
+                variant="shadow"
+                onClick={handleReject}>
+                Reject
+              </Button>
+            </CardFooter>
+          )}
       </Card>
       <ToastContainer />
     </div>
