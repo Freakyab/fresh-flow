@@ -36,7 +36,7 @@ function Orders() {
       .then((res) => res.json())
       .then((data) => {
         if (data.allTransaction) {
-          setOrders(data.allTransaction);
+          setOrders(data.allTransaction.reverse());
           toggleLoad();
         } else {
           handleToast("No data found", "info");

@@ -34,7 +34,7 @@ function Orders() {
       .then((data) => {
         if (data.allTransaction) {
           console.log(data.allTransaction);
-          setOrders(data.allTransaction);
+          setOrders(data.allTransaction.reverse());
         } else {
           handleToast("No data found", "info");
         }

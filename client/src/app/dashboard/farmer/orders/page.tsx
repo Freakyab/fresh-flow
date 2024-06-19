@@ -30,7 +30,7 @@ function Orders() {
       .then((res) => res.json())
       .then((data) => {
         if (data) {
-          setOrderData(data.allTransaction);
+          setOrderData(data.allTransaction.reverse());
         }
       });
   }, []);
