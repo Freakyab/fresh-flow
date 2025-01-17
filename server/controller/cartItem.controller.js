@@ -16,14 +16,28 @@ const e = require("express");
 
 router.post("/addOrder/:id", async (req, res) => {
   try {
-    console.log("addOrder got called");
     const customerId = req.params.id;
     const { order } = req.body;
     const cartExist = await CartItems.find({ customerId: customerId }).exec();
 
     if (cartExist[0]) {
       const orderItems = cartExist[0].orderItems;
-      orderItems.push(order);
+
+      let isOrderExist = false;
+      for (let i = 0; i < orderItems.length; i++) {
+        if (
+          orderItems[i].crop.toLowerCase() === order.crop.toLowerCase() &&
+          orderItems[i].price === order.price
+        ) {
+          orderItems[i].availableQuantity += 1;
+
+          isOrderExist = true;
+          break;
+        }
+      }
+      if (!isOrderExist) {
+        orderItems.push(order);
+      }
       await CartItems.findByIdAndUpdate(cartExist[0]._id, {
         orderItems: orderItems,
       });
@@ -237,73 +251,168 @@ router.post("/clearOrderItems/:id", async (req, res) => {
  * @route POST /cartItems/onPay
  */
 
+// router.post("/onPay/:id", async (req, res) => {
+//   try {
+//     const customerId = req.params.id;
+//     const cartExist = await CartItems.findOne({ customerId: customerId });
+//     const customer = await Customer.findById(customerId);
+
+//     if (cartExist) {
+//       const orderItems = cartExist.orderItems;
+
+//       // Array to hold promises for saving transactions
+//       const transactionPromises = [];
+
+//       for (const order of orderItems) {
+//         const farmer = await Farmer.findById(order._id);
+//         if (!farmer) {
+//           return res.status(400).json({ message: "Farmer not found" });
+//         } else {
+//           const newAvailableCrops = farmer.availableCrops.map((crop) => {
+//             if (crop.typeOfCrop.toLowerCase() === order.crop.toLowerCase()) {
+//               crop.quantity -= order.availableQuantity;
+//               if (crop.quantity < 0) {
+//                 // If quantity is not available, cancel the transaction
+//                 return res
+//                   .status(400)
+//                   .json({
+//                     message: "Not enough quantity available",
+//                     isPaid: false,
+//                   });
+//               }
+//             }
+//             return crop; // Return the modified crop
+//           });
+
+//           const transaction = new Transaction({
+//             farmerId: order._id,
+//             farmerName: order.farmerName,
+//             customerId: customerId,
+//             customerName: customer.fullName,
+//             quantity: order.availableQuantity * 50 * 0.01,
+//             price: order.price,
+//             typeOfCrop: order.crop,
+//             status: "accepted",
+//           });
+
+//           await Farmer.findByIdAndUpdate(order._id, {
+//             availableCrops: newAvailableCrops,
+//           });
+
+//           transactionPromises.push(transaction.save()); // Push promise to array
+//         }
+//       }
+
+//       // Wait for all transaction saves to complete
+//       await Promise.all(transactionPromises);
+
+//       const updatedCart = await CartItems.findByIdAndUpdate(cartExist._id, {
+//         orderItems: [],
+//       });
+
+//       if (!updatedCart) {
+//         res.status(400).json({ message: "Payment Failed", isPaid: false });
+//       } else {
+//         res.status(200).json({ message: "Payment Success", isPaid: true });
+//       }
+//     } else {
+//       res.status(404).json({ message: "Order Not Found", isPaid: false });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Server Error", isPaid: false });
+//   }
+// });
+
 router.post("/onPay/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
     const cartExist = await CartItems.findOne({ customerId: customerId });
     const customer = await Customer.findById(customerId);
+    if (!cartExist) {
+      return res
+        .status(404)
+        .json({ message: "Order Not Found", isPaid: false });
+    }
 
-    if (cartExist) {
-      const orderItems = cartExist.orderItems;
+    if (!customer) {
+      return res
+        .status(404)
+        .json({ message: "Customer Not Found", isPaid: false });
+    }
 
-      // Array to hold promises for saving transactions
-      const transactionPromises = [];
+    const orderItems = cartExist.orderItems;
 
-      for (const order of orderItems) {
-        const farmer = await Farmer.findById(order._id);
-        if (!farmer) {
-          return res.status(400).json({ message: "Farmer not found" });
-        } else {
-          const newAvailableCrops = farmer.availableCrops.map((crop) => {
-            if (crop.typeOfCrop.toLowerCase() === order.crop.toLowerCase()) {
-              crop.quantity -= (order.availableQuantity * 50) / 100;
-              if (crop.quantity < 0) {
-                // If quantity is not available, cancel the transaction
-                return res
-                  .status(400)
-                  .json({
-                    message: "Not enough quantity available",
-                    isPaid: false,
-                  });
-              }
-            }
-            return crop; // Return the modified crop
-          });
+    // Array to hold promises for saving transactions
+    const transactionPromises = [];
+    const cropUpdatePromises = [];
+    let insufficientQuantity = false;
 
-          const transaction = new Transaction({
-            farmerId: order._id,
-            farmerName: order.farmerName,
-            customerId: customerId,
-            customerName: customer.fullName,
-            quantity: order.availableQuantity,
-            price: order.price,
-            typeOfCrop: order.crop,
-            status: "accepted",
-          });
-
-          await Farmer.findByIdAndUpdate(order._id, {
-            availableCrops: newAvailableCrops,
-          });
-
-          transactionPromises.push(transaction.save()); // Push promise to array
-        }
+    for (const order of orderItems) {
+      if (!order._id || !order.crop || !order.availableQuantity) {
+        return res
+          .status(400)
+          .json({ message: "Invalid order data", isPaid: false });
       }
 
-      // Wait for all transaction saves to complete
-      await Promise.all(transactionPromises);
+      const farmer = await Farmer.findById(order._id);
+      if (!farmer) {
+        return res
+          .status(400)
+          .json({ message: "Farmer not found", isPaid: false });
+      }
 
-      const updatedCart = await CartItems.findByIdAndUpdate(cartExist._id, {
-        orderItems: [],
+      const newAvailableCrops = farmer.availableCrops.map((crop) => {
+        if (crop.typeOfCrop.toLowerCase() === order.crop.toLowerCase()) {
+          console.log(crop.quantity, order.availableQuantity);
+          crop.quantity -= order.availableQuantity * 50;
+          if (crop.quantity < 0) {
+            insufficientQuantity = true;
+            return null; // Will skip updating this crop
+          }
+        }
+        return crop; // Return the modified crop
       });
 
-      if (!updatedCart) {
-        res.status(400).json({ message: "Payment Failed", isPaid: false });
-      } else {
-        res.status(200).json({ message: "Payment Success", isPaid: true });
+      if (insufficientQuantity) {
+        return res.status(400).json({
+          message: "Not enough quantity available",
+          isPaid: false,
+        });
       }
-    } else {
-      res.status(404).json({ message: "Order Not Found", isPaid: false });
+
+      const transaction = new Transaction({
+        farmerId: order._id,
+        farmerName: order.farmerName,
+        customerId: customerId,
+        customerName: customer.fullName,
+        quantity: order.availableQuantity * 50,
+        price: order.price * order.availableQuantity,
+        typeOfCrop: order.crop,
+        status: "accepted",
+      });
+
+      cropUpdatePromises.push(
+        Farmer.findByIdAndUpdate(order._id, {
+          availableCrops: newAvailableCrops,
+        })
+      );
+
+      transactionPromises.push(transaction.save()); // Push promise to array
     }
+
+    // Wait for all the crop updates and transactions to complete
+    await Promise.all([...cropUpdatePromises, ...transactionPromises]);
+
+    const updatedCart = await CartItems.findByIdAndUpdate(cartExist._id, {
+      orderItems: [],
+    });
+
+    if (!updatedCart) {
+      return res.status(400).json({ message: "Payment Failed", isPaid: false });
+    }
+
+    res.status(200).json({ message: "Payment Success", isPaid: true });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server Error", isPaid: false });

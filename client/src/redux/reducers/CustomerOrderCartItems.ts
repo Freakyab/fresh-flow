@@ -21,23 +21,22 @@ const customerOrderCartItemSlice = createSlice({
         },
         addOrderItem(state, action: PayloadAction<CropsMarketPlaceProps>) {
             const item = action.payload;
-            const existingItem = state.orderItems.find((orderItem) => orderItem._id === item._id);
+            const existingItem = state.orderItems.find(orderItem => orderItem._id === item._id);
             if (existingItem) {
                 existingItem.availableQuantity += item.availableQuantity;
             } else {
                 state.orderItems.push(item);
             }
-            state.totalAmount += item.price;
+            state.totalAmount += item.price * item.availableQuantity;
         },
         removeOrderItem(state, action: PayloadAction<string>) {
-            const item = state.orderItems.find((orderItem) => orderItem._id === action.payload);
+            const item = state.orderItems.find(orderItem => orderItem._id === action.payload);
             if (item) {
                 state.totalAmount -= item.price * item.availableQuantity;
-                state.orderItems = state.orderItems.filter((orderItem) => orderItem._id !== action.payload);
+                state.orderItems = state.orderItems.filter(orderItem => orderItem._id !== action.payload);
             }
         },
         clearOrderItems(state) {
-            // state.totalSpendAmount = [];
             state.orderItems = [];
             state.totalAmount = 0;
         },
@@ -48,32 +47,25 @@ const customerOrderCartItemSlice = createSlice({
                 state.totalAmount += item.price;
             }
         },
-        setOrderQuantity(state, action: PayloadAction<{ id: string, quantity : number }>) {
+        setOrderQuantity(state, action: PayloadAction<{ id: string, quantity: number }>) {
             const { id, quantity } = action.payload;
-            const item = state.orderItems.find((orderItem) => orderItem._id === id);
-            
+            if (quantity <= 0) return;
+            const item = state.orderItems.find(orderItem => orderItem._id === id);
             if (item) {
-                if(item.availableQuantity < quantity){
-                    state.totalAmount += item.price * (quantity - item.availableQuantity)  ;
-                }
-                else if(item.availableQuantity === quantity){
-                    return ;
-                }
-                else{
-                    state.totalAmount -= item.price * (item.availableQuantity - quantity);
-                }
+                state.totalAmount += item.price * (quantity - item.availableQuantity);
                 item.availableQuantity = quantity;
             }
         },
         removeQuantity(state, action: PayloadAction<string>) {
-            const item = state.orderItems.find((orderItem) => orderItem._id === action.payload);
+            const item = state.orderItems.find(orderItem => orderItem._id === action.payload);
             if (item) {
                 if (item.availableQuantity > 1) {
                     item.availableQuantity -= 1;
+                    state.totalAmount -= item.price;
                 } else {
-                    state.orderItems = state.orderItems.filter((orderItem) => orderItem._id !== action.payload);
+                    state.totalAmount -= item.price * item.availableQuantity;
+                    state.orderItems = state.orderItems.filter(orderItem => orderItem._id !== action.payload);
                 }
-                state.totalAmount -= item.price;
             }
         },
         onPay(state, action: PayloadAction<number>) {

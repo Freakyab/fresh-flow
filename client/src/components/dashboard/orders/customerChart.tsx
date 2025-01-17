@@ -70,7 +70,6 @@ export function CustomerExpenseChart({ className }: { className: string }) {
       .then((res) => res.json())
       .then((data) => {
         if (data.isFound) {
-          console.log(data)
           setPrice(data.ExpensesPerMonth);
         }
        

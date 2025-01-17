@@ -227,7 +227,7 @@ router.get("/getCustomerExpenseChart/:id", async (req, res) => {
         const ExpensesPerMonth = allTransaction.reduce((acc, obj) => {
           const date = new Date(obj.createdAt);
           const monthName = monthNames[date.getMonth()]; // Get month name from array
-          acc[monthName] = (acc[monthName] || 0) + obj.price * obj.quantity;
+          acc[monthName] = (acc[monthName] || 0) + obj.price;
           return acc;
         }, {});
         

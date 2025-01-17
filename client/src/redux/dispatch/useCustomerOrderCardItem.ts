@@ -24,8 +24,7 @@ const useCustomerOrderCardItem = () => {
             })
             .then((data) => {
                 if (data.isOrderAdded) {
-                    console.log(data);
-                    // dispatch(customerOrderCartItemAction.addOrderItem(order));
+                    dispatch(customerOrderCartItemAction.addOrderItem(order));
                 } else {
                     console.log(data);
                 }

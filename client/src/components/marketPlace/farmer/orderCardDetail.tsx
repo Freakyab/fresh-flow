@@ -100,7 +100,7 @@ function OrderCardDetail(order: transactionProps) {
           <div className="flex gap-2">
             Quantity :
             <Chip color="primary" variant="bordered">
-              {!order.customerName ? `${order.quantity} Mt` : order.quantity * 10}
+              {!order.customerName ? `${order.quantity} Mt` : `${order.quantity} Kg`}
             </Chip>
           </div>
           <div className="flex gap-2">

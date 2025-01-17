@@ -68,7 +68,7 @@ function FarmerDetails({
                 <div className="flex gap-3 items-center">
                   <p className="text-lg font-semibold">Quantity : </p>
                   <p>
-                    {item.quantity} / in Kg
+                    {item.quantity}  in Kg
                   </p>
                 </div>
                 <div className="flex gap-3 items-center">

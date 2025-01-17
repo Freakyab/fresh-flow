@@ -300,7 +300,7 @@ const FarmerRegisterform = () => {
                 />
             <Button
               // onClick={handleSubmit}
-              onClick={() => console.log(formData)}
+              // onClick={() => console.log(formData)}
               color="danger"
               variant="shadow"
               className="w-[50%] ml-[30px]">

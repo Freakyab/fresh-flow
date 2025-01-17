@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
 import Image from "next/image";
-
 import { Select, SelectItem } from "@nextui-org/react";
-import { useRouter } from 'nextjs-toploader/app';
+import { useRouter } from "nextjs-toploader/app";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Slider, Button } from "@nextui-org/react";
@@ -32,10 +31,9 @@ const Page = () => {
     setNewCropTypeList(newCropType);
   }, []);
 
-  const { getCropsList, setCrops, setFilter } = useCropsMap();
+  const {  setCrops, setFilter } = useCropsMap();
 
   useEffect(() => {
-    // fetch("http://localhost:5000/farmer/markertPlace", {
     fetch(`http://localhost:5000/farmer/markertPlace`, {
       method: "GET",
       headers: {
@@ -52,16 +50,27 @@ const Page = () => {
       .then((data) => {
         if (data) {
           setCrops(data);
-        } 
-        // else {
-        //   console.log(data);
-        // }
+        }
       });
   }, [filterBuffer]);
 
   const handleFilter = () => {
     setFilter(filterBuffer);
-    // getCropsList();
+  };
+
+  const handleReset = () => {
+    setFilterBuffer({
+      cropName: "",
+      priceRange: { min: 50, max: 10000 }, // Match the Slider's default values
+      location: "All",
+    });
+    
+    // Reset the filter in the global state
+    setFilter({
+      cropName: "",
+      priceRange: { min: 50, max: 10000 },
+      location: "All",
+    });
   };
 
   return (
@@ -75,65 +84,94 @@ const Page = () => {
           height={800}
         />
       </div>
-      <div className="flex">
-        <div className="w-1/5 flex flex-col items-center gap-10 bg-white p-3 rounded-large shadow-lg m-3">
-          <p className="text-2xl font-semibold flex justify-start w-full py-3 text-primary">
-            Filters
-          </p>
-          <Select
-            label="Select Crop"
-            className="max-w-xs"
-            onChange={(e) =>
-              setFilterBuffer({ ...filterBuffer, cropName: e.target.value })
-            }>
-            {newCropTypeList
-              .sort((a, b) => a.label.localeCompare(b.label))
-              .map((item) => (
-                <SelectItem key={item.label} value={item.label}>
-                  {item.label.toUpperCase()}
-                </SelectItem>
-              ))}
-          </Select>
-          <Slider
-            label="Price Range"
-            step={50}
-            minValue={50}
-            maxValue={10000}
-            defaultValue={[50, 10000]}
-            formatOptions={{
-              style: "currency",
-              currency: "RUP",
-            }}
-            onChange={(value: any) =>
-              setFilterBuffer({
-                ...filterBuffer,
-                priceRange: { min: value[0], max: value[1] },
-              })
-            }
-            className="max-w-md"
-          />
-          <div className="flex gap-3">
-            <Button color="primary" onClick={handleFilter}>
-              Apply
-            </Button>
-            <Button color="warning" variant="bordered">
-              Reset
-            </Button>
-          </div>
-          <div className="w-full justify-self items-center">
-            <Button
-              color="primary"
-              variant="bordered"
-              className="w-full"
-              onClick={() => {
-                toast.info("loading..");
-                router.push("/dashboard/customer/cartitems");
-              }}>
-              Cart Items
-            </Button>
+      <div className="flex w-full min-h-screen bg-gray-50">
+        <div className="w-1/4 min-h-screen border-r border-gray-200 bg-white">
+          <div className="p-6 sticky top-0 flex flex-col gap-8">
+            <div className="border-b border-gray-100 pb-4">
+              <h2 className="text-2xl font-semibold text-primary">Filters</h2>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Crop Type
+              </label>
+              <Select
+                label="Select Crop"
+                className="w-full"
+                value={filterBuffer.cropName}
+                variant="bordered"
+                onChange={(e) =>
+                  setFilterBuffer({ ...filterBuffer, cropName: e.target.value })
+                }>
+                {newCropTypeList
+                  .sort((a, b) => a.label.localeCompare(b.label))
+                  .map((item) => (
+                    <SelectItem key={item.label} value={item.label}>
+                      {item.label.toUpperCase()}
+                    </SelectItem>
+                  ))}
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Price Range
+              </label>
+              <Slider
+                label="Price Range"
+                step={50}
+                minValue={50}
+                maxValue={10000}
+                defaultValue={[50, 10000]}
+                className="w-full max-w-md"
+                formatOptions={{
+                  style: "currency",
+                  currency: "RUP",
+                }}
+                value={[filterBuffer.priceRange.min, filterBuffer.priceRange.max]}
+                onChange={(value: any) =>
+                  setFilterBuffer({
+                    ...filterBuffer,
+                    priceRange: { min: value[0], max: value[1] },
+                  })
+                }
+              />
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-3">
+                <Button
+                  color="primary"
+                  className="flex-1 px-8 py-2"
+                  onClick={handleFilter}>
+                  Apply Filters
+                </Button>
+                <Button
+                  color="warning"
+                  variant="bordered"
+                  className="flex-1"
+                  onClick={handleReset}>
+                  Reset
+                </Button>
+              </div>
+
+              <Button
+                color="primary"
+                variant="bordered"
+                className="w-full"
+                onClick={() => {
+                  toast.info("Loading cart items...");
+                  router.push("/dashboard/customer/cartitems");
+                }}>
+                View Cart
+              </Button>
+            </div>
           </div>
         </div>
-        <CropCard className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4" />
+
+        <div className="flex-1">
+          <CropCard className="p-6" />
+        </div>
       </div>
       <ToastContainer />
     </div>

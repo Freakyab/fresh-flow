@@ -52,71 +52,76 @@ function CropCard({ className }: { className: string }) {
     });
     handleToast("success", "Item added to cart successfully");
   };
+
   return (
-    <div className={className}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6 p-6 ${className}`}>
       {getCropsList().map((item, index) => (
-        <div key={index} className="max-w-80 w-fit h-fit">
-          <Card className="m-4 shadow-lg">
-            <CardHeader>
-              <div className="flex justify-between text-lg capitalize w-full">
-                <span className="">{item.crop}</span>
-                <span className="">{item.farmerName} </span>
-              </div>
-            </CardHeader>
-            <Divider />
-            <CardBody>
-              <div className="flex flex-col justify-between items-center">
-                <div className="w-full h-fit">
-                  <Image
-                    src={item.image}
-                    alt="crop"
-                    className="rounded-xl object-contain h-full shadow-lg"
-                    width={800}
-                    height={800}
-                  />
-                </div>
-                <div className="pt-3 flex items-center justify-between w-full">
-                  <span className="text-xl capitalize line-clamp-2 tracking-wider">
-                    {item.price}
-                    <span className="text-base font-light">/50Kg</span>
+        <Card key={index} className="group hover:shadow-lg transition-shadow duration-300 bg-white">
+          <CardHeader className="p-4">
+            <div className="flex flex-col space-y-1">
+              <h3 className="text-xl font-semibold text-gray-900 truncate">
+                {item.crop}
+              </h3>
+              <p className="text-sm text-gray-600">
+                by {item.farmerName}
+              </p>
+            </div>
+          </CardHeader>
+          
+          <Divider />
+          
+          <CardBody className="p-4">
+            <div className="space-y-4">
+              {/* Image Container */}
+                <Image
+                  src={item.image}
+                  alt={item.crop}
+                  width={500}
+                  height={500}
+                  className="object-cover transform group-hover:scale-105 transition-transform duration-300 rounded-lg"
+                />
+              
+              {/* Price and Location */}
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold text-gray-900">
+                    ₹{item.price}
                   </span>
-                  <div className="flex justify-center items-center">
-                    <span>
-                      <IoLocation className="text-xl" />
-                    </span>
-                    <span>{item.city}</span>
-                  </div>
+                  <span className="text-sm text-gray-600">
+                    per 50kg
+                  </span>
+                </div>
+                
+                <div className="flex items-center space-x-1 text-gray-600">
+                  <IoLocation className="w-5 h-5" />
+                  <span className="text-sm font-medium">{item.city}</span>
                 </div>
               </div>
-            </CardBody>
-            <Divider />
-            <CardFooter className="flex items-center gap-3 p-3">
+            </div>
+          </CardBody>
+          
+          <Divider />
+          
+          <CardFooter className="p-4">
+            <div className="flex gap-2 w-full">
               <Button
-                color="primary"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                 size="sm"
-                variant="bordered"
-                onClick={() => router.push(`/farmer/${item._id}`)}>
-                View details
+                onClick={() => router.push(`/farmer/${item._id}`)}
+              >
+                View Details
               </Button>
               <Button
-                color="danger"
-                size="sm"
+                className="flex-1 border-red-600 text-red-600 hover:bg-red-50"
                 variant="bordered"
-                onClick={() => handleCartItems(item)}>
+                size="sm"
+                onClick={() => handleCartItems(item)}
+              >
                 Add to Cart
               </Button>
-              {/* <Button
-                color="success"
-                size="sm"
-                variant="bordered"
-                onClick={() => toast.info("please add to cart..")}
-              >
-                Buy
-                {item?.availableCrops[0].price}/Kg
-              </Button> */}
-            </CardFooter>
-          </Card>
-        </div>
+            </div>
+          </CardFooter>
+        </Card>
       ))}
       <ToastContainer />
     </div>
