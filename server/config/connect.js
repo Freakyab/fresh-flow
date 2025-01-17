@@ -9,9 +9,6 @@ const connectUrl =
     ? process.env.MONGO_URI_DEV
     : process.env.MONGO_URI;
     
-const client = mongoose.createConnection(connectUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = mongoose.createConnection(connectUrl);
 
 module.exports = client;

@@ -15,9 +15,6 @@ const cropMapSlice = createSlice({
         },
         setfilter(state, action: PayloadAction<filterProps>) {
             if (action.payload.cropName !== "All" && action.payload.cropName !== "") {
-                console.log(action.payload
-                    // state.cropList.filter((item) => item.crop.toLowerCase()=== action.payload.cropName?.toLowerCase())
-                );
                 state.cropList = state.cropList.filter((item) => item.crop.toLowerCase()=== action.payload.cropName?.toLowerCase());
             }
             if (action.payload.priceRange.min !== 0 && action.payload.priceRange.max !== 0) {

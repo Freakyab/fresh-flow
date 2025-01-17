@@ -87,7 +87,6 @@ router.post("/removeOrder/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
     const { id, crop } = req.body;
-    console.log(id, crop);
     const cartExist = await CartItems.find({ customerId: customerId }).exec();
 
     if (cartExist[0]) {

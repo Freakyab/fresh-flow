@@ -16,7 +16,6 @@ const useCropsMap = () => {
     };
 
     const setFilter = ({ cropName , priceRange , location } : filterProps) => {
-        console.log(cropName, priceRange, location);
         dispatch(cropMapAction.setfilter({ cropName , priceRange , location }));
     }
 
