@@ -1,18 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MdEmail } from "react-icons/md";
-import { RiLockPasswordFill } from "react-icons/ri";
-import InputWithImageComponent from "./inputWithimage.component";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 import handleToast from "./toastifyNotification";
 import { ToastContainer } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Chip, Input } from "@nextui-org/react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 
 const LoginComponent = () => {
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState("farmer");
   const [formData, setFormData] = useState({
     username: "bhupendra",
     password: "Bangalore",
@@ -34,18 +31,15 @@ const LoginComponent = () => {
   };
 
   const handleLogin = async () => {
-    if (
-      formData.username === "" ||
-      formData.password === "" ||
-      userType === ""
-    ) {
+    if (formData.username === "" || formData.password === "") {
       handleToast("Please fill all the fields", "error");
+    } else if (userType === "") {
+      handleToast("Please select the user type", "error");
     } else {
-      console.log(formData)
       const user =
         userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
       // await fetch(`http://localhost:5000/${user}/login`,{
-      await fetch(`https://fresh-flow-backend.vercel.app/${user}/login`, {
+      await fetch(`http://localhost:5000/${user}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +55,6 @@ const LoginComponent = () => {
           if (data.error) {
             handleToast(data.error, "error");
           } else {
-            console.log(data)
             if (!data.id) {
               handleToast("User not found", "error");
               return;

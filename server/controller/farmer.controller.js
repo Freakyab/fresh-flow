@@ -96,7 +96,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "No Farmer with this username" });
 
     // Validate password
-    const isMatch = bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
     // Sign the token

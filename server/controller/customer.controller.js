@@ -12,8 +12,6 @@ const auth = require("../middleware/auth.middleware");
 
 router.post("/register", async (req, res) => {
   try {
-
-    console.log(req.body);
     const {
       fullName,
       email,
@@ -82,19 +80,18 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     // Validate
     if (!username || !password)
       return res.status(400).json({ msg: "Not all fields have been entered." });
 
     // Check for existing user
     const user = await Customer.findOne({ username });
+    console.log(user);
     if (!user)
       return res.status(400).json({ msg: "No Customer with this username" });
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(password , isMatch)
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
     // Sign the token

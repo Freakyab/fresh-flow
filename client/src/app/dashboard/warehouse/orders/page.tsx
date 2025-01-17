@@ -20,7 +20,7 @@ function Orders() {
   const fetchOrders = () => {
     fetch(
       // `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
+      `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
@@ -33,7 +33,6 @@ function Orders() {
       .then((res) => res.json())
       .then((data) => {
         if (data.allTransaction) {
-          console.log(data.allTransaction);
           setOrders(data.allTransaction.reverse());
         } else {
           handleToast("No data found", "info");

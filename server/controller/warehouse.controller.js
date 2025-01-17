@@ -145,9 +145,9 @@ router.post("/login", async (req, res) => {
         .json({ msg: "No account with this username has been registered" });
 
     // Check if the password is correct
-    // const isMatch = await bcrypt.compare(password, user.password);
-    // if (!isMatch)
-    //   return res.status(400).json({ msg: "Invalid credentials", token , id : user._id});
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ msg: "Invalid credentials", token , id : user._id});
 
     // Sign the token
     const token = jwt.sign(

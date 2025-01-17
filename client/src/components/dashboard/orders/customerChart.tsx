@@ -58,7 +58,7 @@ export function CustomerExpenseChart({ className }: { className: string }) {
     fetch(
       // Change id
       // `http://localhost:5000/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
-       `https://fresh-flow-backend.vercel.app/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
+       `http://localhost:5000/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {

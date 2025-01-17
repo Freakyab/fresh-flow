@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 
 import { Select, SelectItem } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'nextjs-toploader/app';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Slider, Button } from "@nextui-org/react";
@@ -36,7 +36,7 @@ const Page = () => {
 
   useEffect(() => {
     // fetch("http://localhost:5000/farmer/markertPlace", {
-    fetch(`https://fresh-flow-backend.vercel.app/farmer/markertPlace`, {
+    fetch(`http://localhost:5000/farmer/markertPlace`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -52,9 +52,10 @@ const Page = () => {
       .then((data) => {
         if (data) {
           setCrops(data);
-        } else {
-          console.log(data);
-        }
+        } 
+        // else {
+        //   console.log(data);
+        // }
       });
   }, [filterBuffer]);
 

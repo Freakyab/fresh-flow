@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'nextjs-toploader/app';
 
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
@@ -8,7 +8,6 @@ function Header() {
   const router = useRouter();
   const { getUserDetails } = useUserDetails();
 
-  console.log(getUserDetails().userDetails.type);
   const handleSubmit = () => {
     if (getUserDetails().userDetails.username) {
       if (getUserDetails().userDetails.type == "farmer") {

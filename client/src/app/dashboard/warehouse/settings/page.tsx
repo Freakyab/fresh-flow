@@ -31,7 +31,7 @@ const Settings = () => {
   useEffect(() => {
     fetch(
       // `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+      `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
@@ -308,7 +308,7 @@ const Settings = () => {
                 fetch(
                   // Change id
                   // `http://localhost:5000/warehouse/update/${userDetails.userDetails._id}`,
-                  `https://fresh-flow-backend.vercel.app/warehouse/update/${userDetails.userDetails._id}`,
+                  `http://localhost:5000/warehouse/update/${userDetails.userDetails._id}`,
                   {
                     method: "PUT",
                     headers: {

@@ -58,7 +58,7 @@ export function FarmerExpenseChart({ className }: { className: string }) {
     fetch(
       // Change id
       // `http://localhost:5000/farmer/getFarmerExpenseChart/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/farmer/getFarmerExpenseChart/${userDetails.userDetails._id}`,
+      `http://localhost:5000/farmer/getFarmerExpenseChart/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {
@@ -101,7 +101,7 @@ export function WarehouseInventoryPie({ className }: { className: string }) {
     fetch(
       // Change id
       // `http://localhost:5000/farmer/getOccupiedWarehouseInventoryPie/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/farmer/getOccupiedWarehouseInventoryPie/${userDetails.userDetails._id}`,
+      `http://localhost:5000/farmer/getOccupiedWarehouseInventoryPie/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {

@@ -18,7 +18,7 @@ function OrderCardDetail(order: transactionProps) {
   const handleAccept = async () => {
     // await fetch(`http://localhost:5000/transaction/accept/${order._id}`, {
     await fetch(
-      `https://fresh-flow-backend.vercel.app/transaction/accept/${order._id}`,
+      `http://localhost:5000/transaction/accept/${order._id}`,
       {
         method: "PUT",
         headers: {
@@ -39,7 +39,7 @@ function OrderCardDetail(order: transactionProps) {
   const handleReject = async () => {
     // await fetch(`http://localhost:5000/transaction/reject/${order._id}`, {
     await fetch(
-      `https://fresh-flow-backend.vercel.app/transaction/reject/${order._id}`,
+      `http://localhost:5000/transaction/reject/${order._id}`,
       {
         method: "PUT",
         headers: {
@@ -100,20 +100,20 @@ function OrderCardDetail(order: transactionProps) {
           <div className="flex gap-2">
             Quantity :
             <Chip color="primary" variant="bordered">
-              {!order.customerName ? order.quantity : order.quantity * 10}
+              {!order.customerName ? `${order.quantity} Mt` : order.quantity * 10}
             </Chip>
           </div>
           <div className="flex gap-2">
             Price :
             <Chip color="primary" variant="bordered">
-              {order.price}
+              {order.price} /-
             </Chip>
           </div>
           {order.duration && (
             <div className="flex gap-2">
               Duration :
               <Chip color="primary" variant="bordered">
-                {order.duration}
+                {order.duration} Months
               </Chip>
             </div>
           )}

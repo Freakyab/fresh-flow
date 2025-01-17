@@ -31,7 +31,7 @@ const Settings = () => {
   useEffect(() => {
     fetch(
       // `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id}`,
+      `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
@@ -42,7 +42,6 @@ const Settings = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         if (data.isAvailable) {
           setCustomerDetailData(data.user);
           toggleLoad();
@@ -252,7 +251,7 @@ const Settings = () => {
                 fetch(
                   // Change id
                   `http://localhost:5000/customer/update/${userDetails.userDetails._id}`,
-                  // `https://fresh-flow-backend.vercel.app/customer/update/${userDetails.userDetails._id}`,
+                  // `http://localhost:5000/customer/update/${userDetails.userDetails._id}`,
                   {
                     method: "PUT",
                     headers: {

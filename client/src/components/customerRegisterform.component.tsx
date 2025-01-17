@@ -65,7 +65,7 @@ const CustomerRegisterform = () => {
       return;
     }
     // await fetch("http://localhost:5000/customer/register", {
-    await fetch("https://fresh-flow-backend.vercel.app/customer/register", {
+    await fetch("http://localhost:5000/customer/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,12 +86,12 @@ const CustomerRegisterform = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (!data.id) {
           handleToast(data.message, "error");
-        } else {
-          console.log(data);
         }
+        //  else {
+        //   console.log(data);
+        // }
       });
   };
 

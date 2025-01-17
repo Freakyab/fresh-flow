@@ -1,6 +1,6 @@
 "use client";
 import { ReactNode,useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'nextjs-toploader/app';
 
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 

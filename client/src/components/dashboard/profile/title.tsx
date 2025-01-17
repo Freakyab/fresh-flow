@@ -1,7 +1,7 @@
 "use client";
 import React, { ReactNode } from "react";
 import { Divider } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'nextjs-toploader/app';
 
 type TitleProps = {
   title: string;

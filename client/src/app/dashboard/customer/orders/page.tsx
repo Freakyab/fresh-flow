@@ -23,7 +23,7 @@ function Orders() {
   const fetchOrders = () => {
     fetch(
       // `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
+      `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {

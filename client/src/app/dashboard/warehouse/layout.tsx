@@ -7,7 +7,7 @@ import { IoMdReorder } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import SideNav from "../../../components/sideNav.component";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'nextjs-toploader/app';
 
 const WarehouseDashboard = ({ children }: { children: ReactNode }) => {
   const options = [

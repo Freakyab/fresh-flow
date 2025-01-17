@@ -28,5 +28,5 @@ app.use("/customer", require("./controller/customer.controller"));
 app.use("/transaction", require("./controller/transaction.controller"));
 
 app.listen(PORT, async () => {
-  console.log(`Listening on the port ${PORT}`);
+  console.debug(`Listening on the port ${PORT}`);
 });

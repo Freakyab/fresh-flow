@@ -43,7 +43,7 @@ function Page() {
     if (pathname) {
       // fetch(`http://localhost:5000/warehouse/getdatabyid/${pathname}`, {
       fetch(
-        `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`,
+        `http://localhost:5000/warehouse/getdatabyid/${pathname}`,
         {
           method: "POST",
           headers: {
@@ -103,7 +103,7 @@ function Page() {
     }
     await fetch(
       // `http://localhost:5000/transaction/farmer-purchase/${
-      `https://fresh-flow-backend.vercel.app/transaction/farmer-purchase/${
+      `http://localhost:5000/transaction/farmer-purchase/${
         getUserDetails().userDetails._id
       }`,
       {
@@ -123,7 +123,6 @@ function Page() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.error) {
           handleToast(data.error, "error");
         } else {
@@ -194,7 +193,7 @@ function Page() {
                             <Input
                               type="number"
                               name="quantity"
-                              label="Quantity (in Mt)"
+                              label="Quantity (in Mt) *1Mt=1000Kg"
                               placeholder="Enter your quantity in Mt"
                             />
                             <p>

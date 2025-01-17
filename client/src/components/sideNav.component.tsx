@@ -45,12 +45,12 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
   );
 
   const handleLogout = () => {
-    logout();
     router.push("/login");
+    logout();
   };
 
   return (
-    <div className="bg-white p-3 w-full flex flex-col justify-between">
+    <div className="bg-white p-3 w-full flex flex-col justify-between min-h-[calc(100vh-7rem)]">
       <h1 className="text-xl capitalize tracking-tighter">
         start your day,<br/> be productive
       </h1>

@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import { Providers } from "./provider/provider";
 import ReduxProvider from "./provider/reduxProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import NextTopLoader from 'nextjs-toploader';
 
 import "./globals.css";
 import Navbar from "@/components/navbar.component";
@@ -27,6 +28,9 @@ export default function RootLayout({
           <Providers>
             <Navbar />
             {children}
+            <NextTopLoader 
+            showSpinner={false}
+            />
             <SpeedInsights />
           </Providers>
         </ReduxProvider>

@@ -27,7 +27,7 @@ function page() {
   useEffect(() => {
     fetch(
       // `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id} `,
+      `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id} `,
 
       {
         method: "POST",
@@ -39,7 +39,6 @@ function page() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.isAvailable) {
           setCustomerDetailData(data.user);
         } else {
@@ -48,7 +47,7 @@ function page() {
       });
     fetch(
       // `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
+      `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {

@@ -21,7 +21,7 @@ function page() {
   useEffect(() => {
     fetch(
       // `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+      `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
@@ -38,7 +38,7 @@ function page() {
       });
     fetch(
       // `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
+      `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
