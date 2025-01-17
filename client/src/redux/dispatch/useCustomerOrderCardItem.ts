@@ -10,8 +10,8 @@ const useCustomerOrderCardItem = () => {
     const { getUserDetails } = useUserDetails();
 
     const addOrderItem = async (order: CropsMarketPlaceProps) => {
-        // await fetch(`http://localhost:5000/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
-        await fetch(`http://localhost:5000/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -33,8 +33,8 @@ const useCustomerOrderCardItem = () => {
     };
 
     const removeOrderItem = async (id: string, crop: string) => {
-        // await fetch(`http://localhost:5000/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
-        await fetch(`http://localhost:5000/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,8 +53,8 @@ const useCustomerOrderCardItem = () => {
     };
 
     const addQuantity = async(id: string,crop :string) => {
-        // await  fetch(`http://localhost:5000/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
-        await  fetch(`http://localhost:5000/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
+        // await  fetch(`https://fresh-flow-backend.vercel.app/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
+        await  fetch(`https://fresh-flow-backend.vercel.app/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -81,8 +81,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const setOrderItems = async () => {
-        // await fetch(`http://localhost:5000/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
-        await fetch(`http://localhost:5000/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -103,8 +103,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const removeQuantity = async(id: string,crop : string) => {
-        // await fetch(`http://localhost:5000/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
-        await fetch(`http://localhost:5000/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -130,8 +130,8 @@ const useCustomerOrderCardItem = () => {
     };
 
     const clearOrderItems = async() => {
-        // await fetch(`http://localhost:5000/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
-        await fetch(`http://localhost:5000/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -152,8 +152,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const setOrderQuantity = async(id: string,quantity: number,crop :string) => {
-        // await fetch(`http://localhost:5000/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
-        await fetch(`http://localhost:5000/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
+        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
+        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -176,8 +176,8 @@ const useCustomerOrderCardItem = () => {
     }
 
     const onPay = async(totalAmount: number) => {
-        //await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
-         await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+        //await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+         await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

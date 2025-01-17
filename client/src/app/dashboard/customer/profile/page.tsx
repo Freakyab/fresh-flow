@@ -26,8 +26,8 @@ function page() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   useEffect(() => {
     fetch(
-      // `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id}`,
-      `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id} `,
+      // `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id} `,
 
       {
         method: "POST",
@@ -46,8 +46,8 @@ function page() {
         }
       });
     fetch(
-      // `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
-      `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
+      // `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {

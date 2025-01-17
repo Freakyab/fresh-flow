@@ -63,8 +63,8 @@ const FarmerMarketplacePage = () => {
   }, []);
 
   useEffect(() => {
-    // fetch("http://localhost:5000/warehouse/allwarehouse",{
-    fetch("http://localhost:5000/warehouse/allwarehouse", {
+    // fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse",{
+    fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse", {
       // Access-Control-Allow-Origin : "*",
       method: "GET",
       headers: {

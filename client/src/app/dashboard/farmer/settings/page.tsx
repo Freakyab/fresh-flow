@@ -33,8 +33,8 @@ const Settings = () => {
   const { userDetails } = useUserDetails();
   useEffect(() => {
     fetch(
-      // `http://localhost:5000/farmer/getdatabyid/${userDetails.userDetails._id}`,
-      `http://localhost:5000/farmer/getdatabyid/${userDetails.userDetails._id}`,
+      // `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${userDetails.userDetails._id}`,
       {
         method: "POST",
         headers: {
@@ -118,8 +118,8 @@ const Settings = () => {
   const handleSubmit = async () => {
     await fetch(
       // Change id
-      // `http://localhost:5000/farmer/update/${userDetails.userDetails._id}`,
-      `http://localhost:5000/farmer/update/${userDetails.userDetails._id}`,
+      // `https://fresh-flow-backend.vercel.app/farmer/update/${userDetails.userDetails._id}`,
+      `https://fresh-flow-backend.vercel.app/farmer/update/${userDetails.userDetails._id}`,
       {
         method: "PUT",
         headers: {

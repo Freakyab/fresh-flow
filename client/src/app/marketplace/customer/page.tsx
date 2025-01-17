@@ -34,7 +34,7 @@ const Page = () => {
   const {  setCrops, setFilter } = useCropsMap();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/farmer/markertPlace`, {
+    fetch(`https://fresh-flow-backend.vercel.app/farmer/markertPlace`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
