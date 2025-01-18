@@ -32,7 +32,7 @@ const Settings = () => {
   const fetchWarehouseData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+        `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
         {
           method: "POST",
           headers: {
@@ -96,7 +96,7 @@ const Settings = () => {
   const handleSubmit = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/warehouse/update/${userDetails.userDetails._id}`,
+        `https://fresh-flow-backend.vercel.app/warehouse/update/${userDetails.userDetails._id}`,
         {
           method: "PUT",
           headers: {

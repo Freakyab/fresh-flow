@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 function OrderCardDetail(order: transactionProps) {
   const pathname = usePathname();
   const handleAccept = async () => {
-    await fetch(`http://localhost:5000/transaction/accept/${order._id}`, {
+    await fetch(`https://fresh-flow-backend.vercel.app/transaction/accept/${order._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,7 @@ function OrderCardDetail(order: transactionProps) {
   };
 
   const handleReject = async () => {
-    await fetch(`http://localhost:5000/transaction/reject/${order._id}`, {
+    await fetch(`https://fresh-flow-backend.vercel.app/transaction/reject/${order._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

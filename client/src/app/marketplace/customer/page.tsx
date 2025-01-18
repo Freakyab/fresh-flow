@@ -41,7 +41,7 @@ const Page = () => {
   const fetchCrops = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/farmer/markertPlace`,
+        `https://fresh-flow-backend.vercel.app/farmer/markertPlace`,
         {
           method: "GET",
           headers: {

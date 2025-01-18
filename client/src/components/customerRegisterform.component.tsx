@@ -67,8 +67,8 @@ const CustomerRegisterform = () => {
       });
       return;
     }
-    // await fetch("http://localhost:5000/customer/register", {
-    await fetch("http://localhost:5000/customer/register", {
+    // await fetch("https://fresh-flow-backend.vercel.app/customer/register", {
+    await fetch("https://fresh-flow-backend.vercel.app/customer/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

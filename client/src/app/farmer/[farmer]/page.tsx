@@ -26,7 +26,7 @@ function Page() {
   const fetchFarmerData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/farmer/getdatabyid/${pathname}`,
+        `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${pathname}`,
         {
           method: "POST",
           headers: {

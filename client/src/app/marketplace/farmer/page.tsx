@@ -64,7 +64,7 @@ const FarmerMarketplacePage = () => {
   const fetchWarehouse = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/warehouse/allwarehouse",
+        "https://fresh-flow-backend.vercel.app/warehouse/allwarehouse",
         {
           method: "GET",
           headers: {

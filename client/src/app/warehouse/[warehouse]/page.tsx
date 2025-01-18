@@ -48,7 +48,7 @@ function Page() {
   const fetchWarehouseData = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/warehouse/getdatabyid/${pathname}`,
+        `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`,
         {
           method: "POST",
           headers: {
@@ -115,7 +115,7 @@ function Page() {
       }
     }
     await fetch(
-      `http://localhost:5000/transaction/farmer-purchase/${
+      `https://fresh-flow-backend.vercel.app/transaction/farmer-purchase/${
         getUserDetails().userDetails._id
       }`,
       {
