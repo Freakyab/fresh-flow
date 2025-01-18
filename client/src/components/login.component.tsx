@@ -32,14 +32,19 @@ const LoginComponent = () => {
 
   const handleLogin = async () => {
     if (formData.username === "" || formData.password === "") {
-      handleToast("Please fill all the fields", "error");
+      handleToast({
+        message: "Please enter the username and password",
+        type: "error",
+      });
     } else if (userType === "") {
-      handleToast("Please select the user type", "error");
+      handleToast({
+        message: "Please select the user type",
+        type: "error",
+      });
     } else {
       const user =
         userType === "Warehouse Owner" ? "warehouse" : userType.toLowerCase();
-      // await fetch(`https://fresh-flow-backend.vercel.app/${user}/login`,{
-      await fetch(`https://fresh-flow-backend.vercel.app/${user}/login`, {
+      await fetch(`http://localhost:5000/${user}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,10 +58,16 @@ const LoginComponent = () => {
         .then((res) => res.json())
         .then((data) => {
           if (data.error) {
-            handleToast(data.error, "error");
+            handleToast({
+              message: data.error,
+              type: "error",
+            });
           } else {
             if (!data.id) {
-              handleToast("User not found", "error");
+              handleToast({
+                message: "Invalid username or password",
+                type: "error",
+              });
               return;
             }
             signup(formData.username, data.id, data.token, user);

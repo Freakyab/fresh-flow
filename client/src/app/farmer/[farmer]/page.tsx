@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FarmerDetails from "@/components/dashboard/profile/farmerDetails";
+import handleToast from "@/components/toastifyNotification";
 
 const Map = dynamic(
   () => import("@/components/marketPlace/location/individualLocationFinder"),
@@ -18,9 +19,14 @@ function Page() {
 
   useEffect(() => {
     if (pathname) {
-      // fetch(`https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${pathname}`, {
-      fetch(
-        `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${pathname}`,
+      fetchFarmerData();
+    }
+  }, [pathname]);
+  
+  const fetchFarmerData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/farmer/getdatabyid/${pathname}`,
         {
           method: "POST",
           headers: {
@@ -28,16 +34,24 @@ function Page() {
             accept: "/",
           },
         }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data) {
-            setFarmerDetailData(data);
-          }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setFarmerDetailData(responseJson.user);
+      } else {
+        handleToast({
+          type: "error",
+          message: responseJson.message,
         });
+      }
+    } catch (err) {
+      handleToast({
+        type: "error",
+        message: "Failed to fetch data",
+      });
     }
-  }, [pathname]);
-  
+  };
+
   return (
     <>
       {farmerDetailData?.location != null ? (

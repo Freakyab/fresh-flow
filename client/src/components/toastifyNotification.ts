@@ -1,8 +1,11 @@
 import { toast } from "react-toastify";
 
-const handleToast = (text: string, type: string) => {
+const handleToast = ({ message, type }: {
+    message: string,
+    type: "success" | "error" | "info"
+}) => {
     if (type === "success") {
-        toast.success(text, {
+        toast.success(message, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -12,7 +15,7 @@ const handleToast = (text: string, type: string) => {
             progress: undefined,
         });
     } else if (type === "error") {
-        toast.error(text, {
+        toast.error(message, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -22,7 +25,7 @@ const handleToast = (text: string, type: string) => {
             progress: undefined,
         });
     } else {
-        toast.info(text, {
+        toast.info(message, {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,

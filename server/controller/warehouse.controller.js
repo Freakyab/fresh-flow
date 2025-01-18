@@ -64,13 +64,15 @@ router.post("/register", async (req, res) => {
 
     const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
 
-    const newDate = new Date(newRegistrationDate)
+    const newDate = new Date(newRegistrationDate);
 
     // add 5 years in newDate
-    newDate.setFullYear(newDate.getFullYear() + 5)
-    newDate.setDate(newDate.getDate() - 1)
+    newDate.setFullYear(newDate.getFullYear() + 5);
+    newDate.setDate(newDate.getDate() - 1);
 
-    const newRegistrationValidUpto = getDateInMonthAbbreviation(newDate.toISOString().split("T")[0]);
+    const newRegistrationValidUpto = getDateInMonthAbbreviation(
+      newDate.toISOString().split("T")[0]
+    );
 
     // Create a new user
     const newUser = new Warehouse({
@@ -82,7 +84,7 @@ router.post("/register", async (req, res) => {
       city,
       state,
       capacity,
-      registrationDate : newRegistrationDate,
+      registrationDate: newRegistrationDate,
       registrationValidUpto: newRegistrationValidUpto,
       phoneNo,
       status,
@@ -147,7 +149,9 @@ router.post("/login", async (req, res) => {
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ msg: "Invalid credentials", token , id : user._id});
+      return res
+        .status(400)
+        .json({ msg: "Invalid credentials", token, id: user._id });
 
     // Sign the token
     const token = jwt.sign(
@@ -195,10 +199,19 @@ router.put("/update/:id", async (req, res) => {
       occupied,
       typeOfCrop,
     } = req.body;
-    
+
+    if (!req.params.id)
+      return res
+        .status(400)
+        .json({ isFound: false, message: "Id is required" });
+
     // Check if the user already exists
     const user = await Warehouse.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user)
+      return res.status(400).json({
+        isFound: false,
+        message: "User does not exists",
+      });
 
     const getDateInMonthAbbreviation = (date) => {
       const monthNames = [
@@ -227,13 +240,15 @@ router.put("/update/:id", async (req, res) => {
 
     const newRegistrationDate = getDateInMonthAbbreviation(registrationDate);
 
-    const newDate = new Date(newRegistrationDate)
+    const newDate = new Date(newRegistrationDate);
 
     // add 5 years in newDate
-    newDate.setFullYear(newDate.getFullYear() + 5)
-    newDate.setDate(newDate.getDate() - 1)
+    newDate.setFullYear(newDate.getFullYear() + 5);
+    newDate.setDate(newDate.getDate() - 1);
 
-    const newRegistrationValidUpto = getDateInMonthAbbreviation(newDate.toISOString().split("T")[0]);
+    const newRegistrationValidUpto = getDateInMonthAbbreviation(
+      newDate.toISOString().split("T")[0]
+    );
     // Create a new user
     const newUser = {
       ownerName,
@@ -267,9 +282,12 @@ router.put("/update/:id", async (req, res) => {
     // Save the user
     await Warehouse.findByIdAndUpdate(req.params.id, newUser);
 
-    res.json({ msg: "User updated" });
+    res.json({ isFound: true, message: "User updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      isFound: false,
+      message: error.message,
+    });
   }
 });
 
@@ -312,12 +330,27 @@ router.get("/getData", auth, async (req, res) => {
 
 router.post("/getdatabyid/:id", async (req, res) => {
   try {
+    if (!req.params.id)
+      return res.status(400).json({
+        isFound: false,
+        message: "Id is required",
+      });
     const user = await Warehouse.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user)
+      return res.status(400).json({
+        isFound: false,
+        message: "User does not exists",
+      });
 
-    res.status(200).json(user);
+    res.status(200).json({
+      isFound: true,
+      user: user,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      isFound: false,
+      message: error.message,
+    });
   }
 });
 /*
@@ -327,12 +360,22 @@ router.post("/getdatabyid/:id", async (req, res) => {
 router.get("/allwarehouse", async (req, res) => {
   try {
     const warehouse = await Warehouse.find();
-    if (!warehouse) return res.status(400).json({ msg: "Warehouse not found" });
+    if (!warehouse)
+      return res.status(400).json({
+        isFound: false,
+        message: "Warehouse not found",
+      });
     else {
-      res.status(200).json(warehouse);
+      res.status(200).json({
+        isFound: true,
+        data: warehouse,
+      });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      isFound: false,
+      message: error.message,
+    });
   }
 });
 
@@ -412,7 +455,6 @@ router.get("/getOccupiedWarehousePie/:id", async (req, res) => {
         }
         return acc;
       }, []);
-
 
       const data = {
         unoccupied: freeSpace,

@@ -12,77 +12,107 @@ import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
 import { GoListUnordered } from "react-icons/go";
 import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { CiSettings } from "react-icons/ci";
+import handleToast from "@/components/toastifyNotification";
+import { ToastContainer } from "react-toastify";
 function page() {
   const [warehouseDetailData, setWarehouseDetailData] =
     useState<warehouseDetailDataProps>({} as warehouseDetailDataProps);
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const { userDetails } = useUserDetails();
-  useEffect(() => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setWarehouseDetailData(data);
-        }
-      });
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-        body: JSON.stringify({
-          typeOfId: "warehouseId",
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setOrderData(data.allTransaction);
-          toggleLoad();
-        }
-      });
-  }, []);
 
   const toggleLoad = () => {
     setIsLoaded(!isLoaded);
   };
 
+  const fetchWarehouseDetails = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setWarehouseDetailData(responseJson.user);
+      }
+      else{
+        handleToast({
+          type: "error",
+          message: responseJson.message,
+        });
+      }
+    } catch (err) {
+      handleToast({
+        type: "error",
+        message: "Error in fetching warehouse details",
+      });
+    }
+  };
+
+  const fetchOrderData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify({
+            typeOfId: "warehouseId",
+          }),
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isRequestFound) {
+        setOrderData(responseJson.allTransaction);
+        toggleLoad();
+      } else {
+        handleToast({
+          type: "error",
+          message: responseJson.message,
+          
+        });
+      }
+    } catch (err) {
+      handleToast({
+        type: "error",
+        message: "Error in fetching order details",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchWarehouseDetails();
+    fetchOrderData();
+  }, []);
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
       <div className="grid grid-cols-1 md:grid-cols-2  gap-3 h-[500px]">
         <div className="bg-white rounded-xl p-3 ">
-            <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
-            <div className="overflow-y-auto h-[440px]">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
+          <Title title="Warehouse Detail" Icon={<LuWarehouse />} link="" />
+          <div className="overflow-y-auto h-[440px]">
+            <Skeleton className="w-full h-full" isLoaded={isLoaded}>
               <WarehouseDetails
                 warehouseDetailData={warehouseDetailData}
                 className={"flex gap-3 p-3 overflow-scroll h-[440px] w-full"}
-                />
-                </Skeleton>
-            </div>
+              />
+            </Skeleton>
+          </div>
         </div>
-        <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
-            <Title
-              title="Recent's Order"
-              Icon={<GoListUnordered />}
-              link={"/dashboard/warehouse/orders"}
-            />
+        <div className="bg-white h-[500px] rounded-xl p-3">
+          <Title
+            title="Recent's Order"
+            Icon={<GoListUnordered />}
+            link={"/dashboard/warehouse/orders"}
+          />
           <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <div className="flex gap-3 h-[440px] w-full py-3 flex-col overflow-y-auto">
               {OrderData.length !== 0 ? (
@@ -95,31 +125,32 @@ function page() {
                 <div>No order Found</div>
               )}
             </div>
-              </Skeleton>
+          </Skeleton>
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-3 h-full">
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
-            <Title
-              title="Charts"
-              Icon={<LuGanttChartSquare />}
-              link={"/dashboard/warehouse/charts"}
-            />
+          <Title
+            title="Charts"
+            Icon={<LuGanttChartSquare />}
+            link={"/dashboard/warehouse/charts"}
+          />
           <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             <WarehouseExpenseChart className="" />
           </Skeleton>
         </div>
         <div className="bg-white rounded-xl p-3 flex-1">
-            <Title
-              title="Settings"
-              Icon={<CiSettings />}
-              link={"/dashboard/warehouse/settings"}
-            />
-              <Skeleton className="w-full h-full" isLoaded={isLoaded}>
+          <Title
+            title="Settings"
+            Icon={<CiSettings />}
+            link={"/dashboard/warehouse/settings"}
+          />
+          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
             Click on See More to access the settings
           </Skeleton>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 function Orders() {
   const [orders, setOrders] = useState<transactionProps[]>([]);
-  const [status, setStatus] = useState("Pending");
   const [isLoaded, setIsLoaded] = React.useState(false);
   const { userDetails } = useUserDetails();
 
@@ -20,31 +19,38 @@ function Orders() {
     fetchOrders();
   }, [status]);
 
-  const fetchOrders = () => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-        body: JSON.stringify({ typeOfId: "customerId" }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.allTransaction) {
-          setOrders(data.allTransaction.reverse());
-          toggleLoad();
-        } else {
-          handleToast("No data found", "info");
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify({ typeOfId: "customerId" }),
         }
-      })
-      .catch((err) => {
-        handleToast(err.message, "error");
+      );
+      const responseJson = await response.json();
+      if (
+        responseJson.isRequestFound &&
+        responseJson.allTransaction.length > 0
+      ) {
+        setOrders(responseJson.allTransaction.reverse());
+        toggleLoad();
+      } else {
+        handleToast({
+          message: "No data found",
+          type: "info",
+        });
+      }
+    } catch (err: any) {
+      handleToast({
+        message: err.message,
+        type: "error",
       });
+    }
   };
 
   const toggleLoad = () => {
@@ -56,13 +62,10 @@ function Orders() {
       <div className="m-3 bg-primary p-3 w-full text-white flex justify-center flex-col items-center rounded-3xl">
         <h1 className="text-2xl font-bold text-center">Orders</h1>
         {orders.length === 0 ? (
-          <h1 className="text-center text-2xl">
-            No orders available
-          </h1>
+          <h1 className="text-center text-2xl">No orders available</h1>
         ) : (
           orders.reverse().map((order, index) => (
             <div key={index} className="w-[90%] rounded-3xl">
-             
               {/* Check if order is empty */}
               <OrderCardDetail {...order} />
             </div>

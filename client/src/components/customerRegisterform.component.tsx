@@ -61,11 +61,14 @@ const CustomerRegisterform = () => {
 
   const handleSubmit = async () => {
     if (formData.password !== formData.confirmPassword) {
-      handleToast("Password and Confirm Password does not match", "error");
+      handleToast({
+        message: "Password and Confirm Password does not match",
+        type: "error",
+      });
       return;
     }
-    // await fetch("https://fresh-flow-backend.vercel.app/customer/register", {
-    await fetch("https://fresh-flow-backend.vercel.app/customer/register", {
+    // await fetch("http://localhost:5000/customer/register", {
+    await fetch("http://localhost:5000/customer/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +90,10 @@ const CustomerRegisterform = () => {
       .then((res) => res.json())
       .then((data) => {
         if (!data.id) {
-          handleToast(data.message, "error");
+          handleToast({
+            message: data.error,
+            type: "error",
+          });
         }
         //  else {
         //   console.log(data);
@@ -97,13 +103,14 @@ const CustomerRegisterform = () => {
 
   const getCurrentLocation = () => {
     if (isGetCurrentLocation) {
-      handleToast("Fetching current location", "info");
+      handleToast({ 
+        message: "Fetching current location", type: "info", });
       if (navigator.geolocation) {
         setTimeout(() => {
           navigator.geolocation.getCurrentPosition((position) => {
             handleToast(
-              `Location fetched: \n Lat : ${position.coords.latitude} , Lng : ${position.coords.longitude}`,
-              "success"
+             {message: `Location fetched: \n Lat : ${position.coords.latitude} , Lng : ${position.coords.longitude}`,
+              type: "success"}
             );
             setFormData({
               ...formData,
@@ -112,7 +119,7 @@ const CustomerRegisterform = () => {
           });
         }, 2000);
       } else {
-        handleToast("Geolocation is not supported by this browser", "error");
+        handleToast({message : "Geolocation is not supported by this browser",type: "error"});
       }
     }
     setIsGetCurrentLocation(false);
@@ -255,7 +262,7 @@ const CustomerRegisterform = () => {
                     setFormData({ ...formData, state: e.target.value })
                   }
                 />
-                
+
                 <Input
                   label="Image"
                   type="text"
@@ -264,11 +271,13 @@ const CustomerRegisterform = () => {
                     setFormData({ ...formData, image: e.target.value })
                   }
                 />
-              <Button onClick={handleSubmit}
-                color="danger"
-                variant="shadow"
-                className="w-[50%] ml-[30px]"
-              >Submit</Button>
+                <Button
+                  onClick={handleSubmit}
+                  color="danger"
+                  variant="shadow"
+                  className="w-[50%] ml-[30px]">
+                  Submit
+                </Button>
               </div>
             </div>
           </SwiperSlide>

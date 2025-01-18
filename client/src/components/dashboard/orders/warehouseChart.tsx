@@ -14,8 +14,6 @@ import { Bar, Pie } from "react-chartjs-2";
 import handleToast from "@/components/toastifyNotification";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
-
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -56,18 +54,16 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
     "December",
   ];
 
-
-
   useEffect(() => {
     fetch(
       // Change id
-      // `https://fresh-flow-backend.vercel.app/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
+      // `http://localhost:5000/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
+      `http://localhost:5000/warehouse/getWarehouseExpenseChart/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
       }
     )
@@ -76,8 +72,6 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
         if (data) {
           setPrice(data);
         }
-
-
       });
   }, []);
 
@@ -93,10 +87,10 @@ export function WarehouseExpenseChart({ className }: { className: string }) {
   };
 
   return (
-  <> 
-  <Bar options={options} data={newData} className={className}/>
-  </>
-);
+    <>
+      <Bar options={options} data={newData} className={className} />
+    </>
+  );
 }
 export function WarehouseOccupacyPie({ className }: { className: string }) {
   const [pieData, setPieData] = React.useState<WarehouseOccupacyPieProps>({
@@ -110,13 +104,13 @@ export function WarehouseOccupacyPie({ className }: { className: string }) {
   useEffect(() => {
     fetch(
       // Change id
-      // `https://fresh-flow-backend.vercel.app/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
+      // `http://localhost:5000/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
+      `http://localhost:5000/warehouse/getOccupiedWarehousePie/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "accept": "/",
+          accept: "/",
         },
       }
     )
@@ -125,7 +119,10 @@ export function WarehouseOccupacyPie({ className }: { className: string }) {
         if (data) {
           setPieData(data);
         } else {
-          handleToast("No data found", "info");
+          handleToast({
+            message: "No data found",
+            type: "info",
+          });
         }
       });
   }, []);

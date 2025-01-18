@@ -9,6 +9,7 @@ import { Slider, Button } from "@nextui-org/react";
 import CropCard from "@/components/marketPlace/customer/cropCard";
 import useCropsMap from "@/redux/dispatch/useCropsMap";
 import cropsTypeList from "@/components/dataSample/cropsType";
+import handleToast from "@/components/toastifyNotification";
 
 const Page = () => {
   const [filterBuffer, setFilterBuffer] = React.useState({
@@ -31,28 +32,40 @@ const Page = () => {
     setNewCropTypeList(newCropType);
   }, []);
 
-  const {  setCrops, setFilter } = useCropsMap();
+  const { setCrops, setFilter } = useCropsMap();
 
   useEffect(() => {
-    fetch(`https://fresh-flow-backend.vercel.app/farmer/markertPlace`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "/",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setCrops(data);
-        }
-      });
+    fetchCrops();
   }, [filterBuffer]);
+
+  const fetchCrops = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/farmer/markertPlace`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setCrops(responseJson.data);
+      } else {
+        handleToast({
+          type: "error",
+          message: responseJson.message,
+        });
+      }
+    } catch (error) {
+      handleToast({
+        type: "error",
+        message: "Error fetching crops",
+      });
+    }
+  };
 
   const handleFilter = () => {
     setFilter(filterBuffer);
@@ -64,7 +77,7 @@ const Page = () => {
       priceRange: { min: 50, max: 10000 }, // Match the Slider's default values
       location: "All",
     });
-    
+
     // Reset the filter in the global state
     setFilter({
       cropName: "",
@@ -128,7 +141,10 @@ const Page = () => {
                   style: "currency",
                   currency: "RUP",
                 }}
-                value={[filterBuffer.priceRange.min, filterBuffer.priceRange.max]}
+                value={[
+                  filterBuffer.priceRange.min,
+                  filterBuffer.priceRange.max,
+                ]}
                 onChange={(value: any) =>
                   setFilterBuffer({
                     ...filterBuffer,

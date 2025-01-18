@@ -18,35 +18,43 @@ import handleToast from "@/components/toastifyNotification";
 import "react-toastify/dist/ReactToastify.css";
 
 function CartItems() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
   const quantityArray = ["50", "100", "150", "200", "250", "300"];
   const {
-    getOrderItems,
     removeOrderItem,
     clearOrderItems,
+    getOrderItems,
     customerOrderCartItemState,
     setOrderQuantity,
     onPay,
     setOrderItems,
   } = useCustomerOrderCardItem();
-
-  const cartItem = getOrderItems();
-  useEffect(() => {
-    setOrderItems();
-    toggleLoad();
-  }, []);
+  const [cartItem, setCartItems] = useState([] as CropsMarketPlaceProps[]);
 
   const [status, setStatus] = useState([] as string[]);
 
   useEffect(() => {
-    setStatus(cartItem.map((item) => (item.availableQuantity * 50).toString()));
-  }, [cartItem]);
+    const fetchTheCartItems = async () => {
+      const response = await setOrderItems();
+      if (!response.isOrderFound) {
+        handleToast({ message: response.message, type: "info" });
+      }
+      const cartArray = getOrderItems();
+      const statusArray = [];
+      for (let i = 0; i < cartArray.length; i++) {
+        statusArray.push((cartArray[i].availableQuantity * 50).toString());
+      }
+      setStatus(statusArray);
+      setIsLoaded(false);
+      setCartItems(cartArray);
+    };
 
-  const toggleLoad = () => {
-    setIsLoaded(!isLoaded);
-  };
+    if (isLoaded) {
+      fetchTheCartItems();
+    }
+  }, [cartItem, customerOrderCartItemState, isLoaded]);
 
-  const handleChange = (
+  const handleChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
     _id: string,
     index: number
@@ -55,12 +63,50 @@ function CartItems() {
     newStatus[index] = e.target.value.toString();
     const quantity = parseInt(e.target.value) / 50;
     if (!quantity) return;
-    setOrderQuantity(_id, quantity, cartItem[index].crop);
+    const response = await setOrderQuantity(
+      _id,
+      quantity,
+      cartItem[index].crop
+    );
+    if (!response.isQuantitySet) {
+      handleToast({ message: response.message, type: "error" });
+    }
+    setStatus(newStatus);
+  };
+
+  const handleRemove = async (id: string, crop: string) => {
+    const response = await removeOrderItem(id, crop);
+    handleToast({
+      message: response.message,
+      type: response.isOrderRemoved ? "success" : "error",
+    });
+    setIsLoaded(true);
+  };
+
+  const handleClearCart = async () => {
+    const response = await clearOrderItems();
+    handleToast({
+      message: response.message,
+      type: response.isOrderCleared ? "success" : "error",
+    });
+    setIsLoaded(true);
+  };
+
+  const handleChckout = async () => {
+    if (cartItem.length === 0) {
+      handleToast({ message: "Cart is Empty", type: "info" });
+      return;
+    }
+    const response = await onPay(customerOrderCartItemState.totalAmount);
+    handleToast({
+      message: response.message,
+      type: response.isPaid ? "success" : "error",
+    });
   };
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <Skeleton className="w-full" isLoaded={isLoaded}>
+      <Skeleton className="w-full" isLoaded={!isLoaded}>
         <div className="space-y-6">
           <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
 
@@ -128,21 +174,6 @@ function CartItems() {
                                 <h3 className="font-medium text-gray-900 mb-2">
                                   Quantity
                                 </h3>
-                                {/* {status.length !== 0 && (
-                                  <Select
-                                    className="w-full"
-                                    name="quantity"
-                                    // value={status[index]}
-                                    defaultSelectedKeys={[status[index]]}
-                                    onChange={(e) => handleChange(e, item._id, index)}
-                                  >
-                                    {quantityArray.map((quantity) => (
-                                      <SelectItem key={quantity} value={quantity}>
-                                        {quantity} kg
-                                      </SelectItem>
-                                    ))}
-                                  </Select>
-                                )} */}
                                 {status.length !== 0 && (
                                   <Select
                                     key={index}
@@ -166,9 +197,9 @@ function CartItems() {
                               <div className="flex items-center justify-between">
                                 <span className="text-gray-600">Price:</span>
                                 <span className="text-lg font-semibold text-green-600">
-                                  ₹{item.price} 
+                                  ₹{item.price}
                                   <span className="text-sm text-gray-600">
-                                  / 50 kg
+                                    / 50 kg
                                   </span>
                                 </span>
                               </div>
@@ -178,9 +209,7 @@ function CartItems() {
                           {/* Remove Button */}
                           <div className="mt-4">
                             <Button
-                              onClick={() =>
-                                removeOrderItem(item._id, item.crop)
-                              }
+                              onClick={() => handleRemove(item._id, item.crop)}
                               className="text-red-600 hover:text-red-700"
                               variant="ghost">
                               Remove
@@ -215,18 +244,13 @@ function CartItems() {
                     <Divider className="my-4" />
                     <Button
                       className="w-full bg-green-600 hover:bg-green-700 text-white"
-                      onClick={() => {
-                        cartItem.length !== 0
-                          ? handleToast("Checkout", "success")
-                          : handleToast("Cart is empty", "error");
-                        onPay(customerOrderCartItemState.totalAmount);
-                      }}>
+                      onClick={handleChckout}>
                       Proceed to Checkout
                     </Button>
                     <Button
                       className="w-full"
                       variant="ghost"
-                      onClick={clearOrderItems}>
+                      onClick={handleClearCart}>
                       Clear Cart
                     </Button>
                   </div>

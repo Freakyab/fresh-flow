@@ -6,33 +6,50 @@ import { Select, SelectItem } from "@nextui-org/react";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
+import handleToast from "@/components/toastifyNotification";
+import { ToastContainer } from "react-toastify";
 
 function Orders() {
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
   const [typeOf, setTypeOf] = useState<string>("Customer");
   const [status, setStatus] = useState("Pending");
   const { userDetails } = useUserDetails();
-  useEffect(() => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-        body: JSON.stringify({
-          typeOfId: "farmerId",
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setOrderData(data.allTransaction.reverse());
+
+  const fetchOrderData = async () => {
+    try{
+      const response = await fetch(
+        `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify({
+            typeOfId: "farmerId",
+          }),
         }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isRequestFound) {
+        setOrderData(responseJson.allTransaction.reverse());
+      }else{
+        handleToast({
+          type: "error",
+          message: "No order found",
+        });
+      }
+    }
+    catch(err){
+      handleToast({
+        type: "error",
+        message: "Something went wrong",
       });
+    }
+  }
+
+  useEffect(() => {
+    fetchOrderData();
   }, []);
 
   return (
@@ -97,6 +114,7 @@ function Orders() {
           </div>
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 }

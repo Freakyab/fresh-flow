@@ -29,6 +29,11 @@ router.post("/addOrder/:id", async (req, res) => {
           orderItems[i].crop.toLowerCase() === order.crop.toLowerCase() &&
           orderItems[i].price === order.price
         ) {
+          if (orderItems[i].availableQuantity == 6) {
+            return res
+              .status(200)
+              .json({ message: "Already 6 items added", isOrderAdded: false });
+          }
           orderItems[i].availableQuantity += 1;
 
           isOrderExist = true;
@@ -63,16 +68,29 @@ router.post("/addOrder/:id", async (req, res) => {
 router.post("/setOrderItems/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
+    if (!customerId) {
+      return res
+        .status(400)
+        .json({ message: "Invalid customer ID", isOrderFound: false });
+    }
     const cartItemList = await CartItems.find({
       customerId: customerId,
     }).exec();
 
     if (cartItemList[0].orderItems.length > 0) {
+      res.status(200).json({
+        message: "Order Items Found",
+        orderItems: cartItemList[0].orderItems,
+        isOrderFound: true,
+      });
+    } else {
       res
         .status(200)
-        .json({ orderItems: cartItemList[0].orderItems, isOrderFound: true });
-    } else {
-      res.status(200).json({ orderItems: [], isOrderFound: true });
+        .json({
+          orderItems: [],
+          message: "No Order Items Found",
+          isOrderFound: true,
+        });
     }
   } catch (error) {
     console.log(error);
@@ -220,6 +238,11 @@ router.put("/setOrderQuantity/:id", async (req, res) => {
 router.post("/clearOrderItems/:id", async (req, res) => {
   try {
     const customerId = req.params.id;
+    if (!customerId) {
+      return res
+        .status(400)
+        .json({ message: "Invalid customer ID", isOrderCleared: false });
+    }
     const cartExist = await CartItems.find({ customerId: customerId }).exec();
     if (cartExist[0]) {
       const updatedCart = await CartItems.findByIdAndUpdate(cartExist[0]._id, {

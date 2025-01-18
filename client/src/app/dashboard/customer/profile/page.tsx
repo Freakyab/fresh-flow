@@ -24,48 +24,73 @@ function page() {
   const [OrderData, setOrderData] = useState<transactionProps[]>([]);
   const { userDetails } = useUserDetails();
   const [isLoaded, setIsLoaded] = React.useState(false);
-  useEffect(() => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/customer/getdatabyid/${userDetails.userDetails._id} `,
 
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.isAvailable) {
-          setCustomerDetailData(data.user);
-        } else {
-          handleToast("No data found", "error");
+  const fetchCustomerData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/customer/getdatabyid/${userDetails.userDetails._id} `,
+
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
         }
-      });
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-        body: JSON.stringify({
-          typeOfId: "customerId",
-        }),
+      );
+      const responseJson = await response.json();
+      if (responseJson.isAvailable) {
+        setCustomerDetailData(responseJson.user);
+      } else {
+        handleToast({
+          message: "No data found",
+          type: "info",
+        });
       }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setOrderData(data.allTransaction);
-          toggleLoad();
-        }
+    } catch (err) {
+      handleToast({
+        message: "Something went wrong",
+        type: "error",
       });
+    }
+  };
+
+  const fetchOrderData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify({
+            typeOfId: "customerId",
+          }),
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isRequestFound) {
+        setOrderData(responseJson.allTransaction);
+        toggleLoad();
+      } else {
+        handleToast({
+          message: "No data found",
+          type: "info",
+        });
+      }
+    } catch (err) {
+      handleToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomerData();
+    fetchOrderData();
   }, []);
 
   const toggleLoad = () => {
@@ -77,14 +102,14 @@ function page() {
       <div className="grid grid-cols-2 gap-3 h-[500px]">
         <div className="bg-white rounded-xl p-3 ">
           <Title title="Customer Detail" Icon={<LuWarehouse />} link="" />
-            <div className="overflow-y-auto h-[440px]">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
+          <div className="overflow-y-auto h-[440px]">
+            <Skeleton className="w-full h-full" isLoaded={isLoaded}>
               <CustomerDetails
                 customerDetailData={customerDetailData}
                 className={"flex gap-3 p-3"}
               />
-          </Skeleton>
-            </div>
+            </Skeleton>
+          </div>
         </div>
         <div className="bg-white h-[500px] overflow-auto rounded-xl p-3">
           <Title
@@ -92,8 +117,8 @@ function page() {
             Icon={<GoListUnordered />}
             link={"/dashboard/customer/orders"}
           />
-            <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
-          <Skeleton className="w-full h-full" isLoaded={isLoaded}>
+          <div className="flex gap-3 w-full p-3 flex-col overflow-y-auto">
+            <Skeleton className="w-full h-full" isLoaded={isLoaded}>
               {OrderData.length !== 0 ? (
                 OrderData.map((order, index) => (
                   <div key={index}>
@@ -103,8 +128,8 @@ function page() {
               ) : (
                 <div>No order Found</div>
               )}
-          </Skeleton>
-            </div>
+            </Skeleton>
+          </div>
         </div>
       </div>
       <div className="flex gap-3 h-full">
@@ -115,16 +140,14 @@ function page() {
             link={"/dashboard/customer/charts"}
           />
           <Skeleton className="w-full h-full" isLoaded={isLoaded}>
-
-          <CustomerExpenseChart className="" />
-          {/* <WarehouseExpenseChart className="" /> */}
+            <CustomerExpenseChart className="" />
+            {/* <WarehouseExpenseChart className="" /> */}
           </Skeleton>
         </div>
         <div className="bg-white rounded-xl p-3 w-1/2 h-full">
           <Title title="Settings" Icon={<CiSettings />} link={""} />
           <Skeleton className="w-full h-full" isLoaded={isLoaded}>
-
-          Click on See More to access the settings
+            Click on See More to access the settings
           </Skeleton>
         </div>
       </div>

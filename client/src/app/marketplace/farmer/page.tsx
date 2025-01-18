@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useRouter } from 'nextjs-toploader/app';
 
 import useMapLoading from "@/redux/dispatch/useMaploading";
 import { latLngThreshold } from "@/components/marketPlace/location/filter";
@@ -38,7 +37,6 @@ interface CenterProp {
 const Map = dynamic(() => import("@/components/location"), { ssr: false });
 
 const FarmerMarketplacePage = () => {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [location, setLocation] = useState({
     latitude: 0,
@@ -62,31 +60,37 @@ const FarmerMarketplacePage = () => {
     setNewCropTypeList(newCropType);
   }, []);
 
-  useEffect(() => {
-    // fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse",{
-    fetch("https://fresh-flow-backend.vercel.app/warehouse/allwarehouse", {
-      // Access-Control-Allow-Origin : "*",
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "/",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+
+  const fetchWarehouse = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/warehouse/allwarehouse",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
         }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setWarehouseDetailData(data);
-          toggleLoad();
-        } else {
-          handleToast("No data found", "error");
-        }
+      );
+
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setWarehouseDetailData(responseJson.data);
+        toggleLoad();
+      } else {
+        handleToast({
+          type: "error",
+          message: responseJson.message,
+        });
+      }
+    } catch (error) {
+      handleToast({
+        type: "error",
+        message: "Error fetching warehouse",
       });
-  }, []);
+    }
+  };
 
   const {
     setFlyOn,
@@ -123,13 +127,13 @@ const FarmerMarketplacePage = () => {
     setSearch(searchValue !== null ? searchValue.toString() : "");
   };
 
-  // const handleRoute = (id: string) => {
-  //   router.push(`/warehouse/${id}`);
-  // };
-
   const toggleLoad = () => {
     setIsLoaded(!isLoaded);
   };
+
+  useEffect(() => {
+    fetchWarehouse();
+  }, []);
 
   return (
     <div className="w-[99%] m-2 border-black border-2 d-hight">

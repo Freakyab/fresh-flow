@@ -113,12 +113,12 @@ router.post("/order-request/:id", async (req, res) => {
       allTransaction = await Transaction.find({ customerId: userId });
     }
     if (allTransaction) {
-      res.status(200).json({ allTransaction });
+      res.status(200).json({ allTransaction , message: "Request found" , isRequestFound: true});
     } else {
-      res.status(400).json({ message: "no request found" });
+      res.status(400).json({ message: "No request found" , isRequestFound: false});
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, isRequestFound: false });
   }
 });
 router.post("/order-top-request/:id", async (req, res) => {
@@ -143,12 +143,12 @@ router.post("/order-top-request/:id", async (req, res) => {
         .sort({ createdAt: -1 });
     }
     if (allTransaction) {
-      res.status(200).json({ allTransaction });
+      res.status(200).json({ allTransaction , message: "Request found" , isRequestFound: true});
     } else {
-      res.status(400).json({ message: "no request found" });
+      res.status(400).json({ message: "no request found", isRequestFound: false });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message , isRequestFound: false});
   }
 });
 

@@ -11,6 +11,7 @@ import OrderCardDetail from "@/components/marketPlace/farmer/orderCardDetail";
 import { LuWarehouse, LuGanttChartSquare } from "react-icons/lu";
 import { GoListUnordered } from "react-icons/go";
 import { CiSettings } from "react-icons/ci";
+import handleToast from "@/components/toastifyNotification";
 
 function page() {
   const [farmerDetailData, setFarmerDetailData] =
@@ -19,50 +20,76 @@ function page() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const { userDetails } = useUserDetails();
 
-  useEffect(() => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setFarmerDetailData(data);
-          toggleLoad();
-        }
-      });
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-top-request/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-        body: JSON.stringify({
-          typeOfId: "farmerId",
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setOrderData(data.allTransaction);
-        }
-      });
-  }, []);
-
   const toggleLoad = () => {
     setIsLoaded(!isLoaded);
   };
+
+  const fetchFarmerData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/farmer/getdatabyid/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setFarmerDetailData(responseJson.user);
+        toggleLoad();
+      } else {
+        handleToast({
+          type: "error",
+          message: responseJson.message,
+        });
+      }
+    } catch (err) {
+      handleToast({
+        type: "error",
+        message: "Failed to fetch data",
+      });
+    }
+  };
+
+  const fetchOrderData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/transaction/order-top-request/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify({
+            typeOfId: "farmerId",
+          }),
+        }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isRequestFound) {
+        setOrderData(responseJson.allTransaction);
+      } else {
+        handleToast({
+          type: "error",
+          message: responseJson.message,
+        });
+      }
+    } catch (err) {
+      handleToast({
+        type: "error",
+        message: "Failed to fetch data",
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchFarmerData();
+    fetchOrderData();
+  }, []);
 
   return (
     <div className="gap-3 flex flex-col w-full h-full p-3 ">
@@ -101,7 +128,7 @@ function page() {
           <Title
             title="Recent Order's (Customer)"
             // Icon={<LuGanttChartSquare />}
-            Icon={<GoListUnordered/>}
+            Icon={<GoListUnordered />}
             link={"/dashboard/farmer/orders"}
           />
           <Skeleton isLoaded={isLoaded}>

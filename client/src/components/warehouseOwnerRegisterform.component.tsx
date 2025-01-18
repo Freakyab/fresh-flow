@@ -51,14 +51,14 @@ const WarehouseOwnerRegisterform = () => {
   const [isVisible, SetIsVisible] = useState(false);
   const getCurrentLocation = () => {
     if (isGetCurrentLocation) {
-      handleToast("Fetching current location", "info");
+      handleToast({ message: "Fetching current location", type: "info" });
       if (navigator.geolocation) {
         setTimeout(() => {
           navigator.geolocation.getCurrentPosition((position) => {
-            handleToast(
-              `Location fetched: \n Lat : ${position.coords.latitude} , Lng : ${position.coords.longitude}`,
-              "success"
-            );
+            handleToast({
+              message: `Location fetched: \n Lat : ${position.coords.latitude} , Lng : ${position.coords.longitude}`,
+              type: "success",
+            });
             setFormData({
               ...formData,
               location: [position.coords.latitude, position.coords.longitude],
@@ -66,7 +66,10 @@ const WarehouseOwnerRegisterform = () => {
           });
         }, 2000);
       } else {
-        handleToast("Geolocation is not supported by this browser", "error");
+        handleToast({
+          message: "Geolocation is not supported by this browser",
+          type: "error",
+        });
       }
     }
     setIsGetCurrentLocation(false);
@@ -299,7 +302,7 @@ const WarehouseOwnerRegisterform = () => {
               Submit
             </Button>
           </SwiperSlide>
-        </Swiper> 
+        </Swiper>
       </CardBody>
       <ToastContainer />
     </Card>

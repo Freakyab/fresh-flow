@@ -17,30 +17,39 @@ function Orders() {
     fetchOrders();
   }, [status]);
 
-  const fetchOrders = () => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/transaction/order-request/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "accept": "/",
-        },
-        body: JSON.stringify({ typeOfId: "warehouseId" }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.allTransaction) {
-          setOrders(data.allTransaction.reverse());
-        } else {
-          handleToast("No data found", "info");
+  const fetchOrders = async() => {
+    try{
+      const response = await fetch(
+        `http://localhost:5000/transaction/order-request/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify({
+            typeOfId: "warehouseId",
+          }),
         }
-      })
-      .catch((err) => {
-        handleToast(err.message, "error");
+      );
+      const responseJson = await response.json();
+      if (responseJson.isRequestFound) {
+        setOrders(responseJson.allTransaction.reverse());
+      }
+      else{
+        handleToast({
+          message: "No data found",
+          type: "info",
+        });
+      }
+
+
+    }catch(err){
+      handleToast({
+        message: "Something went wrong",
+        type: "error",
       });
+    }
   };
 
   return (
@@ -63,21 +72,21 @@ function Orders() {
           </SelectItem>
         </Select>
       </div>
-      {orders.filter((order) => order.status === status.toLocaleLowerCase()).length === 0 ? (
-        <h1 className="text-center text-2xl text-white">
-          No orders available
-        </h1>
-      ) : (
-        orders
-        .filter((order) => order.status === status.toLocaleLowerCase())
-        .map((order, index) => (
-          <div key={index} >
-            {/* Check if order is empty */}
-            <OrderCardDetail {...order} />
-          </div>
-        ))
-    )}
-  </div>
-);
+
+      {orders.filter((order) => order.status === status.toLocaleLowerCase())
+        .length === 0 ? (
+          <h1 className="text-center text-2xl text-white">No orders available</h1>
+        ) : (
+          orders
+          .filter((order) => order.status === status.toLocaleLowerCase())
+          .map((order, index) => (
+            <div key={index}>
+              {/* Check if order is empty */}
+              <OrderCardDetail {...order} />
+            </div>
+          ))
+        )}
+    </div>
+  );
 }
 export default Orders;

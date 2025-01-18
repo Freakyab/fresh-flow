@@ -31,39 +31,53 @@ const Settings = () => {
     availableCrops: [{ typeOfCrop: "", quantity: 0, price: 0 }],
   });
   const { userDetails } = useUserDetails();
-  useEffect(() => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/farmer/getdatabyid/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setFarmerDetailData(data);
-          setCropData({ availableCrops: data.availableCrops });
-        } else {
-          handleToast("No data found", "error");
+
+  const fetchFarmerData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/farmer/getdatabyid/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
         }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setFarmerDetailData(responseJson.user);
+        setCropData({ availableCrops: responseJson.user.availableCrops });
+      } else {
+        handleToast({
+          message: "No data found",
+          type: "info",
+        });
+      }
+    } catch (err) {
+      handleToast({
+        message: "Something went wrong",
+        type: "info",
       });
-  }, []);
+    }
+  };
 
   const handleEditMode = () => {
     setIsEdit(!isEdit);
     if (!isEdit) {
-      handleToast("Edit mode enabled", "info");
+      handleToast({
+        message: "Edit mode enabled",
+        type: "info",
+      });
     }
   };
 
   const getCurrentLocation = () => {
     if (isGetCurrentLocation) {
-      handleToast("Fetching current location", "info");
+      handleToast({
+        message: "Fetching current location",
+        type: "info",
+      });
       if (navigator.geolocation) {
         setTimeout(() => {
           navigator.geolocation.getCurrentPosition((position) => {
@@ -74,7 +88,10 @@ const Settings = () => {
           });
         }, 2000);
       } else {
-        handleToast("Geolocation is not supported by this browser", "error");
+        handleToast({
+          message: "Geolocation is not supported by this browser",
+          type: "error",
+        });
       }
     }
     setIsGetCurrentLocation(false);
@@ -114,28 +131,31 @@ const Settings = () => {
       ],
     });
   };
-
+  
   const handleSubmit = async () => {
-    await fetch(
-      // Change id
-      // `https://fresh-flow-backend.vercel.app/farmer/update/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/farmer/update/${userDetails.userDetails._id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-        body: JSON.stringify(farmerDetailData),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          handleToast("Farmer details updated", "success");
-          setIsEdit(false);
+    try {
+      const response = await fetch(
+        `http://localhost:5000/farmer/update/${userDetails.userDetails._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify(farmerDetailData),
         }
+      );
+      const responseJson = await response.json();
+      handleToast({
+        message: responseJson.message,
+        type: responseJson.isUpdated ? "success" : "error",
       });
+    } catch (err) {
+      handleToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
   };
 
   const removeCrop = (index: number) => {
@@ -143,6 +163,10 @@ const Settings = () => {
     updatedCrops.splice(index, 1);
     setCropData({ ...cropData, availableCrops: updatedCrops });
   };
+
+  useEffect(() => {
+    fetchFarmerData();
+  }, []);
 
   return (
     <div className="w-full m-3">
@@ -231,24 +255,23 @@ const Settings = () => {
                     }
                   />
                   {isEdit && (
-                      <Button
-                        color="danger"
-                        className="my-2"
-                        variant="bordered"
-                        onClick={() => removeCrop(index)}>
-                        Remove
-                      </Button>
+                    <Button
+                      color="danger"
+                      className="my-2"
+                      variant="bordered"
+                      onClick={() => removeCrop(index)}>
+                      Remove
+                    </Button>
                   )}
-                  {
-                    isEdit && index === cropData.availableCrops.length - 1 && (
-                      <Button
+                  {isEdit && index === cropData.availableCrops.length - 1 && (
+                    <Button
                       color="success"
                       className="my-2"
                       variant="bordered"
                       onClick={addCrop}>
-                        Add
-                      </Button>
-                        )}
+                      Add
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>

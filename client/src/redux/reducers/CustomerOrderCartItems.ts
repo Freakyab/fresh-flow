@@ -40,32 +40,15 @@ const customerOrderCartItemSlice = createSlice({
             state.orderItems = [];
             state.totalAmount = 0;
         },
-        addQuantity(state, action: PayloadAction<string>) {
-            const item = state.orderItems.find((orderItem) => orderItem._id === action.payload);
-            if (item) {
-                item.availableQuantity += 1;
-                state.totalAmount += item.price;
-            }
-        },
+       
         setOrderQuantity(state, action: PayloadAction<{ id: string, quantity: number }>) {
             const { id, quantity } = action.payload;
             if (quantity <= 0) return;
             const item = state.orderItems.find(orderItem => orderItem._id === id);
             if (item) {
-                state.totalAmount += item.price * (quantity - item.availableQuantity);
+                state.totalAmount -= item.price * item.availableQuantity;
                 item.availableQuantity = quantity;
-            }
-        },
-        removeQuantity(state, action: PayloadAction<string>) {
-            const item = state.orderItems.find(orderItem => orderItem._id === action.payload);
-            if (item) {
-                if (item.availableQuantity > 1) {
-                    item.availableQuantity -= 1;
-                    state.totalAmount -= item.price;
-                } else {
-                    state.totalAmount -= item.price * item.availableQuantity;
-                    state.orderItems = state.orderItems.filter(orderItem => orderItem._id !== action.payload);
-                }
+                state.totalAmount += item.price * item.availableQuantity;
             }
         },
         onPay(state, action: PayloadAction<number>) {

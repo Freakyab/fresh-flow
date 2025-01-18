@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { usePathname,useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -41,9 +41,14 @@ function Page() {
 
   useEffect(() => {
     if (pathname) {
-      // fetch(`https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`, {
-      fetch(
-        `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${pathname}`,
+      fetchWarehouseData();
+    }
+  }, [pathname]);
+
+  const fetchWarehouseData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/warehouse/getdatabyid/${pathname}`,
         {
           method: "POST",
           headers: {
@@ -51,21 +56,23 @@ function Page() {
             accept: "/",
           },
         }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data) {
-            setWarehouseDetailData(data);
-          }
-        });
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setWarehouseDetailData(responseJson.user);
+      } else {
+        handleToast({ message: responseJson.message, type: "error" });
+      }
+    } catch (err) {
+      handleToast({ message: "Something went wrong", type: "error" });
     }
-  }, [pathname]);
+  };
 
   useEffect(() => {
     if (getUserDetails().userDetails.type === "farmer") {
       setIsValid(true);
     } else {
-      handleToast("Login from farmer's Account", "error");
+      handleToast({ message: "Login from farmer's Account", type: "error" });
     }
   }, []);
   const handleSubmit = async (e: FormData) => {
@@ -76,7 +83,10 @@ function Page() {
     const newQuantity = parseInt(quantity as string);
 
     if (newDuration > 24) {
-      handleToast("Duration should be less than 24 months", "error");
+      handleToast({
+        message: "Duration should be less than 24 months",
+        type: "error",
+      });
       return;
     }
 
@@ -85,7 +95,7 @@ function Page() {
       : 0;
 
     if (duration === "" || quantity === "" || selectedCrop === "") {
-      handleToast("Please enter all the values", "error");
+      handleToast({ message: "Please enter all the values", type: "error" });
       return;
     } else {
       if (
@@ -94,16 +104,18 @@ function Page() {
         isNaN(newDuration) ||
         isNaN(newQuantity)
       ) {
-        handleToast("Please enter valid values", "error");
+        handleToast({ message: "Please enter valid values", type: "error" });
         return;
       } else if (newQuantity > capacity) {
-        handleToast("Quantity is more than the capacity", "error");
+        handleToast({
+          message: "Quantity is more than the capacity",
+          type: "error",
+        });
         return;
       }
     }
     await fetch(
-      // `https://fresh-flow-backend.vercel.app/transaction/farmer-purchase/${
-      `https://fresh-flow-backend.vercel.app/transaction/farmer-purchase/${
+      `http://localhost:5000/transaction/farmer-purchase/${
         getUserDetails().userDetails._id
       }`,
       {
@@ -124,10 +136,13 @@ function Page() {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          handleToast(data.error, "error");
+          handleToast({ message: data.error, type: "error" });
         } else {
-          handleToast("Transcation successful, Check order history", "success");
-          router.push('/dashboard/farmer/orders');
+          handleToast({
+            message: "Transcation successful, Check order history",
+            type: "success",
+          });
+          router.push("/dashboard/farmer/orders");
         }
       });
     handleClose();
@@ -161,7 +176,7 @@ function Page() {
               className=""
             />
             {isValid && (
-              <div >
+              <div>
                 <Button
                   color="success"
                   variant="bordered"

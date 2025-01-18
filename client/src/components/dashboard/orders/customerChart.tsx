@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
-import handleToast from "@/components/toastifyNotification";
+// import handleToast from "@/components/toastifyNotification";
 
 ChartJS.register(
   CategoryScale,
@@ -57,8 +57,8 @@ export function CustomerExpenseChart({ className }: { className: string }) {
   useEffect(() => {
     fetch(
       // Change id
-      // `https://fresh-flow-backend.vercel.app/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
-       `https://fresh-flow-backend.vercel.app/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
+      // `http://localhost:5000/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
+       `http://localhost:5000/customer/getCustomerExpenseChart/${userDetails.userDetails._id}`,
       {
         method: "GET",
         headers: {

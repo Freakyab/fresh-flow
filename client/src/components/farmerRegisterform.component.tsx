@@ -46,14 +46,17 @@ const FarmerRegisterform = () => {
 
   const getCurrentLocation = () => {
     if (isGetCurrentLocation) {
-      handleToast("Fetching current location", "info");
+      handleToast({
+        message: "Fetching current location",
+        type: "info",
+      });
       if (navigator.geolocation) {
         setTimeout(() => {
           navigator.geolocation.getCurrentPosition((position) => {
-            handleToast(
-              `Location fetched: \n Lat : ${position.coords.latitude} , Lng : ${position.coords.longitude}`,
-              "success"
-            );
+            handleToast({
+              message: `Location fetched: \n Lat : ${position.coords.latitude} , Lng : ${position.coords.longitude}`,
+              type: "success",
+            });
             setFormData({
               ...formData,
               location: [position.coords.latitude, position.coords.longitude],
@@ -61,7 +64,10 @@ const FarmerRegisterform = () => {
           });
         }, 2000);
       } else {
-        handleToast("Geolocation is not supported by this browser", "error");
+        handleToast({
+          message: "Geolocation is not supported by this browser",
+          type: "error",
+        });
       }
     }
     setIsGetCurrentLocation(false);
@@ -298,14 +304,14 @@ const FarmerRegisterform = () => {
                     })
                   }
                 />
-            <Button
-              // onClick={handleSubmit}
-              // onClick={() => console.log(formData)}
-              color="danger"
-              variant="shadow"
-              className="w-[50%] ml-[30px]">
-              Submit
-            </Button>
+                <Button
+                  // onClick={handleSubmit}
+                  // onClick={() => console.log(formData)}
+                  color="danger"
+                  variant="shadow"
+                  className="w-[50%] ml-[30px]">
+                  Submit
+                </Button>
               </div>
             </div>
           </SwiperSlide>

@@ -28,38 +28,52 @@ const Settings = () => {
     useState<boolean>(true);
 
   const { userDetails } = useUserDetails();
-  useEffect(() => {
-    fetch(
-      // `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      `https://fresh-flow-backend.vercel.app/warehouse/getdatabyid/${userDetails.userDetails._id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setWarehouseDetailData(data);
-        } else {
-          handleToast("No data found", "error");
+
+  const fetchWarehouseData = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/warehouse/getdatabyid/${userDetails.userDetails._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
         }
+      );
+      const responseJson = await response.json();
+      if (responseJson.isFound) {
+        setWarehouseDetailData(responseJson.user);
+      } else {
+        handleToast({
+          message: "No data found",
+          type: "info",
+        });
+      }
+    } catch (error) {
+      handleToast({
+        message: "Something went wrong",
+        type: "error",
       });
-  }, []);
+    }
+  };
 
   const handleEditMode = () => {
     setIsEdit(!isEdit);
     if (!isEdit) {
-      handleToast("Edit mode enabled", "info");
+      handleToast({
+        message: "Edit mode enabled",
+        type: "info",
+      });
     }
   };
 
   const getCurrentLocation = () => {
     if (isGetCurrentLocation) {
-      handleToast("Fetching current location", "info");
+      handleToast({
+        message: "Fetching current location",
+        type: "info",
+      });
       if (navigator.geolocation) {
         setTimeout(() => {
           navigator.geolocation.getCurrentPosition((position) => {
@@ -70,11 +84,45 @@ const Settings = () => {
           });
         }, 2000);
       } else {
-        handleToast("Geolocation is not supported by this browser", "error");
+        handleToast({
+          message: "Geolocation is not supported by this browser",
+          type: "error",
+        });
       }
     }
     setIsGetCurrentLocation(false);
   };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/warehouse/update/${userDetails.userDetails._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "/",
+          },
+          body: JSON.stringify(warehouseDetailData),
+        }
+      );
+
+      const responseJson = await response.json();
+      handleToast({
+        message: responseJson.message,
+        type: responseJson.isFound ? "success" : "error",
+      });
+    } catch (error) {
+      handleToast({
+        message: "Something went wrong",
+        type: "error",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchWarehouseData();
+  }, []);
 
   return (
     <div className="w-full m-3">
@@ -304,28 +352,7 @@ const Settings = () => {
           <CardFooter className="bg-white">
             <Button
               className="bg-blue-500 text-white p-2 rounded-md"
-              onClick={() => {
-                fetch(
-                  // Change id
-                  // `https://fresh-flow-backend.vercel.app/warehouse/update/${userDetails.userDetails._id}`,
-                  `https://fresh-flow-backend.vercel.app/warehouse/update/${userDetails.userDetails._id}`,
-                  {
-                    method: "PUT",
-                    headers: {
-                      "Content-Type": "application/json",
-                      accept: "/",
-                    },
-                    body: JSON.stringify(warehouseDetailData),
-                  }
-                )
-                  .then((res) => res.json())
-                  .then((data) => {
-                    if (data) {
-                      handleToast("Warehouse details updated", "success");
-                      setIsEdit(false);
-                    }
-                  });
-              }}>
+              onClick={handleSubmit}>
               Update
             </Button>
           </CardFooter>

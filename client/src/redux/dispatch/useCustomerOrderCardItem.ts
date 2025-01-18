@@ -10,190 +10,204 @@ const useCustomerOrderCardItem = () => {
     const { getUserDetails } = useUserDetails();
 
     const addOrderItem = async (order: CropsMarketPlaceProps) => {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-            body: JSON.stringify({ order }),
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.isOrderAdded) {
-                    dispatch(customerOrderCartItemAction.addOrderItem(order));
-                } else {
-                    console.log(data);
-                }
-            });
+        try {
+
+            const response =
+                await fetch(`http://localhost:5000/cartItems/addOrder/${getUserDetails().userDetails._id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "/",
+                    },
+                    body: JSON.stringify({ order }),
+                })
+            const responseJson = await response.json();
+            if (responseJson.isOrderAdded) {
+                dispatch(customerOrderCartItemAction.addOrderItem(order));
+            }
+            return responseJson;
+        } catch (err) {
+            return {
+                isOrderAdded: false,
+                message: "An error occured while adding order item"
+            }
+        }
 
     };
 
     const removeOrderItem = async (id: string, crop: string) => {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-            body: JSON.stringify({ id, crop })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.isOrderRemoved) {
-                    dispatch(customerOrderCartItemAction.removeOrderItem(id));
-                } 
-            });
+        try {
+            const response =
+                await fetch(`http://localhost:5000/cartItems/removeOrder/${getUserDetails().userDetails._id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "/",
+                    },
+                    body: JSON.stringify({ id, crop })
+                })
+
+            const responseJson = await response.json();
+            if (responseJson.isOrderRemoved) {
+                dispatch(customerOrderCartItemAction.removeOrderItem(id));
+            }
+            return responseJson;
+        } catch (err) {
+            return {
+                isOrderRemoved: false,
+                message: "An error occured while removing order item"
+            }
+        }
     };
 
-    const addQuantity = async(id: string,crop :string) => {
-        // await  fetch(`https://fresh-flow-backend.vercel.app/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
-        await  fetch(`https://fresh-flow-backend.vercel.app/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-            body: JSON.stringify({ id ,crop })
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (data.isQuantityAdded) {
-                    // console.log(data);
-                    dispatch(customerOrderCartItemAction.addQuantity(id));
-                } else {
-                    console.log(data);
-                }
-            });
+    // const addQuantity = async (id: string, crop: string) => {
+    //     // await  fetch(`http://localhost:5000/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
+    //     await fetch(`http://localhost:5000/cartItems/addQuantity/${getUserDetails().userDetails._id}`, {
+    //         method: "PUT",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             accept: "/",
+    //         },
+    //         body: JSON.stringify({ id, crop })
+    //     })
+    //         .then((response) => {
+    //             if (!response.ok) {
+    //                 throw new Error("Network response was not ok");
+    //             }
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             if (data.isQuantityAdded) {
+    //                 // console.log(data);
+    //                 dispatch(customerOrderCartItemAction.addQuantity(id));
+    //             }
+    //         });
 
-        // dispatch(customerOrderCartItemAction.addQuantity(id));
-    }
+    //     // dispatch(customerOrderCartItemAction.addQuantity(id));
+    // }
 
     const setOrderItems = async () => {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.isOrderFound) {
-                    console.log(data.orderItems);
-                    dispatch(customerOrderCartItemAction.setOrderItems(data.orderItems));
-                } else {
-                    console.log(data);
-                }
-            });
+        try {
+            const response =
+                await fetch(`http://localhost:5000/cartItems/setOrderItems/${getUserDetails().userDetails._id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "/",
+                    },
+                })
+            const responseJson = await response.json();
+            if (responseJson.isOrderFound) {
+                dispatch(customerOrderCartItemAction.setOrderItems(responseJson.orderItems));
+            }
+            return responseJson;
+        }
+        catch (err) {
+            return {
+                isOrderFound: false,
+                message: "An error occured while setting order items"
+            }
+        }
     }
 
-    const removeQuantity = async(id: string,crop : string) => {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-            body: JSON.stringify({ id,crop })
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.isQuantityRemoved) {
-                    dispatch(customerOrderCartItemAction.removeQuantity(id));
-                } else {
-                    console.log(data);
-                }
-            });
-        // dispatch(customerOrderCartItemAction.removeQuantity(id));
-    };
+    // const removeQuantity = async (id: string, crop: string) => {
+    //     // await fetch(`http://localhost:5000/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
+    //     await fetch(`http://localhost:5000/cartItems/removeQuantity/${getUserDetails().userDetails._id}`, {
+    //         method: "PUT",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             accept: "/",
+    //         },
+    //         body: JSON.stringify({ id, crop })
+    //     })
+    //         .then((response) => {
+    //             return response.json();
+    //         })
+    //         .then((data) => {
+    //             if (data.isQuantityRemoved) {
+    //                 dispatch(customerOrderCartItemAction.removeQuantity(id));
+    //             }
+    //         });
+    //     // dispatch(customerOrderCartItemAction.removeQuantity(id));
+    // };
 
     const getOrderItems = () => {
         return customerOrderCartItemState.orderItems;
     };
 
-    const clearOrderItems = async() => {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data.isOrderItemsCleared) {
-                    dispatch(customerOrderCartItemAction.clearOrderItems());
-                } else {
-                    console.log(data);
-                }
-            });
-        // dispatch(customerOrderCartItemAction.clearOrderItems());
+    const clearOrderItems = async () => {
+        try {
+            const response =
+                await fetch(`http://localhost:5000/cartItems/clearOrderItems/${getUserDetails().userDetails._id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "/",
+                    },
+                })
+            const responseJson = await response.json();
+            if (responseJson.isOrderCleared) {
+                dispatch(customerOrderCartItemAction.clearOrderItems());
+            }
+            return responseJson;
+        }
+        catch (err) {
+            return {
+                isOrderCleared: false,
+                message: "An error occured while clearing order items"
+            }
+        }
     }
 
-    const setOrderQuantity = async(id: string,quantity: number,crop :string) => {
-        // await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
-        await fetch(`https://fresh-flow-backend.vercel.app/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-            body: JSON.stringify({ id,quantity ,crop})
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data);
-                if (data.isQuantitySet) {
-                    dispatch(customerOrderCartItemAction.setOrderQuantity({id,quantity}));
-                } else {
-                    console.log(data);
-                }
-            });
-        // dispatch(customerOrderCartItemAction.setOrderQuantity({id,quantity}));
+    const setOrderQuantity = async (id: string, quantity: number, crop: string) => {
+        try {
+            const response =
+                await fetch(`http://localhost:5000/cartItems/setOrderQuantity/${getUserDetails().userDetails._id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "/",
+                    },
+                    body: JSON.stringify({ id, quantity, crop })
+                })
+
+            const responseJson = await response.json();
+            if (responseJson.isQuantitySet) {
+                dispatch(customerOrderCartItemAction.setOrderQuantity({ id, quantity }));
+            }
+            return responseJson;
+        }
+        catch (err) {
+            return {
+                isQuantitySet: false,
+                message: "An error occured while setting order quantity"
+            }
+        }
     }
 
-    const onPay = async(totalAmount: number) => {
-        //await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
-         await fetch(`https://fresh-flow-backend.vercel.app/cartItems/onPay/${getUserDetails().userDetails._id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                accept: "/",
-            },
-            body: JSON.stringify({ totalAmount })
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.isPaid) {
-                    dispatch(customerOrderCartItemAction.onPay(totalAmount));
-                } else {
-                    console.log(data);
-                }
-            });
-        // dispatch(customerOrderCartItemAction.onPay(totalAmount));
+    const onPay = async (totalAmount: number) => {
+        try {
+            const response =
+                await fetch(`http://localhost:5000/cartItems/onPay/${getUserDetails().userDetails._id}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        accept: "/",
+                    },
+                    body: JSON.stringify({ totalAmount })
+                })
+            const responseJson = await response.json();
+            if (responseJson.isPaid) {
+                dispatch(customerOrderCartItemAction.onPay(totalAmount));
+            }
+            return responseJson;
+        }
+        catch (err) {
+            return {
+                isPaid: false,
+                message: "An error occured while paying"
+            }
+        }
     }
 
     const getTotalSpend = () => {
@@ -206,8 +220,7 @@ const useCustomerOrderCardItem = () => {
         removeOrderItem,
         getOrderItems,
         clearOrderItems,
-        addQuantity,
-        removeQuantity,
+        // removeQuantity,
         onPay,
         getTotalSpend,
         setOrderItems,

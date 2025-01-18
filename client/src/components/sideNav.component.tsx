@@ -3,7 +3,8 @@ import React, { ReactNode, useState, useEffect } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import Link from "next/link";
 import { User, Button } from "@nextui-org/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
 import useUserDetails from "@/redux/dispatch/useUserDetails";
 
 type Option = {
@@ -29,14 +30,12 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
       .split("/")
       .filter((item) => item !== "")[2];
 
-    setActiveIndex(
-      options.findIndex(
+      const activeIndex = options.findIndex(
         ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
-      )
-    );
-    setSelectedIndex(activeIndex !== -1 ? options.findIndex(
-      ({ title }) => title.toLowerCase() == activeComponent.toLowerCase()
-    ) : 0);
+      );
+      setActiveIndex(activeIndex);
+      setSelectedIndex(activeIndex);
+      
   }, [pathname]);
   // Find the index of the active component
 
@@ -45,14 +44,15 @@ const SideNav = ({ options, name, ownerName }: SideNavProps) => {
   );
 
   const handleLogout = () => {
-    router.push("/login");
     logout();
+    router.push("/login");
   };
 
   return (
     <div className="bg-white p-3 w-full flex flex-col justify-between min-h-[calc(100vh-7rem)]">
       <h1 className="text-xl capitalize tracking-tighter">
-        start your day,<br/> be productive
+        start your day,
+        <br /> be productive
       </h1>
       <div className="py-3">
         <User

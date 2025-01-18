@@ -16,46 +16,39 @@ import "react-toastify/dist/ReactToastify.css";
 function OrderCardDetail(order: transactionProps) {
   const pathname = usePathname();
   const handleAccept = async () => {
-    // await fetch(`https://fresh-flow-backend.vercel.app/transaction/accept/${order._id}`, {
-    await fetch(
-      `https://fresh-flow-backend.vercel.app/transaction/accept/${order._id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
+    await fetch(`http://localhost:5000/transaction/accept/${order._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "/",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
-        handleToast(data.message, "success");
+        handleToast({ message: data.message, type: "success" });
       })
       .catch((err) => {
-        handleToast(err.message, "error");
+        handleToast({ message: err.message, type: "error" });
       });
   };
 
   const handleReject = async () => {
-    // await fetch(`https://fresh-flow-backend.vercel.app/transaction/reject/${order._id}`, {
-    await fetch(
-      `https://fresh-flow-backend.vercel.app/transaction/reject/${order._id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "/",
-        },
-      }
-    )
+    await fetch(`http://localhost:5000/transaction/reject/${order._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "/",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
-        handleToast(data.message, "success");
+        handleToast({ message: data.message, type: "success" });
       })
       .catch((err) => {
-        handleToast(err.message, "error");
+        handleToast({ message: err.message, type: "error" });
       });
   };
+  
 
   return (
     <div className="flex justify-center items-center  p-3 w-full">
@@ -100,7 +93,9 @@ function OrderCardDetail(order: transactionProps) {
           <div className="flex gap-2">
             Quantity :
             <Chip color="primary" variant="bordered">
-              {!order.customerName ? `${order.quantity} Mt` : `${order.quantity} Kg`}
+              {!order.customerName
+                ? `${order.quantity} Mt`
+                : `${order.quantity} Kg`}
             </Chip>
           </div>
           <div className="flex gap-2">
