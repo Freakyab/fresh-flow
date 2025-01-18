@@ -26,7 +26,7 @@ router.post("/register", async (req, res) => {
     } = req.body;
     // Check if the user already exists
     const user = await Customer.findOne({ username });
-    if (user) return res.status(400).json({ msg: "Username already exists" });
+    if (user) return  res.status(400).json({ msg: "Username already exists" });
 
     // Create a new user
     const newUser = new Customer({
@@ -59,17 +59,17 @@ router.post("/register", async (req, res) => {
     );
 
     if (token) {
-      res.status(201).json({
+      return res.status(201).json({
         message: "Customer register successfully",
         token,
         id: newUser._id,
       });
     } else {
-      res.status(400).json({ message: "Customer register failed" });
+      return res.status(400).json({ message: "Customer register failed" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -86,13 +86,12 @@ router.post("/login", async (req, res) => {
 
     // Check for existing user
     const user = await Customer.findOne({ username });
-    console.log(user);
     if (!user)
-      return res.status(400).json({ msg: "No Customer with this username" });
+      return  res.status(400).json({ msg: "No Customer with this username" });
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!isMatch) return  res.status(400).json({ msg: "Invalid credentials" });
 
     // Sign the token
     const token = jwt.sign(
@@ -100,15 +99,15 @@ router.post("/login", async (req, res) => {
       process.env.JWT_SECRET
     );
     if (token) {
-      res
+      return res
         .status(201)
         .json({ message: "Customer login successfully", token, id: user._id });
     } else {
-      res.status(400).json({ message: "Customer login failed" });
+      return  res.status(400).json({ message: "Customer login failed" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -132,7 +131,7 @@ router.put("/update/:id", async (req, res) => {
 
     // Check if the user already exists
     const user = await Customer.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user) return  res.status(400).json({ msg: "User does not exists" });
 
     const hashedPassword = user.password;
 
@@ -154,13 +153,13 @@ router.put("/update/:id", async (req, res) => {
     const update = await Customer.findByIdAndUpdate(req.params.id, newUser);
     
     if (update) {
-      res.status(201).json({ message: "Customer updated successfully", isUpdated: true});
+      return res.status(201).json({ message: "Customer updated successfully", isUpdated: true});
     } else {
-      res.status(400).json({ message: "Customer update failed", isUpdated: false});
+      return res.status(400).json({ message: "Customer update failed", isUpdated: false});
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error" , isUpdated: false});
+    return res.status(500).json({ message: "Server Error" , isUpdated: false});
   }
 });
 
@@ -171,13 +170,13 @@ router.put("/update/:id", async (req, res) => {
 router.delete("/delete/:id", auth, async (req, res) => {
   try {
     const user = await Customer.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user) return  res.status(400).json({ msg: "User does not exists" });
 
     await Customer.findByIdAndDelete(req.params.id);
-    res.json({ msg: "User deleted" });
+    return res.json({ msg: "User deleted" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -188,11 +187,11 @@ router.delete("/delete/:id", auth, async (req, res) => {
 router.post("/getdatabyid/:id", async (req, res) => {
   try {
     const user = await Customer.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" , isAvailable: false});
+    if (!user) return  res.status(400).json({ msg: "User does not exists" , isAvailable: false});
 
-    res.status(200).json({ user , isAvailable: true });
+    return res.status(200).json({ user , isAvailable: true });
   } catch (error) {
-    res.status(500).json({ error: error.message , isAvailable: false});
+    return res.status(500).json({ error: error.message , isAvailable: false});
   }
 });
 
@@ -200,7 +199,7 @@ router.get("/getCustomerExpenseChart/:id", async (req, res) => {
   try {
     const customer = await Customer.findById(req.params.id);
     if (!customer) {
-      return res.status(400).json({ msg: "Customer not found" });
+      return  res.status(400).json({ msg: "Customer not found" });
     } else {
       const allTransaction = await Transaction.find({
         customerId: req.params.id,
@@ -231,13 +230,13 @@ router.get("/getCustomerExpenseChart/:id", async (req, res) => {
           return acc;
         }, {});
         
-        res.status(200).json({ ExpensesPerMonth , isFound : true });
+        return res.status(200).json({ ExpensesPerMonth , isFound : true });
       } else {
-        res.status(400).json({ msg: "No data found for charts" , isFound : false });
+        return res.status(400).json({ msg: "No data found for charts" , isFound : false });
       }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message , isFound : false });
+    return res.status(500).json({ error: error.message , isFound : false });
   }
 });
 

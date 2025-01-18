@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
 
     // Check if the user already exists
     const user = await Warehouse.findOne({ username });
-    if (user) return res.status(400).json({ msg: "Username already exists" });
+    if (user) return  res.status(400).json({ msg: "Username already exists" });
 
     const getDateInMonthAbbreviation = (date) => {
       const monthNames = [
@@ -114,16 +114,16 @@ router.post("/register", async (req, res) => {
     );
 
     if (token) {
-      res.status(201).json({
+      return res.status(201).json({
         message: "Warehouse owner register successfully",
         token,
         id: newUser._id,
       });
     } else {
-      res.status(400).json({ message: "Warehouse owner register failed" });
+      return res.status(400).json({ message: "Warehouse owner register failed" });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -134,10 +134,9 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-
     // Validate
     if (!username || !password)
-      return res.status(400).json({ msg: "Not all fields have been entered" });
+      return  res.status(400).json({ msg: "Not all fields have been entered" });
 
     // Check if the user exists
     const user = await Warehouse.findOne({ username });
@@ -148,28 +147,29 @@ router.post("/login", async (req, res) => {
 
     // Check if the password is correct
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res
-        .status(400)
-        .json({ msg: "Invalid credentials", token, id: user._id });
+    
+        // Sign the token
+        const token = jwt.sign(
+          { id: user._id, username: user.username },
+          process.env.JWT_SECRET
+        );
 
-    // Sign the token
-    const token = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET
-    );
+    if (!isMatch) {
+      return  res.status(400).json({ msg: "Invalid credentials", id: user._id });
+    }
 
     if (token) {
-      res.status(201).json({
+      console.log(user._id);
+      return  res.status(201).json({
         message: "Warehoouse owner login successfully",
         token,
         id: user._id,
       });
     } else {
-      res.status(400).json({ message: "Warehouse owner login failed" });
+      return  res.status(400).json({ message: "Warehouse owner login failed" });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -208,7 +208,7 @@ router.put("/update/:id", async (req, res) => {
     // Check if the user already exists
     const user = await Warehouse.findOne({ _id: req.params.id });
     if (!user)
-      return res.status(400).json({
+      return  res.status(400).json({
         isFound: false,
         message: "User does not exists",
       });
@@ -282,9 +282,9 @@ router.put("/update/:id", async (req, res) => {
     // Save the user
     await Warehouse.findByIdAndUpdate(req.params.id, newUser);
 
-    res.json({ isFound: true, message: "User updated successfully" });
+    return res.json({ isFound: true, message: "User updated successfully" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       isFound: false,
       message: error.message,
     });
@@ -298,12 +298,12 @@ router.put("/update/:id", async (req, res) => {
 router.delete("/delete:id", auth, async (req, res) => {
   try {
     const user = await Warehouse.findOne({ _id: req.params.id });
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user) return  res.status(400).json({ msg: "User does not exists" });
 
     await Warehouse.findByIdAndDelete(req.params.id);
-    res.json({ msg: "User deleted" });
+    return res.json({ msg: "User deleted" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -316,11 +316,11 @@ router.get("/getData", auth, async (req, res) => {
     const user = await Warehouse.findById(req.userId).select(
       "-_id -password -__v -otp"
     );
-    if (!user) return res.status(400).json({ msg: "User does not exists" });
+    if (!user) return  res.status(400).json({ msg: "User does not exists" });
 
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -331,23 +331,23 @@ router.get("/getData", auth, async (req, res) => {
 router.post("/getdatabyid/:id", async (req, res) => {
   try {
     if (!req.params.id)
-      return res.status(400).json({
+      return  res.status(400).json({
         isFound: false,
         message: "Id is required",
       });
     const user = await Warehouse.findOne({ _id: req.params.id });
     if (!user)
-      return res.status(400).json({
+      return  res.status(400).json({
         isFound: false,
         message: "User does not exists",
       });
 
-    res.status(200).json({
+    return res.status(200).json({
       isFound: true,
       user: user,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       isFound: false,
       message: error.message,
     });
@@ -361,18 +361,18 @@ router.get("/allwarehouse", async (req, res) => {
   try {
     const warehouse = await Warehouse.find();
     if (!warehouse)
-      return res.status(400).json({
+      return  res.status(400).json({
         isFound: false,
         message: "Warehouse not found",
       });
     else {
-      res.status(200).json({
+      return res.status(200).json({
         isFound: true,
         data: warehouse,
       });
     }
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       isFound: false,
       message: error.message,
     });
@@ -383,7 +383,7 @@ router.get("/getWarehouseExpenseChart/:id", async (req, res) => {
   try {
     const warehouse = await Warehouse.findById(req.params.id);
     if (!warehouse) {
-      return res.status(400).json({ msg: "Warehouse not found" });
+      return  res.status(400).json({ msg: "Warehouse not found" });
     } else {
       const allTransaction = await Transaction.find({
         warehouseId: req.params.id,
@@ -413,13 +413,13 @@ router.get("/getWarehouseExpenseChart/:id", async (req, res) => {
           return acc;
         }, {});
 
-        res.status(200).json(ExpensesPerMonth);
+        return res.status(200).json(ExpensesPerMonth);
       } else {
-        res.status(400).json({ msg: "No data found" });
+        return res.status(400).json({ msg: "No data found" });
       }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
@@ -432,7 +432,7 @@ router.get("/getOccupiedWarehousePie/:id", async (req, res) => {
     }).exec(); // Executing the query to return a promise
 
     if (!warehouse) {
-      return res.status(400).json({ msg: "Warehouse not found" });
+      return  res.status(400).json({ msg: "Warehouse not found" });
     } else {
       const freeSpace = warehouse.capacity - warehouse.occupied;
 
@@ -462,13 +462,13 @@ router.get("/getOccupiedWarehousePie/:id", async (req, res) => {
         totalSpace: parseInt(warehouse.capacity),
       };
       if (data) {
-        res.status(200).json(data);
+        return res.status(200).json(data);
       } else {
-        res.status(400).json({ msg: "data found" });
+        return res.status(400).json({ msg: "data found" });
       }
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 });
 
